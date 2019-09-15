@@ -1,0 +1,29 @@
+version: '3'
+services:
+  frontend:
+    image: nginx:alpine
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "80:80"
+    links:
+      - backend
+    depends_on:
+      - backend
+  backend:
+    build: ./
+    volumes:
+      - ./:/app
+    links:
+      - db
+    depends_on:
+      - db
+    command: sh -c "chmod +x ./docker/entrypoint.sh && ./docker/entrypoint.sh"
+  db:
+    image: sameersbn/postgresql
+    environment:
+      - DB_USER=blog_user
+      - DB_PASS=blog_pass
+      - DB_NAME=blog_db
+    ports:
+      - 5432
