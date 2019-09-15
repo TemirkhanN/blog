@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    autowire: true
+  blog.view.post:
+    class: App\View\PostView
+    tags: [{name: view, view: post.view}]
+  blog.view.post_list:
+    class: Temirkhan\View\CollectionView
+    arguments:
+      $elementViewName: 'post.view'
+    tags: [{name: view, view: post.list}]

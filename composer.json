@@ -1,6 +1,12 @@
 {
     "type": "project",
     "license": "proprietary",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/TemirkhanN/view.git"
+        }
+    ],
     "require": {
         "php": "~7.3.0",
         "ext-ctype": "*",

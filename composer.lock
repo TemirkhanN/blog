@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "481445b60e8e1229b307ce1cc9d0e30d",
+    "content-hash": "49b3e8da72f473906efd3f6a1f352c1c",
     "packages": [
         {
             "name": "psr/cache",
@@ -1700,12 +1700,43 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2019-08-20T14:27:59+00:00"
+        },
+        {
+            "name": "temirkhan/view",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/TemirkhanN/view.git",
+                "reference": "6d6321c3428f1317cc7281caa00aa56dc7aa9262"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/TemirkhanN/view/zipball/6d6321c3428f1317cc7281caa00aa56dc7aa9262",
+                "reference": "6d6321c3428f1317cc7281caa00aa56dc7aa9262",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3"
+            },
+            "type": "project",
+            "autoload": {
+                "psr-4": {
+                    "Temirkhan\\View\\": "src/"
+                }
+            },
+            "support": {
+                "source": "https://github.com/TemirkhanN/view/tree/master",
+                "issues": "https://github.com/TemirkhanN/view/issues"
+            },
+            "time": "2019-09-15T18:22:08+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "temirkhan/view": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
