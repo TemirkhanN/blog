@@ -1707,12 +1707,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/TemirkhanN/view.git",
-                "reference": "6d6321c3428f1317cc7281caa00aa56dc7aa9262"
+                "reference": "31e1f5dd131219f81a0a2e63ff46759c9191eb83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TemirkhanN/view/zipball/6d6321c3428f1317cc7281caa00aa56dc7aa9262",
-                "reference": "6d6321c3428f1317cc7281caa00aa56dc7aa9262",
+                "url": "https://api.github.com/repos/TemirkhanN/view/zipball/31e1f5dd131219f81a0a2e63ff46759c9191eb83",
+                "reference": "31e1f5dd131219f81a0a2e63ff46759c9191eb83",
                 "shasum": ""
             },
             "require": {
@@ -1728,7 +1728,7 @@
                 "source": "https://github.com/TemirkhanN/view/tree/master",
                 "issues": "https://github.com/TemirkhanN/view/issues"
             },
-            "time": "2019-09-15T18:22:08+00:00"
+            "time": "2019-09-18T21:13:02+00:00"
         }
     ],
     "packages-dev": [],

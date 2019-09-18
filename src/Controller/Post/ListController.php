@@ -5,12 +5,17 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Service\Post\PostListService;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\expr;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Temirkhan\View\ViewFactoryInterface;
 
 class ListController
 {
+    /**
+     * @const int
+     */
+    private const POSTS_PER_PAGE = 10;
+
     /**
      * @var PostListService
      */
@@ -33,11 +38,15 @@ class ListController
         $this->viewFactory = $viewFactory;
     }
 
-    public function __invoke()
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function __invoke(Request $request): JsonResponse
     {
-        $offset = 0;
-        $limit = 25;
-        $posts = $this->postListService->getPublishedPosts($offset, $limit);
+        $offset = $request->query->getInt('offset', 0);
+        $posts  = $this->postListService->getPublishedPosts($offset, self::POSTS_PER_PAGE);
 
         $view = $this->viewFactory->createView('post.list', $posts);
 

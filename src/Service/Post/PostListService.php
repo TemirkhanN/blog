@@ -5,14 +5,34 @@ declare(strict_types=1);
 namespace App\Service\Post;
 
 use App\Entity\Post;
+use App\Entity\PostCollection;
+use App\Repository\PostRepositoryInterface;
 
 class PostListService
 {
-    public function getPublishedPosts(int $limit, int $offset): iterable
+    /**
+     * @var PostRepositoryInterface
+     */
+    private $postRepository;
+
+    /**
+     * Constructor
+     *
+     * @param PostRepositoryInterface $postRepository
+     */
+    public function __construct(PostRepositoryInterface $postRepository)
     {
-        return [
-            new Post(2, 'Another title', 'Some author'),
-            new Post(1, 'Some title', 'Some author'),
-        ];
+        $this->postRepository = $postRepository;
+    }
+
+    /**
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return PostCollection
+     */
+    public function getPublishedPosts(int $offset, int $limit): PostCollection
+    {
+        return $this->postRepository->getPosts($limit, $offset);
     }
 }
