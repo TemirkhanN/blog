@@ -1,3 +1,6 @@
 index:
     path: /
     controller:  App\Controller\Post\ListController
+view_post:
+    path: /{slug}
+    controller:  App\Controller\Post\ViewController
