@@ -35,4 +35,14 @@ class PostListService
     {
         return $this->postRepository->getPosts($limit, $offset);
     }
+
+    /**
+     * @param string $slug
+     *
+     * @return Post|null
+     */
+    public function getPostBySlug(string $slug): ?Post
+    {
+        return $this->postRepository->findOneBySlug($slug);
+    }
 }

@@ -8,6 +8,9 @@ use App\Entity\PostCollection;
 
 class PostRepository implements PostRepositoryInterface
 {
+    /**
+     * @var Post[]
+     */
     private $storage;
 
     public function __construct()
@@ -44,5 +47,21 @@ class PostRepository implements PostRepositoryInterface
                 yield $post;
             }
         })($limit, $offset));
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @return Post|null
+     */
+    public function findOneBySlug(string $slug): ?Post
+    {
+        foreach ($this->storage as $item) {
+            if ($item->getSlug() === $slug) {
+                return $item;
+            }
+        }
+
+        return null;
     }
 }

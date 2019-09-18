@@ -10,12 +10,15 @@ class Post
 
     private $title;
 
+    private $slug;
+
     private $author;
 
     public function __construct(int $id, string $title, string $author)
     {
-        $this->id = $id;
-        $this->title = $title;
+        $this->id     = $id;
+        $this->title  = $title;
+        $this->slug   = preg_replace('#\W#', '', $title);
         $this->author = $author;
     }
 
@@ -32,5 +35,10 @@ class Post
     public function getAuthor(): string
     {
         return $this->author;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
     }
 }
