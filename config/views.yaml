@@ -9,3 +9,8 @@ services:
     arguments:
       $elementViewName: 'post.view'
     tags: [{name: view, view: post.list}]
+
+  # Application layer
+  validation.violation_list:
+    class: App\View\ConstraintViolationsView
+    tags: [{name: view, view: constraints.violation}]
