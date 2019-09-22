@@ -12,14 +12,17 @@ class Post
 
     private $slug;
 
+    private $content;
+
     private $author;
 
-    public function __construct(int $id, string $title, string $author)
+    public function __construct(int $id, string $title, string $content, string $author)
     {
-        $this->id     = $id;
-        $this->title  = $title;
-        $this->slug   = preg_replace('#\W#', '', $title);
-        $this->author = $author;
+        $this->id      = $id;
+        $this->title   = $title;
+        $this->content = $content;
+        $this->slug    = preg_replace('#\W#', '', $title);
+        $this->author  = $author;
     }
 
     public function getId(): int
@@ -30,6 +33,11 @@ class Post
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function getContent(): string
+    {
+        return $this->content;
     }
 
     public function getAuthor(): string

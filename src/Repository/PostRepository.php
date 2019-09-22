@@ -5,6 +5,7 @@ namespace App\Repository;
 
 use App\Entity\Post;
 use App\Entity\PostCollection;
+use SplObjectStorage;
 
 class PostRepository implements PostRepositoryInterface
 {
@@ -15,12 +16,12 @@ class PostRepository implements PostRepositoryInterface
 
     public function __construct()
     {
-        $this->storage = new \SplObjectStorage();
+        $this->storage = new SplObjectStorage();
 
         $posts = [
-            new Post(3, 'Fixture attacks!', 'Me'),
-            new Post(2, 'Another title', 'Some author'),
-            new Post(1, 'Some title', 'Some author'),
+            new Post(3, 'Fixture attacks!', 'Fixture content', 'Me'),
+            new Post(2, 'Another title', 'Fixture content', 'Some author'),
+            new Post(1, 'Some title', 'Fixture content', 'Some author'),
         ];
 
         foreach ($posts as $fixture) {
@@ -30,23 +31,27 @@ class PostRepository implements PostRepositoryInterface
 
     public function getPosts(int $limit, int $offset): PostCollection
     {
-        return new PostCollection((function (int $limit, int $offset) {
-            if ($offset < 0 || $offset > $this->storage->count()) {
-                return;
-            }
-
-            foreach ($this->storage as $post) {
-                if ($offset-- > 0) {
-                    continue;
+        return new PostCollection(
+            (function (int $limit, int $offset) {
+                if ($offset < 0 || $offset > $this->storage->count()) {
+                    return;
                 }
 
-                if ($limit-- === 0) {
-                    break;
-                }
+                foreach ($this->storage as $post) {
+                    if ($offset-- > 0) {
+                        continue;
+                    }
 
-                yield $post;
-            }
-        })($limit, $offset));
+                    if ($limit-- === 0) {
+                        break;
+                    }
+
+                    yield $post;
+                }
+            })(
+                $limit, $offset
+            )
+        );
     }
 
     /**
@@ -63,5 +68,17 @@ class PostRepository implements PostRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param Post $post
+     */
+    public function save(Post $post): void
+    {
+        if ($this->storage->contains($post)) {
+            return;
+        }
+
+        $this->storage->attach($post);
     }
 }

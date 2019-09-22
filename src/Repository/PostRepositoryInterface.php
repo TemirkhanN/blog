@@ -22,4 +22,9 @@ interface PostRepositoryInterface
      * @return Post|null
      */
     public function findOneBySlug(string $slug): ?Post;
+
+    /**
+     * @param Post $post
+     */
+    public function save(Post $post): void;
 }
