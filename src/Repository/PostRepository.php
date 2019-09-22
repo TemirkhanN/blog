@@ -5,39 +5,41 @@ namespace App\Repository;
 
 use App\Entity\Post;
 use App\Entity\PostCollection;
-use SplObjectStorage;
+use Redis;
 
 class PostRepository implements PostRepositoryInterface
 {
     /**
-     * @var Post[]
+     * Hash scope in redis
+     *
+     * @const string
+     */
+    private const TABLE_NAME = 'blog_posts';
+
+    /**
+     * @var Redis
      */
     private $storage;
 
-    public function __construct()
+    /**
+     * Constructor
+     *
+     * @param Redis $redis
+     */
+    public function __construct(Redis $redis)
     {
-        $this->storage = new SplObjectStorage();
-
-        $posts = [
-            new Post(3, 'Fixture attacks!', 'Fixture content', 'Me'),
-            new Post(2, 'Another title', 'Fixture content', 'Some author'),
-            new Post(1, 'Some title', 'Fixture content', 'Some author'),
-        ];
-
-        foreach ($posts as $fixture) {
-            $this->storage->attach($fixture);
-        }
+        $this->storage = $redis;
     }
 
     public function getPosts(int $limit, int $offset): PostCollection
     {
         return new PostCollection(
             (function (int $limit, int $offset) {
-                if ($offset < 0 || $offset > $this->storage->count()) {
+                if ($offset < 0 || $offset > $this->storage->hLen(self::TABLE_NAME)) {
                     return;
                 }
 
-                foreach ($this->storage as $post) {
+                foreach ($this->storage->hGetAll(self::TABLE_NAME) as $post) {
                     if ($offset-- > 0) {
                         continue;
                     }
@@ -46,7 +48,7 @@ class PostRepository implements PostRepositoryInterface
                         break;
                     }
 
-                    yield $post;
+                    yield unserialize($post, [Post::class]);
                 }
             })(
                 $limit, $offset
@@ -61,13 +63,13 @@ class PostRepository implements PostRepositoryInterface
      */
     public function findOneBySlug(string $slug): ?Post
     {
-        foreach ($this->storage as $item) {
-            if ($item->getSlug() === $slug) {
-                return $item;
-            }
+        $iterator = null;
+        $posts = $this->storage->hScan(self::TABLE_NAME, $iterator, "*_$slug");
+        if ($posts === []) {
+            return null;
         }
 
-        return null;
+        return unserialize(reset($posts), [Post::class]);
     }
 
     /**
@@ -75,10 +77,8 @@ class PostRepository implements PostRepositoryInterface
      */
     public function save(Post $post): void
     {
-        if ($this->storage->contains($post)) {
-            return;
-        }
+        $hash = sprintf('%s_%s', $post->getId(), $post->getSlug());
 
-        $this->storage->attach($post);
+        $this->storage->hSet(self::TABLE_NAME, $hash, serialize($post));
     }
 }

@@ -20,6 +20,11 @@ RUN docker-php-ext-install \
     mbstring \
     pdo_pgsql
 
+RUN pecl install -o -f redis \
+    &&  rm -rf /tmp/pear
+
+RUN docker-php-ext-enable redis
+
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/ \
     && ln -s /usr/local/bin/composer.phar /usr/local/bin/composer

@@ -6,6 +6,7 @@ namespace App\Service\Post;
 use App\Dto\CreatePost;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
+use Ramsey\Uuid\Uuid;
 
 class CreatePostService
 {
@@ -21,8 +22,8 @@ class CreatePostService
 
     public function execute(string $author, CreatePost $createPost): Post
     {
-        static $id = 123;
-        $post = new Post(++$id, $createPost->title, $createPost->content, $author);
+        $id = Uuid::uuid4();
+        $post = new Post($id->toString(), $createPost->title, $createPost->content, $author);
 
         $this->repository->save($post);
 
