@@ -22,7 +22,7 @@ services:
     depends_on:
       - db
       - cache
-    command: sh -c "chmod +x ./docker/entrypoint.sh && ./docker/entrypoint.sh"
+    entrypoint: ./docker/entrypoint.sh
   db:
     image: sameersbn/postgresql
     environment:
