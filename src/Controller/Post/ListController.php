@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Service\Post\PostListService;
+use App\Service\Response\ResponseFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Temirkhan\View\ViewFactoryInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class ListController
 {
@@ -22,34 +22,32 @@ class ListController
     private $postListService;
 
     /**
-     * @var ViewFactoryInterface
+     * @var ResponseFactoryInterface
      */
-    private $viewFactory;
+    private $responseFactory;
 
     /**
      * Constructor
      *
-     * @param PostListService      $postListService
-     * @param ViewFactoryInterface $viewFactory
+     * @param PostListService          $postListService
+     * @param ResponseFactoryInterface $responseFactory
      */
-    public function __construct(PostListService $postListService, ViewFactoryInterface $viewFactory)
+    public function __construct(PostListService $postListService, ResponseFactoryInterface $responseFactory)
     {
         $this->postListService = $postListService;
-        $this->viewFactory = $viewFactory;
+        $this->responseFactory = $responseFactory;
     }
 
     /**
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return Response
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request): Response
     {
         $offset = $request->query->getInt('offset', 0);
         $posts  = $this->postListService->getPublishedPosts($offset, self::POSTS_PER_PAGE);
 
-        $view = $this->viewFactory->createView('post.list', $posts);
-
-        return new JsonResponse($view);
+        return $this->responseFactory->view($posts, 'post.list');
     }
 }

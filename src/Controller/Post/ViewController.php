@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Service\Post\PostListService;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\Response\ResponseFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Temirkhan\View\ViewFactoryInterface;
 
 class ViewController
 {
@@ -22,45 +21,43 @@ class ViewController
     private $security;
 
     /**
-     * @var ViewFactoryInterface
+     * @var ResponseFactoryInterface
      */
-    private $viewFactory;
+    private $responseFactory;
 
     /**
      * Constructor
      *
      * @param PostListService               $postListService
      * @param AuthorizationCheckerInterface $security
-     * @param ViewFactoryInterface          $viewFactory
+     * @param ResponseFactoryInterface      $responseFactory
      */
     public function __construct(
         PostListService $postListService,
         AuthorizationCheckerInterface $security,
-        ViewFactoryInterface $viewFactory
+        ResponseFactoryInterface $responseFactory
     ) {
         $this->postListService = $postListService;
         $this->security        = $security;
-        $this->viewFactory     = $viewFactory;
+        $this->responseFactory = $responseFactory;
     }
 
     /**
      * @param string $slug
      *
-     * @return JsonResponse
+     * @return Response
      */
-    public function __invoke(string $slug): JsonResponse
+    public function __invoke(string $slug): Response
     {
         $post = $this->postListService->getPostBySlug($slug);
         if ($post === null) {
-            return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+            return $this->responseFactory->notFound("Publication doesn't exist");
         }
 
         if (!$this->security->isGranted('view_post', $post)) {
-            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+            return $this->responseFactory->forbidden("You're not allowed to view this publication");
         }
 
-        $view = $this->viewFactory->createView('post.view', $post);
-
-        return new JsonResponse($view);
+        return $this->responseFactory->view($post, 'post.view');
     }
 }

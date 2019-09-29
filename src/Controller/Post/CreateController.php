@@ -5,12 +5,11 @@ namespace App\Controller\Post;
 
 use App\Dto\CreatePost;
 use App\Service\Post\CreatePostService;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Service\Response\ResponseFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Temirkhan\View\ViewFactoryInterface;
 
 class CreateController
 {
@@ -30,9 +29,9 @@ class CreateController
     private $validator;
 
     /**
-     * @var ViewFactoryInterface
+     * @var ResponseFactoryInterface
      */
-    private $viewFactory;
+    private $responseFactory;
 
     /**
      * Construct
@@ -40,44 +39,40 @@ class CreateController
      * @param CreatePostService             $postCreator
      * @param AuthorizationCheckerInterface $securityChecker
      * @param ValidatorInterface            $validator
-     * @param ViewFactoryInterface          $viewFactory
+     * @param ResponseFactoryInterface      $responseFactory
      */
     public function __construct(
         CreatePostService $postCreator,
         AuthorizationCheckerInterface $securityChecker,
         ValidatorInterface $validator,
-        ViewFactoryInterface $viewFactory
+        ResponseFactoryInterface $responseFactory
     ) {
-        $this->postCreator = $postCreator;
-        $this->security    = $securityChecker;
-        $this->validator   = $validator;
-        $this->viewFactory = $viewFactory;
+        $this->postCreator     = $postCreator;
+        $this->security        = $securityChecker;
+        $this->validator       = $validator;
+        $this->responseFactory = $responseFactory;
     }
 
     /**
      * @param Request $request
      *
-     * @return JsonResponse
+     * @return Response
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request): Response
     {
         if (!$this->security->isGranted('create_post')) {
-            return new JsonResponse(null, Response::HTTP_FORBIDDEN);
+            return $this->responseFactory->forbidden("You're not allowed to create posts");
         }
 
-        $data = $request->request->all();
+        $data       = $request->request->all();
         $violations = $this->validator->validate($data, CreatePost::getConstraints());
         if (count($violations)) {
-            $view = $this->viewFactory->createView('constraints.violation', $violations);
-
-            return new JsonResponse($view, Response::HTTP_BAD_REQUEST);
+            return $this->responseFactory->view($violations, 'constraints.violation', Response::HTTP_BAD_REQUEST);
         }
 
         $author = 'Temirkhan'; // TODO replace
         $post   = $this->postCreator->execute($author, new CreatePost($data));
 
-        $view = $this->viewFactory->createView('post.view', $post);
-
-        return new JsonResponse($view, Response::HTTP_CREATED);
+        return $this->responseFactory->view($post, 'post.view', Response::HTTP_CREATED);
     }
 }
