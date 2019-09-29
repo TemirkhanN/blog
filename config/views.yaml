@@ -14,3 +14,7 @@ services:
   validation.violation_list:
     class: App\View\ConstraintViolationsView
     tags: [{name: view, view: constraints.violation}]
+
+  response.system_message:
+    class: App\Service\Response\View\SystemMessageView
+    tags: [{name: view, view: response.system_message}]
