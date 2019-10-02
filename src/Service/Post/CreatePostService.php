@@ -4,26 +4,44 @@ declare(strict_types=1);
 namespace App\Service\Post;
 
 use App\Dto\CreatePost;
+use App\Entity\Author;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
-use Ramsey\Uuid\Uuid;
 
+/**
+ * Post creation service
+ */
 class CreatePostService
 {
     /**
+     * Post repository
+     *
      * @var PostRepositoryInterface
      */
     private $repository;
 
+    /**
+     * Constructor
+     *
+     * @param PostRepositoryInterface $postRepository
+     */
     public function __construct(PostRepositoryInterface $postRepository)
     {
         $this->repository = $postRepository;
     }
 
-    public function execute(string $author, CreatePost $createPost): Post
+    /**
+     * @param Author     $author
+     * @param CreatePost $data
+     *
+     * @return Post
+     */
+    public function execute(Author $author, CreatePost $data): Post
     {
-        $id = Uuid::uuid4();
-        $post = new Post($id->toString(), $createPost->title, $createPost->content, $author);
+        $post = new Post($author, $data->title, $data->content);
+        if ($this->repository->findOneBySlug($post->getSlug())) {
+            throw new \RuntimeException(sprintf('Author already has post with very similar title'));
+        }
 
         $this->repository->save($post);
 

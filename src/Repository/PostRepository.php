@@ -7,6 +7,9 @@ use App\Entity\Post;
 use App\Entity\PostCollection;
 use Redis;
 
+/**
+ * Post repository
+ */
 class PostRepository implements PostRepositoryInterface
 {
     /**
@@ -17,6 +20,8 @@ class PostRepository implements PostRepositoryInterface
     private const TABLE_NAME = 'blog_posts';
 
     /**
+     * Data storage
+     *
      * @var Redis
      */
     private $storage;
@@ -31,6 +36,14 @@ class PostRepository implements PostRepositoryInterface
         $this->storage = $redis;
     }
 
+    /**
+     * Returns post collection
+     *
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return PostCollection
+     */
     public function getPosts(int $limit, int $offset): PostCollection
     {
         return new PostCollection(
@@ -57,6 +70,8 @@ class PostRepository implements PostRepositoryInterface
     }
 
     /**
+     * Finds post by slug
+     *
      * @param string $slug
      *
      * @return Post|null
@@ -64,7 +79,7 @@ class PostRepository implements PostRepositoryInterface
     public function findOneBySlug(string $slug): ?Post
     {
         $iterator = null;
-        $posts = $this->storage->hScan(self::TABLE_NAME, $iterator, "*_$slug");
+        $posts    = $this->storage->hScan(self::TABLE_NAME, $iterator, "*_$slug");
         if ($posts === []) {
             return null;
         }
@@ -73,12 +88,12 @@ class PostRepository implements PostRepositoryInterface
     }
 
     /**
+     * Saves post in repository
+     *
      * @param Post $post
      */
     public function save(Post $post): void
     {
-        $hash = sprintf('%s_%s', $post->getId(), $post->getSlug());
-
-        $this->storage->hSet(self::TABLE_NAME, $hash, serialize($post));
+        $this->storage->hSet(self::TABLE_NAME, $post->getId(), serialize($post));
     }
 }

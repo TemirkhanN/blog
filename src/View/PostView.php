@@ -16,9 +16,9 @@ class PostView implements ViewInterface
         }
 
         return [
-            'id ' => $context->getId(),
-            'title' => $context->getTitle(),
-            'author' => $context->getAuthor(),
+            'slug'   => $context->getSlug(),
+            'title'  => $context->getTitle(),
+            'author' => $context->getAuthor()->getName(),
         ];
     }
 }

@@ -4,47 +4,99 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+/**
+ * Publication
+ */
 class Post
 {
-    private $id;
-
+    /**
+     * Title
+     *
+     * @var string
+     */
     private $title;
 
+    /**
+     * User-friendly URL post name
+     *
+     * @var string
+     */
     private $slug;
 
+    /**
+     * Content
+     *
+     * @var string
+     */
     private $content;
 
+    /**
+     * Author
+     *
+     * @var Author
+     */
     private $author;
 
-    public function __construct(string $id, string $title, string $content, string $author)
+    /**
+     * Constructor
+     *
+     * @param Author $author
+     * @param string $title
+     * @param string $content
+     */
+    public function __construct(Author $author, string $title, string $content)
     {
-        $this->id      = $id;
         $this->title   = $title;
         $this->content = $content;
         $this->slug    = preg_replace('#\W#', '', $title);
         $this->author  = $author;
     }
 
+    /**
+     * Returns identifier
+     *
+     * @return string
+     */
     public function getId(): string
     {
-        return $this->id;
+        return sprintf('%s_%s', $this->author->getName(), $this->getSlug());
     }
 
+    /**
+     * Returns title
+     *
+     * @return string
+     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
+    /**
+     * Returns content
+     *
+     * @return string
+     */
     public function getContent(): string
     {
         return $this->content;
     }
 
-    public function getAuthor(): string
+    /**
+     * Returns author
+     *
+     * @return Author
+     */
+    public function getAuthor(): Author
     {
         return $this->author;
     }
 
+    /**
+     * Returns slug
+     *
+     * @return string
+     */
     public function getSlug(): string
     {
         return $this->slug;

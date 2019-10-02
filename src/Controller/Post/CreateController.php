@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Dto\CreatePost;
+use App\Entity\Author;
 use App\Service\Post\CreatePostService;
 use App\Service\Response\ResponseFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,13 +55,14 @@ class CreateController
     }
 
     /**
+     * @param Author  $author
      * @param Request $request
      *
      * @return Response
      */
-    public function __invoke(Request $request): Response
+    public function __invoke(Author $author, Request $request): Response
     {
-        if (!$this->security->isGranted('create_post')) {
+        if (!$this->security->isGranted('create_post', $author)) {
             return $this->responseFactory->forbidden("You're not allowed to create posts");
         }
 
@@ -70,8 +72,7 @@ class CreateController
             return $this->responseFactory->view($violations, 'constraints.violation', Response::HTTP_BAD_REQUEST);
         }
 
-        $author = 'Temirkhan'; // TODO replace
-        $post   = $this->postCreator->execute($author, new CreatePost($data));
+        $post = $this->postCreator->execute($author, new CreatePost($data));
 
         return $this->responseFactory->view($post, 'post.view', Response::HTTP_CREATED);
     }
