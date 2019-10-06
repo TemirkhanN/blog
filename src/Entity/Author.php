@@ -5,22 +5,11 @@ namespace App\Entity;
 
 class Author
 {
-    private $userId;
-
     private $name;
 
-    public function __construct(int $userId, string $name)
+    public function __construct(string $name)
     {
-        $this->userId = $userId;
-        $this->name   = $name;
-    }
-
-    /**
-     * @return int
-     */
-    public function getUserId(): int
-    {
-        return $this->userId;
+        $this->name = $name;
     }
 
     /**

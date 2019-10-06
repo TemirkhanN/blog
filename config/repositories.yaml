@@ -1,0 +1,12 @@
+services:
+  _defaults:
+    autowire: true
+  App\Repository\:
+    resource: '../src/Repository'
+
+  App\Repository\AuthorRepositoryInterface:
+    class: App\Repository\AuthorRepository
+    arguments:
+      $initialAuthors:
+        -
+          name: Temirkhan

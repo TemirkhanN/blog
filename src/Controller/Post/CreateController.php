@@ -66,7 +66,7 @@ class CreateController
             return $this->responseFactory->forbidden("You're not allowed to create posts");
         }
 
-        $data       = $request->request->all();
+        $data       = json_decode($request->getContent(), true);
         $violations = $this->validator->validate($data, CreatePost::getConstraints());
         if (count($violations)) {
             return $this->responseFactory->view($violations, 'constraints.violation', Response::HTTP_BAD_REQUEST);
