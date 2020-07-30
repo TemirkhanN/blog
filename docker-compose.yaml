@@ -16,6 +16,8 @@ services:
       - ./:/app
     environment:
       - REDIS_URL=redis://cache
+      - USER_ID="${USER_ID}"
+      - GROUP_ID="${GROUP_ID}"
     networks:
       - appnet
       - infranet
