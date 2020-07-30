@@ -7,6 +7,7 @@ use App\Dto\CreatePost;
 use App\Entity\Author;
 use App\Service\Post\CreatePostService;
 use App\Service\Response\ResponseFactoryInterface;
+use Spatie\DataTransferObject\DataTransferObjectError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -66,8 +67,14 @@ class CreateController
             return $this->responseFactory->forbidden("You're not allowed to create posts");
         }
 
-        $data       = json_decode($request->getContent(), true);
-        $violations = $this->validator->validate($data, CreatePost::getConstraints());
+        $data = json_decode($request->getContent(), true);
+        try {
+            $dto = new CreatePost($data);
+        } catch (DataTransferObjectError $e) {
+            return $this->responseFactory->badRequest($e->getMessage());
+        }
+
+        $violations = $this->validator->validate($dto);
         if (count($violations)) {
             return $this->responseFactory->view($violations, 'constraints.violation', Response::HTTP_BAD_REQUEST);
         }

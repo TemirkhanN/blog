@@ -104,4 +104,16 @@ class ResponseFactory implements ResponseFactoryInterface
 
         return $this->view($message, 'response.system_message', Response::HTTP_NOT_FOUND);
     }
+
+    /**
+     * Creates response on bad request
+     *
+     * @param string $message
+     *
+     * @return Response
+     */
+    public function badRequest(string $message): Response
+    {
+        return $this->createResponse($message, Response::HTTP_BAD_REQUEST);
+    }
 }

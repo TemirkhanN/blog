@@ -49,4 +49,6 @@ interface ResponseFactoryInterface
      * @return Response
      */
     public function notFound(string $details): Response;
+
+    public function badRequest(string $message): Response;
 }
