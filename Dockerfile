@@ -32,8 +32,16 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/ \
     && ln -s /usr/local/bin/composer.phar /usr/local/bin/composer
 
-RUN usermod -u ${USER_ID} www-data
+COPY ./ /app
 
 WORKDIR /app
 
+RUN usermod -u ${USER_ID} www-data
+RUN chown -R www-data:www-data /app
+
 USER "${USER_ID}:${GROUP_ID}"
+
+RUN composer install --prefer-source --no-interaction
+RUN php bin/console cache:warmup --env=prod
+
+CMD php-fpm -F

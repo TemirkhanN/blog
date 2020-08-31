@@ -1,3 +1,8 @@
+.git
+.idea
+test
+var/*
+vendor
 /docker
 Dockerfile
 docker-compose.yaml
