@@ -58,6 +58,6 @@ class ViewController
             return $this->responseFactory->forbidden("You're not allowed to view this publication");
         }
 
-        return $this->responseFactory->view($post, 'post.view');
+        return $this->responseFactory->view($post, 'post.preview');
     }
 }

@@ -4,6 +4,13 @@ services:
   blog.view.post:
     class: App\View\PostView
     tags: [{name: view, view: post.view}]
+
+  blog.view.post_preview:
+    class: App\View\PostView
+    arguments:
+      $isFull: false
+    tags: [{name: view, view: post.preview}]
+
   blog.view.post_list:
     class: Temirkhan\View\CollectionView
     arguments:
