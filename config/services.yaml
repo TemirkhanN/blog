@@ -40,7 +40,7 @@ services:
         arguments:
             - '%env(REDIS_URL)%'
             -
-                persistent: 0
+                persistent: 1
 
     App\Resolver\AuthorResolver:
         arguments:
