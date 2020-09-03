@@ -1,0 +1,131 @@
+openapi: 3.0.1
+info:
+  title: blog
+  description: Blog RESTful API documentation
+  contact:
+    email: temirkhan@nasukhov.me
+  version: 1.0.0
+servers:
+- url: /api
+paths:
+  /posts:
+    post:
+      tags:
+      - Post
+      summary: Create new post
+      description: Creates and publishes new post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Title of the post
+                content:
+                  type: string
+                  description: Post content itself
+              required:
+                - title
+                - content
+            example:
+              title: Kite is good
+              content: Lets talk about kites
+      responses:
+        401:
+          description: Unauthenticated
+          content: {}
+        400:
+          description: Invalid data
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        200:
+          description: Succesfully created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  slug:
+                    type: string
+                  title:
+                    type: string
+                  author:
+                    type: string
+              example:
+                slug: kiteisgood
+                title: Kite is good
+                author: Willie
+      security:
+      - api_key: []
+    get:
+      tags:
+      - Post
+      summary: List all posts
+      description: Gets posts sorted by publish date desc
+      responses:
+        200:
+          description: List posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+  /posts/{slug}:
+    get:
+      tags:
+      - pet
+      summary: Finds post by slug
+      parameters:
+      - name: slug
+        in: path
+        description: Slug of post to return
+        required: true
+        schema:
+          type: string
+          example: letstalkaboutkites
+      responses:
+        404:
+          description: Not found
+          content: {}
+        403:
+          description: Forbidden
+          content: {}
+        200:
+          description: Found and retrieved post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        slug:
+          type: string
+          description: Unique post identifier containing title
+        author:
+          type: string
+          description: Author name
+        title:
+          type: string
+          description: Post header/title
+        content:
+          type: string
+          description: Post content itself
+      example:
+        slug: kiteisgood
+        author: Willie
+        title: Kite is good
+        content: Lets talk about kites
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: Authorization
+      in: header

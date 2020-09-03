@@ -1,12 +1,13 @@
+
 index:
-    path: /posts
+    path: /api/posts
     methods: [GET]
     controller:  App\Controller\Post\ListController
 create_post:
-    path: /posts
+    path: /api/posts
     methods: [POST]
     controller:  App\Controller\Post\CreateController
 view_post:
-    path: /posts/{slug}
+    path: /api/posts/{slug}
     methods: [GET]
     controller:  App\Controller\Post\ViewController
