@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6804003da850c1154124a21ef0905c47",
+    "content-hash": "96dc2cf350196ff0dadefb352ddbef31",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -3452,6 +3452,49 @@
             "time": "2020-01-21T11:09:03+00:00"
         },
         {
+            "name": "temirkhan/dto-bundle",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/TemirkhanN/dto-bundle.git",
+                "reference": "0b70b8526a1439a529de4095b9bcf7157a22353f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/TemirkhanN/dto-bundle/zipball/0b70b8526a1439a529de4095b9bcf7157a22353f",
+                "reference": "0b70b8526a1439a529de4095b9bcf7157a22353f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^7.3",
+                "spatie/data-transfer-object": "^1.13|^2.5",
+                "symfony/dependency-injection": "^4.1|^5.0",
+                "symfony/http-kernel": "^4.1|^5.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Temirkhan\\DataObjectBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "temirkhan",
+                    "email": "temirkhan@nasukhov.me"
+                }
+            ],
+            "description": "DTO handler bundle for symfony projects",
+            "time": "2020-09-03T21:14:34+00:00"
+        },
+        {
             "name": "temirkhan/view",
             "version": "dev-master",
             "source": {
@@ -3490,7 +3533,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~7.3.0",
+        "php": "^7.3.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
