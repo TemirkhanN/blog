@@ -8,12 +8,13 @@
         }
     ],
     "require": {
-        "php": "^7.3.0",
+        "php": "~7.3.0",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-redis": "^5.0",
         "doctrine/annotations": "^1.10",
+        "nelmio/cors-bundle": "^2.1",
         "ramsey/uuid": "^3.8",
         "spatie/data-transfer-object": "^1.13",
         "symfony/console": "4.3.*",
