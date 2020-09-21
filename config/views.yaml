@@ -14,7 +14,7 @@ services:
   blog.view.post_list:
     class: Temirkhan\View\CollectionView
     arguments:
-      $elementViewName: 'post.view'
+      $elementViewName: 'post.preview'
     tags: [{name: view, view: post.list}]
 
   # Application layer

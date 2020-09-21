@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\View;
 
 use App\Entity\Post;
+use App\Service\TextFormatter;
 use Temirkhan\View\ViewInterface;
 
 class PostView implements ViewInterface
@@ -33,6 +34,8 @@ class PostView implements ViewInterface
 
         if ($this->isFull) {
             $view['content'] = $context->getContent();
+        } else {
+            $view['preview'] = TextFormatter::cutFirstSentences($context->getContent(), 4);
         }
 
         return $view;

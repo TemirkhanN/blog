@@ -47,7 +47,7 @@ class Post
     public function __construct(Author $author, string $title, string $content)
     {
         $this->title   = $title;
-        $this->content = $content;
+        $this->content = htmlspecialchars($content, ENT_QUOTES);
         $this->slug    = preg_replace('#\W#', '', $title);
         $this->author  = $author;
     }
