@@ -108,12 +108,21 @@ class ResponseFactory implements ResponseFactoryInterface
     /**
      * Creates response on bad request
      *
-     * @param string $message
+     * @param string $details
      *
      * @return Response
      */
-    public function badRequest(string $message): Response
+    public function badRequest(string $details): Response
     {
-        return $this->createResponse($message, Response::HTTP_BAD_REQUEST);
+        $message = new SystemMessage($details, Response::HTTP_BAD_REQUEST);
+
+        return $this->view($message, 'response.system_message', Response::HTTP_BAD_REQUEST);
+    }
+
+    public function unauthorized(string $details): Response
+    {
+        $message = new SystemMessage($details, Response::HTTP_UNAUTHORIZED);
+
+        return $this->view($message, 'response.system_message', Response::HTTP_UNAUTHORIZED);
     }
 }

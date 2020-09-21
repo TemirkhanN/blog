@@ -35,12 +35,14 @@ class CreatePostService
      * @param CreatePost $data
      *
      * @return Post
+     *
+     * @throws \DomainException
      */
     public function execute(Author $author, CreatePost $data): Post
     {
         $post = new Post($author, $data->title, $data->content);
         if ($this->repository->findOneBySlug($post->getSlug())) {
-            throw new \RuntimeException(sprintf('Author already has post with very similar title'));
+            throw new \DomainException(sprintf('Author already has post with very similar title'));
         }
 
         $this->repository->save($post);

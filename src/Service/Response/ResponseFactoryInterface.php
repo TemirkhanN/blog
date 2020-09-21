@@ -51,4 +51,6 @@ interface ResponseFactoryInterface
     public function notFound(string $details): Response;
 
     public function badRequest(string $message): Response;
+
+    public function unauthorized(string $message): Response;
 }
