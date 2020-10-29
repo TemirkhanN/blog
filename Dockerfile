@@ -37,11 +37,11 @@ COPY ./ /app
 WORKDIR /app
 
 RUN usermod -u ${USER_ID} www-data
-RUN chown -R www-data:www-data /app
+RUN chown -R www-data:www-data /app /var/www
 
 USER "${USER_ID}:${GROUP_ID}"
 
-RUN composer install --prefer-source --no-interaction
-RUN php bin/console cache:warmup --env=prod
+RUN composer install --no-dev --optimize-autoloader
+RUN APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
 
 CMD php-fpm -F
