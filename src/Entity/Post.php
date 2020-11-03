@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+
 /**
  * Publication
  */
@@ -22,6 +25,11 @@ class Post
      * @var string
      */
     private $slug;
+
+    /**
+     * @var DateTimeImmutable
+     */
+    private $publishedAt;
 
     /**
      * Content
@@ -46,10 +54,11 @@ class Post
      */
     public function __construct(Author $author, string $title, string $content)
     {
-        $this->title   = $title;
-        $this->content = htmlspecialchars($content, ENT_QUOTES);
-        $this->slug    = preg_replace('#\W#', '', $title);
-        $this->author  = $author;
+        $this->title       = $title;
+        $this->content     = htmlspecialchars($content, ENT_QUOTES);
+        $this->slug        = preg_replace('#\W#', '', $title);
+        $this->author      = $author;
+        $this->publishedAt = new DateTimeImmutable();
     }
 
     /**
@@ -100,5 +109,15 @@ class Post
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    /**
+     * Returns post publish datetime
+     *
+     * @return DateTimeInterface
+     */
+    public function getPublishedAt(): DateTimeInterface
+    {
+        return $this->publishedAt;
     }
 }
