@@ -19,7 +19,7 @@ class ConstraintViolationsView implements ViewInterface
      *
      * @return array
      */
-    public function getView($context): array
+    public function getView($context)
     {
         if (!$context instanceof ConstraintViolationListInterface) {
             return null;

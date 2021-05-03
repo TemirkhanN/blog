@@ -25,3 +25,7 @@ services:
   response.system_message:
     class: App\Service\Response\View\SystemMessageView
     tags: [{name: view, view: response.system_message}]
+
+  response.chunk_list:
+    class: App\View\ChunkView
+    tags: [{name: view, view: response.chunk}]

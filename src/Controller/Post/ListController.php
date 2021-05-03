@@ -48,6 +48,7 @@ class ListController
         $offset = $request->query->getInt('offset', 0);
         $posts  = $this->postListService->getPublishedPosts($offset, self::POSTS_PER_PAGE);
 
-        return $this->responseFactory->view($posts, 'post.list');
+        // TODO invalid representation form
+        return $this->responseFactory->view(['post.list', $posts, 0], 'response.chunk');
     }
 }
