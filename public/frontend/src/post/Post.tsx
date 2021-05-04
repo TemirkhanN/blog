@@ -9,7 +9,6 @@ type PostModel = {
 
 class Post extends React.Component<{match:{params: {slug: string}}}, { error: HttpError | null, isLoaded: boolean, post: PostModel | null }> {
     constructor(props: {match:{params: {slug: string}}}) {
-        console.log(props);
         super(props);
         this.state = {
             error: null,

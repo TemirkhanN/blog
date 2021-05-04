@@ -1,12 +1,6 @@
 import * as React from "react";
 import HttpError from "../basetypes/HttpError";
-import {
-    BrowserRouter as Router,
-    Link,
-    Route,
-    Switch
-} from "react-router-dom";
-import Post from "./Post";
+import {Link} from "react-router-dom";
 
 type PostPreview = {
     title: string,
@@ -63,10 +57,10 @@ class PostList extends React.Component<{}, { error: HttpError | null, isLoaded: 
             return <div>Unexpected error. Post collection is not defined...</div>;
         }
 
-        return <Router>
+        return (
             <div className="posts">
                 {(posts.items.map(post => (
-                    <div className="post">
+                    <div className="post" key={post.slug}>
                         <div className="post-title">
                             <Link to={"/posts/" + post.slug}>{post.title}</Link>
                         </div>
@@ -76,11 +70,7 @@ class PostList extends React.Component<{}, { error: HttpError | null, isLoaded: 
                     </div>
                 )))}
             </div>
-
-            <Switch>
-                <Route path="/posts/:slug" component={Post}/>
-            </Switch>
-        </Router>;
+        );
     }
 }
 
