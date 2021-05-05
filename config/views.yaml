@@ -11,12 +11,6 @@ services:
       $isFull: false
     tags: [{name: view, view: post.preview}]
 
-  blog.view.post_list:
-    class: Temirkhan\View\CollectionView
-    arguments:
-      $elementViewName: 'post.preview'
-    tags: [{name: view, view: post.list}]
-
   # Application layer
   validation.violation_list:
     class: App\View\ConstraintViolationsView
@@ -26,6 +20,6 @@ services:
     class: App\Service\Response\View\SystemMessageView
     tags: [{name: view, view: response.system_message}]
 
-  response.chunk_list:
-    class: App\View\ChunkView
-    tags: [{name: view, view: response.chunk}]
+  response.paginated_view:
+    class: App\View\PaginatedView
+    tags: [{name: view, view: response.paginated_collection}]

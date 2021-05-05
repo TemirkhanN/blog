@@ -6,6 +6,7 @@ namespace App\Controller\Post;
 
 use App\Service\Post\PostListService;
 use App\Service\Response\ResponseFactoryInterface;
+use App\Service\Response\ValueObject\CollectionChunk;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -26,29 +27,19 @@ class ListController
      */
     private $responseFactory;
 
-    /**
-     * Constructor
-     *
-     * @param PostListService          $postListService
-     * @param ResponseFactoryInterface $responseFactory
-     */
     public function __construct(PostListService $postListService, ResponseFactoryInterface $responseFactory)
     {
         $this->postListService = $postListService;
         $this->responseFactory = $responseFactory;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
     public function __invoke(Request $request): Response
     {
         $offset = $request->query->getInt('offset', 0);
         $posts  = $this->postListService->getPublishedPosts($offset, self::POSTS_PER_PAGE);
 
-        // TODO invalid representation form
-        return $this->responseFactory->view(['post.list', $posts, 0], 'response.chunk');
+        $context = new CollectionChunk(self::POSTS_PER_PAGE, $offset, 0, $posts);
+
+        return $this->responseFactory->view(['post.preview', $context], 'response.paginated_collection');
     }
 }

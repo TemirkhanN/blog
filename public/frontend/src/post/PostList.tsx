@@ -9,7 +9,12 @@ type PostPreview = {
 }
 
 type PostCollection = {
-    items: PostPreview[]
+    data: PostPreview[],
+    pagination: {
+        limit: number,
+        offset: number,
+        total: number
+    }
 }
 
 class PostList extends React.Component<{}, { error: HttpError | null, isLoaded: boolean, posts: PostCollection | null }> {
@@ -59,7 +64,7 @@ class PostList extends React.Component<{}, { error: HttpError | null, isLoaded: 
 
         return (
             <div className="posts">
-                {(posts.items.map(post => (
+                {(posts.data.map(post => (
                     <div className="post" key={post.slug}>
                         <div className="post-title">
                             <Link to={"/posts/" + post.slug}>{post.title}</Link>

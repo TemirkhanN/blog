@@ -36,14 +36,6 @@ class PostRepository implements PostRepositoryInterface
         $this->storage = $redis;
     }
 
-    /**
-     * Returns post collection
-     *
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return PostCollection
-     */
     public function getPosts(int $limit, int $offset): PostCollection
     {
         return new PostCollection(

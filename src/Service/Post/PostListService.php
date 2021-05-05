@@ -25,12 +25,6 @@ class PostListService
         $this->postRepository = $postRepository;
     }
 
-    /**
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return PostCollection
-     */
     public function getPublishedPosts(int $offset, int $limit): PostCollection
     {
         return $this->postRepository->getPosts($limit, $offset);

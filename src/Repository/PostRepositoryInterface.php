@@ -8,23 +8,9 @@ use App\Entity\PostCollection;
 
 interface PostRepositoryInterface
 {
-    /**
-     * @param int $limit
-     * @param int $offset
-     *
-     * @return PostCollection
-     */
     public function getPosts(int $limit, int $offset): PostCollection;
 
-    /**
-     * @param string $slug
-     *
-     * @return Post|null
-     */
     public function findOneBySlug(string $slug): ?Post;
 
-    /**
-     * @param Post $post
-     */
     public function save(Post $post): void;
 }
