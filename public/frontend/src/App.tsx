@@ -14,7 +14,7 @@ function App() {
                 <Route exact path='/' component={PostList}/>
             </Switch>
             <footer>
-                ©{process.env.REACT_AUTHOR_NAME}
+                ©{process.env.REACT_APP_AUTHOR_NAME}
             </footer>
         </div>
     );
