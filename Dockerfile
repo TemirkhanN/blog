@@ -1,4 +1,4 @@
-FROM php:7.3-fpm
+FROM php:7.4-fpm
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
@@ -20,7 +20,6 @@ RUN docker-php-ext-install \
     curl \
     bcmath \
     gettext \
-    mbstring \
     pdo_pgsql
 
 RUN pecl install -o -f redis \

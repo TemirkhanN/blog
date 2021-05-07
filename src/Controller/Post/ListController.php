@@ -12,20 +12,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ListController
 {
-    /**
-     * @const int
-     */
     private const POSTS_PER_PAGE = 10;
 
-    /**
-     * @var PostListService
-     */
-    private $postListService;
+    private PostListService $postListService;
 
-    /**
-     * @var ResponseFactoryInterface
-     */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
     public function __construct(PostListService $postListService, ResponseFactoryInterface $responseFactory)
     {

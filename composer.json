@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "php": "~7.3.0",
+        "php": "~7.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
@@ -26,8 +26,6 @@
         "symfony/yaml": "4.3.*",
         "temirkhan/dto-bundle": "^0.1.0",
         "temirkhan/view": "dev-master"
-    },
-    "require-dev": {
     },
     "config": {
         "preferred-install": {
