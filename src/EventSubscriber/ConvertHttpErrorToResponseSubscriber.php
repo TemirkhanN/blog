@@ -14,19 +14,12 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Temirkhan\View\ViewFactoryInterface;
 
-class ConvertHtppErrorToResponseSubscriber implements EventSubscriberInterface
+class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var ResponseFactoryInterface
-     */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(ResponseFactoryInterface $responseFactory, LoggerInterface $logger)
     {
@@ -47,7 +40,7 @@ class ConvertHtppErrorToResponseSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $error = $event->getThrowable();
+        $error = $event->getException();
 
         switch (true) {
             case $error instanceof NotFoundHttpException:
