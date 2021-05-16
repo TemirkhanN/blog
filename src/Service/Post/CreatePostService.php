@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Service\Post;
 
 use App\Dto\CreatePost;
-use App\Entity\Author;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 
@@ -31,16 +30,15 @@ class CreatePostService
     }
 
     /**
-     * @param Author     $author
      * @param CreatePost $data
      *
      * @return Post
      *
      * @throws \DomainException
      */
-    public function execute(Author $author, CreatePost $data): Post
+    public function execute(CreatePost $data): Post
     {
-        $post = new Post($author, $data->title, $data->content);
+        $post = new Post($data->title, $data->content);
         if ($this->repository->findOneBySlug($post->getSlug())) {
             throw new \DomainException(sprintf('Author already has post with very similar title'));
         }

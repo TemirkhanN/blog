@@ -4,43 +4,23 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Dto\CreatePost;
-use App\Entity\Author;
 use App\Service\Post\CreatePostService;
 use App\Service\Response\ResponseFactoryInterface;
+use DomainException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateController
 {
-    /**
-     * @var CreatePostService
-     */
-    private $postCreator;
+    private CreatePostService $postCreator;
 
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $security;
+    private AuthorizationCheckerInterface $security;
 
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
+    private ValidatorInterface $validator;
 
-    /**
-     * @var ResponseFactoryInterface
-     */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
-    /**
-     * Construct
-     *
-     * @param CreatePostService             $postCreator
-     * @param AuthorizationCheckerInterface $securityChecker
-     * @param ValidatorInterface            $validator
-     * @param ResponseFactoryInterface      $responseFactory
-     */
     public function __construct(
         CreatePostService $postCreator,
         AuthorizationCheckerInterface $securityChecker,
@@ -53,15 +33,9 @@ class CreateController
         $this->responseFactory = $responseFactory;
     }
 
-    /**
-     * @param Author     $author
-     * @param CreatePost $postData
-     *
-     * @return Response
-     */
-    public function __invoke(Author $author, CreatePost $postData): Response
+    public function __invoke(CreatePost $postData): Response
     {
-        if (!$this->security->isGranted('create_post', $author)) {
+        if (!$this->security->isGranted('create_post')) {
             return $this->responseFactory->forbidden("You're not allowed to create posts");
         }
 
@@ -71,8 +45,8 @@ class CreateController
         }
 
         try {
-            $post = $this->postCreator->execute($author, $postData);
-        } catch (\DomainException $e) {
+            $post = $this->postCreator->execute($postData);
+        } catch (DomainException $e) {
             return $this->responseFactory->badRequest($e->getMessage());
         }
 

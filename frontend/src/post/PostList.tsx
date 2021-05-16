@@ -1,30 +1,35 @@
 import * as React from "react";
-import HttpError from "../basetypes/HttpError"
+import HttpError from "../basetypes/HttpError";
+import PostPreview from "./PostPreview";
+import Preview from "./Type/Preview"
 
-type PostModel = {
-    slug: string,
-    title: string,
-    content: string
+type PostCollection = {
+    data: Preview[],
+    pagination: {
+        limit: number,
+        offset: number,
+        total: number
+    }
 }
 
-class Post extends React.Component<{match:{params: {slug: string}}}, { error: HttpError | null, isLoaded: boolean, post: PostModel | null }> {
-    constructor(props: {match:{params: {slug: string}}}) {
+class PostList extends React.Component<{}, { error: HttpError | null, isLoaded: boolean, posts: PostCollection | null }> {
+    constructor(props: {}) {
         super(props);
         this.state = {
             error: null,
             isLoaded: false,
-            post: null
+            posts: null
         };
     }
 
     componentDidMount() {
-        fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts/" + this.props.match.params.slug)
+        fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts")
             .then(res => res.json())
             .then(
-                (result: PostModel) => {
+                (result) => {
                     this.setState({
                         isLoaded: true,
-                        post: result
+                        posts: result
                     });
                 },
                 // Note: it's important to handle errors here
@@ -40,27 +45,26 @@ class Post extends React.Component<{match:{params: {slug: string}}}, { error: Ht
     }
 
     render() {
-        const {error, isLoaded, post} = this.state;
+        const {error, isLoaded, posts} = this.state;
+
         if (error) {
             return <div>Error: {error.message}</div>;
         } else if (!isLoaded) {
             return <div>Loading...</div>;
         }
 
-        // todo Do we really need to check this?
-        if (post === null) {
-            return <div>Runtime error...</div>;
+        if (posts === null) {
+            return <div>Unexpected error. Post collection is not defined...</div>;
         }
 
         return (
-            <div className="post">
-                <h1>{post.title}</h1>
-                <div className="content">
-                    {post.content}
-                </div>
+            <div className="posts">
+                {(posts.data.map(post => (
+                    <PostPreview post={post} key={post.slug}/>
+                )))}
             </div>
         );
     }
 }
 
-export default Post;
+export default PostList;

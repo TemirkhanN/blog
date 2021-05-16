@@ -29,8 +29,7 @@ class PostView implements ViewInterface
         $view = [
             'slug'        => $context->getSlug(),
             'title'       => $context->getTitle(),
-            'author'      => $context->getAuthor()->getName(),
-            'publishedAt' => $context->getPublishedAt()->format('Y-m-d H:i:s'),
+            'publishedAt' => $context->getPublishedAt()->format(\DateTimeInterface::ATOM),
         ];
 
         if ($this->isFull) {

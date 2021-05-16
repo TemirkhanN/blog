@@ -63,7 +63,7 @@ class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
                     'Internal error',
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
-                $this->logger->error('Unexpected error occured', ['exception' => $error]);
+                $this->logger->error('Unexpected error occurred', ['exception' => $error]);
                 break;
         }
 

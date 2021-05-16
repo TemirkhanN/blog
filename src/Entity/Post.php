@@ -12,110 +12,41 @@ use DateTimeInterface;
  */
 class Post
 {
-    /**
-     * Title
-     *
-     * @var string
-     */
-    private $title;
+    private string $title;
 
-    /**
-     * User-friendly URL post name
-     *
-     * @var string
-     */
-    private $slug;
+    private string $slug;
 
-    /**
-     * @var DateTimeImmutable
-     */
-    private $publishedAt;
+    private DateTimeImmutable $publishedAt;
 
-    /**
-     * Content
-     *
-     * @var string
-     */
-    private $content;
+    private string $content;
 
-    /**
-     * Author
-     *
-     * @var Author
-     */
-    private $author;
-
-    /**
-     * Constructor
-     *
-     * @param Author $author
-     * @param string $title
-     * @param string $content
-     */
-    public function __construct(Author $author, string $title, string $content)
+    public function __construct(string $title, string $content)
     {
         $this->title       = $title;
         $this->content     = $content;
-        $this->slug        = preg_replace('#\W#', '', $title);
-        $this->author      = $author;
         $this->publishedAt = new DateTimeImmutable();
+        $this->slug        = sprintf(
+            '%s_%s',
+            $this->getPublishedAt()->format('Y-m-d'),
+            (string)preg_replace('#\W#u', '-', $title)
+        );
     }
 
-    /**
-     * Returns identifier
-     *
-     * @return string
-     */
-    public function getId(): string
-    {
-        return sprintf('%s_%s', $this->author->getName(), $this->getSlug());
-    }
-
-    /**
-     * Returns title
-     *
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * Returns content
-     *
-     * @return string
-     */
     public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * Returns author
-     *
-     * @return Author
-     */
-    public function getAuthor(): Author
-    {
-        return $this->author;
-    }
-
-    /**
-     * Returns slug
-     *
-     * @return string
-     */
     public function getSlug(): string
     {
         return $this->slug;
     }
 
-    /**
-     * Returns post publish datetime
-     *
-     * @return DateTimeInterface
-     */
     public function getPublishedAt(): DateTimeInterface
     {
         return $this->publishedAt;

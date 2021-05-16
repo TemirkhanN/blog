@@ -7,10 +7,6 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    # Erm.. Token storage for authentication and etc. Must be replaced with repository
-    tokens_map:
-        Temirkhan: '%env(MY_VERY_SECRET_TOKEN)%'
-
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -42,11 +38,6 @@ services:
             -
                 persistent: 1
 
-    App\Resolver\AuthorResolver:
-        arguments:
-            $tokens: '%tokens_map%'
-        tags: [{name: controller.argument_value_resolver }]
-
     App\Security\TokenAuthenticator:
         arguments:
-            $tokens: '%tokens_map%'
+            $ownerToken: '%env(MY_VERY_SECRET_TOKEN)%'

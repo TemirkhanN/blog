@@ -15,18 +15,17 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
     /**
-     * @var array
+     * Authentication token for blog owner
+     *
+     * @var string
      */
-    private $tokens;
+    private string $ownerToken;
 
-    /**
-     * @var ResponseFactoryInterface
-     */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
-    public function __construct(array $tokens, ResponseFactoryInterface $responseFactory)
+    public function __construct(string $ownerToken, ResponseFactoryInterface $responseFactory)
     {
-        $this->tokens          = $tokens;
+        $this->ownerToken      = $ownerToken;
         $this->responseFactory = $responseFactory;
     }
 
@@ -53,10 +52,8 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 
     public function getUser($credentials, UserProviderInterface $userProvider)
     {
-        foreach ($this->tokens as $authorName => $token) {
-            if ($token === $credentials['token']) {
-                return new User($authorName, null);
-            }
+        if ($this->ownerToken === $credentials['token']) {
+            return new User('admin', null);
         }
 
         return null;

@@ -1,0 +1,17 @@
+App\Entity\Post:
+  type: entity
+  table: posts
+  id:
+    slug:
+      type: string
+      length: 255
+      generator:
+        strategy: NONE
+  fields:
+    title:
+      type: string
+      length: 200
+    content:
+      type: text
+    publishedAt:
+      type: datetime_immutable
