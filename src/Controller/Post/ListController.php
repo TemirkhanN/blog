@@ -27,7 +27,12 @@ class ListController
     public function __invoke(Request $request): Response
     {
         $offset = $request->query->getInt('offset', 0);
-        $posts  = $this->postListService->getPublishedPosts($offset, self::POSTS_PER_PAGE);
+        $tag    = $request->query->get('tag');
+        if ($tag !== null) {
+            $posts = $this->postListService->getPostsByTag($tag, $offset, self::POSTS_PER_PAGE);
+        } else {
+            $posts = $this->postListService->getPosts($offset, self::POSTS_PER_PAGE);
+        }
 
         $context = new CollectionChunk(self::POSTS_PER_PAGE, $offset, 0, $posts);
 

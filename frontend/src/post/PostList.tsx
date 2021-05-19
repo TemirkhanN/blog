@@ -12,8 +12,8 @@ type PostCollection = {
     }
 }
 
-class PostList extends React.Component<{}, { error: HttpError | null, isLoaded: boolean, posts: PostCollection | null }> {
-    constructor(props: {}) {
+class PostList extends React.Component<{ match: { params: { tag: string } } }, { error: HttpError | null, isLoaded: boolean, posts: PostCollection | null }> {
+    constructor(props: { match: { params: { tag: string } } }) {
         super(props);
         this.state = {
             error: null,
@@ -23,7 +23,50 @@ class PostList extends React.Component<{}, { error: HttpError | null, isLoaded: 
     }
 
     componentDidMount() {
-        fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts")
+        this.fetchPosts(this.props.match.params.tag);
+    }
+
+    componentDidUpdate(prevProps: Readonly<{ match: { params: { tag: string } } }>, prevState: Readonly<{ error: HttpError | null; isLoaded: boolean; posts: PostCollection | null }>, snapshot?: any) {
+        if (prevProps.match.params.tag === this.props.match.params.tag) {
+            return;
+        }
+
+        this.fetchPosts(this.props.match.params.tag);
+    }
+
+    render() {
+        const {error, isLoaded, posts} = this.state;
+
+        if (error) {
+            return <div>Error: {error.message}</div>;
+        } else if (!isLoaded) {
+            return (
+                <div className="d-flex justify-content-center">
+                    <div className="spinner-grow" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            );
+        }
+
+        if (posts === null) {
+            return <div>Unexpected error. Post collection is not defined...</div>;
+        }
+
+        return (
+            <div className="posts">
+                {(posts.data.map(post => (
+                    <PostPreview post={post} key={post.slug}/>
+                )))}
+            </div>
+        );
+    }
+
+    private fetchPosts(tag?: string) {
+        this.setState({isLoaded: false});
+
+        const tagFilter = tag ? "?tag=" + tag : '';
+        fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts" + tagFilter)
             .then(res => res.json())
             .then(
                 (result) => {
@@ -42,28 +85,6 @@ class PostList extends React.Component<{}, { error: HttpError | null, isLoaded: 
                     });
                 }
             )
-    }
-
-    render() {
-        const {error, isLoaded, posts} = this.state;
-
-        if (error) {
-            return <div>Error: {error.message}</div>;
-        } else if (!isLoaded) {
-            return <div>Loading...</div>;
-        }
-
-        if (posts === null) {
-            return <div>Unexpected error. Post collection is not defined...</div>;
-        }
-
-        return (
-            <div className="posts">
-                {(posts.data.map(post => (
-                    <PostPreview post={post} key={post.slug}/>
-                )))}
-            </div>
-        );
     }
 }
 

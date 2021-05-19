@@ -29,9 +29,9 @@ code {
   border-bottom: 1px dashed lightgray;
 }
 
-.post-preview .pub-date {
+.pub-date {
   color: gray;
-  margin:0;
+  margin:0 0 0 2px;
   font-size: 14px;
 }
 

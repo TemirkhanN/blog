@@ -25,9 +25,14 @@ class PostListService
         $this->postRepository = $postRepository;
     }
 
-    public function getPublishedPosts(int $offset, int $limit): PostCollection
+    public function getPosts(int $offset, int $limit): PostCollection
     {
         return $this->postRepository->getPosts($limit, $offset);
+    }
+
+    public function getPostsByTag(string $tag, int $offset, int $limit): PostCollection
+    {
+        return $this->postRepository->getPostsByTag($tag, $limit, $offset);
     }
 
     /**

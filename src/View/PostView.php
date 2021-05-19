@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\View;
 
 use App\Entity\Post;
+use App\Entity\Tag;
 use App\Service\TextFormatter;
 use Temirkhan\View\ViewInterface;
 
@@ -30,6 +31,7 @@ class PostView implements ViewInterface
             'slug'        => $context->getSlug(),
             'title'       => $context->getTitle(),
             'publishedAt' => $context->getPublishedAt()->format(\DateTimeInterface::ATOM),
+            'tags'        => array_map(static function (Tag $tag) {return (string)$tag;}, $context->getTags()),
         ];
 
         if ($this->isFull) {

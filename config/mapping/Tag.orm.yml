@@ -1,0 +1,9 @@
+App\Entity\Tag:
+  type: entity
+  table: tags
+  id:
+    name:
+      type: string
+      length: 50
+      generator:
+        strategy: NONE

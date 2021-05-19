@@ -15,3 +15,14 @@ App\Entity\Post:
       type: text
     publishedAt:
       type: datetime_immutable
+  manyToMany:
+    tags:
+      targetEntity: App\Entity\Tag
+      joinTable:
+        name: posts_tags
+        joinColumns:
+          post_id:
+            referencedColumnName: slug
+        inverseJoinColumns:
+          tag_id:
+            referencedColumnName: name

@@ -6,6 +6,8 @@ namespace App\Entity;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Publication
@@ -20,11 +22,15 @@ class Post
 
     private string $content;
 
+    /** @var Collection<Tag> */
+    private Collection $tags;
+
     public function __construct(string $title, string $content)
     {
         $this->title       = $title;
         $this->content     = $content;
         $this->publishedAt = new DateTimeImmutable();
+        $this->tags        = new ArrayCollection();
         $this->slug        = sprintf(
             '%s_%s',
             $this->getPublishedAt()->format('Y-m-d'),
@@ -50,5 +56,20 @@ class Post
     public function getPublishedAt(): DateTimeInterface
     {
         return $this->publishedAt;
+    }
+
+    public function addTag(Tag $tag): void
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+    }
+
+    /**
+     * @return Tag[]
+     */
+    public function getTags(): array
+    {
+        return $this->tags->toArray();
     }
 }

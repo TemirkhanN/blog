@@ -12,6 +12,7 @@ function App() {
             <main>
                 <Switch>
                     <Route path="/posts/:slug" component={Post}/>
+                    <Route path='/tags/:tag' component={PostList}/>
                     <Route exact path='/' component={PostList}/>
                 </Switch>
             </main>
