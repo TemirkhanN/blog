@@ -1,9 +1,11 @@
 build:
   docker:
-    web: Dockerfile
+    backend: Dockerfile
+    frontend: nginx:alpine
 run:
-  web: heroku-php-nginx -C ./.heroku/nginx.conf public/
+  frontend: -C ./docker/nginx.conf ./
+  backend: php-fpm -F
 release:
+  image: backend
   command:
-    - php app/console doctrine:migrations:migrate --no-interaction
-  image: worker
+    - php bin/console doctrine:migrations:migrate --no-interaction
