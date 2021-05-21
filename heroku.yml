@@ -1,7 +1,7 @@
 build:
   docker:
+    frontend: frontend/Dockerfile
     backend: Dockerfile
-    frontend: nginx:alpine
 run:
   frontend: -C ./docker/nginx.conf ./
   backend: php-fpm -F
