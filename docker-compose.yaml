@@ -3,7 +3,7 @@ services:
   frontend:
     build: ./frontend
     volumes:
-      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./frontend/docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./frontend/build:/app/public:ro
     ports:
       - "80:80"

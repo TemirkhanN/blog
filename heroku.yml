@@ -2,9 +2,6 @@ build:
   docker:
     frontend: frontend/Dockerfile
     backend: Dockerfile
-run:
-  frontend: -C ./docker/nginx.conf ./
-  backend: php-fpm -F
 release:
   image: backend
   command:
