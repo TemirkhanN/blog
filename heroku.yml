@@ -1,0 +1,9 @@
+build:
+  docker:
+    web: Dockerfile
+run:
+  web: heroku-php-nginx -C ./.heroku/nginx.conf public/
+release:
+  command:
+    - php app/console doctrine:migrations:migrate --no-interaction
+  image: worker
