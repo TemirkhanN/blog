@@ -4,10 +4,11 @@ import Preview from "./Type/Preview";
 import {Remarkable} from 'remarkable';
 import TagList from "./TagList";
 
+const markdownRenderer = new Remarkable();
+
 class PostPreview extends React.Component<{ post: Preview }, {}> {
     render() {
-        const md = new Remarkable();
-        const content = md.render(this.props.post.preview);
+        const content = markdownRenderer.render(this.props.post.preview);
 
         const publishedAt = (new Date(this.props.post.publishedAt)).toLocaleDateString(
             'en-gb',
