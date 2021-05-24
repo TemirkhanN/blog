@@ -1,5 +1,3 @@
-*/node_modules/
-*/build/
 **/.dockerignore
 **/.DS_Store
 **/.git/
@@ -10,10 +8,12 @@
 **/docker-compose.*.yml
 **/docker-compose.yaml
 **/docker-compose.yml
-**/Dockerfile
+**/Dockerfile*
 **/Thumbs.db
+**/docker
 .idea
 .editorconfig
 .env.*.local
 .env.local
 node_modules
+build

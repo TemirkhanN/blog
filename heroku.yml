@@ -1,8 +1,7 @@
 build:
   docker:
-    frontend: frontend/Dockerfile
-    backend: Dockerfile
+    web: Dockerfile.heroku
 release:
-  image: backend
+  image: web
   command:
     - php bin/console doctrine:migrations:migrate --no-interaction

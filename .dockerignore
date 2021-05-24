@@ -12,8 +12,9 @@
 **/docker-compose.*.yml
 **/docker-compose.yaml
 **/docker-compose.yml
-**/Dockerfile
+**/Dockerfile*
 **/Thumbs.db
+**/docker
 .idea
 .editorconfig
 .env.*.local
@@ -27,3 +28,5 @@ helm/
 public/bundles/
 var/
 vendor/
+frontend/node_modules
+frontend/build
