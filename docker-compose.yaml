@@ -3,8 +3,9 @@ services:
   frontend:
     build: ./frontend
     volumes:
-      - ./frontend/docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./frontend/build:/app/public:ro
+      - ./frontend/docker/nginx.conf:/etc/nginx/conf.d/default.conf
+    env_file:
+      - frontend/.env
     ports:
       - "80:80"
     networks:
