@@ -40,7 +40,7 @@ RUN chown -R www-data:www-data /app /var/www
 
 USER "${USER_ID}:${GROUP_ID}"
 
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --prefer-dist --no-progress --optimize-autoloader
 RUN APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
 
 CMD php-fpm -F
