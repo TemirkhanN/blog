@@ -6,9 +6,8 @@ build:
 
 .PHONY: up
 up:
-	make build-frontend
 	docker-compose up -d
-	docker-compose exec -u www-data backend php bin/console doctrine:migrations:migrate --no-interaction
+	make migrate
 
 .PHONY: bash
 bash:
@@ -22,6 +21,6 @@ down:
 ps:
 	docker-compose ps
 
-.PHONY: build-frontend
-build-frontend:
-	cd ./frontend && npm run build
+.PHONY: migrate
+migrate:
+	docker-compose exec -u www-data backend php bin/console doctrine:migrations:migrate --no-interaction
