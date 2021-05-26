@@ -3,7 +3,7 @@ services:
   frontend:
     image: nginx:alpine
     volumes:
-      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./frontend/docker/nginx.conf:/etc/nginx/templates/default.conf.template:ro
       - ./frontend/build:/app/public:ro
     ports:
       - "80:80"
