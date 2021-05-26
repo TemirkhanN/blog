@@ -5,9 +5,9 @@ services:
       context: ./frontend
       args:
         BACKEND_URL: ${REACT_APP_BACKEND_URL}
-    volumes:
-      - ./frontend/docker/nginx.conf:/etc/nginx/conf.d/default.conf
+        BLOG_DOMAIN: ${BLOG_DOMAIN_NAME}
     environment:
+      - BLOG_DOMAIN_NAME
       - REACT_APP_AUTHOR_NAME
       - REACT_APP_BACKEND_URL
       - REACT_APP_LINKEDIN_LINK
@@ -34,8 +34,6 @@ services:
       - DB_NAME
       - DB_VERSION
       - DB_DRIVER
-    volumes:
-      - ./:/app
     networks:
       - appnet
       - infranet
@@ -53,7 +51,7 @@ services:
     networks:
       - infranet
     volumes:
-      - ./var/pgdata:/var/lib/postgresql
+      - db-storage:/var/lib/postgresql
   cache:
     image: redis
     networks:
@@ -62,3 +60,6 @@ services:
 networks:
   infranet:
   appnet:
+
+volumes:
+  db-storage:

@@ -34,7 +34,7 @@ services:
     networks:
       - infranet
     volumes:
-      - ./var/pgdata:/var/lib/postgresql
+      - db-storage:/var/lib/postgresql
   cache:
     image: redis
     networks:
@@ -43,3 +43,6 @@ services:
 networks:
   infranet:
   appnet:
+
+volumes:
+  db-storage:
