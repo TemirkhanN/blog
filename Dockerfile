@@ -2,6 +2,8 @@ FROM php:7.4-fpm
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
+ARG APP_ENV=prod
+ENV APP_ENV=$APP_ENV
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \

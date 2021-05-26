@@ -1,5 +1,8 @@
 FROM nginx:alpine
 
+ARG BACKEND_URL=http://localhost
+ENV REACT_APP_BACKEND_URL=$BACKEND_URL
+
 RUN apk add --no-cache \
     npm
 
