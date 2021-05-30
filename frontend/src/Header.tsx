@@ -43,6 +43,7 @@ class Header extends React.Component {
                                 <li className="nav-item fs-4">
                                     <a
                                         target="_blank"
+                                        rel="noreferrer"
                                         className="nav-link"
                                         href={process.env.REACT_APP_GITHUB_LINK}>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -56,6 +57,7 @@ class Header extends React.Component {
                                 <li className="nav-item fs-4">
                                     <a
                                         target="_blank"
+                                        rel="noreferrer"
                                         className="nav-link"
                                         href={process.env.REACT_APP_LINKEDIN_LINK}
                                     >
