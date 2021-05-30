@@ -58,7 +58,9 @@ class Post extends React.Component<{ match: { params: { slug: string } } }, { er
                     </Alert>
                 </div>
             );
-        } else if (!isLoaded) {
+        }
+
+        if (!isLoaded) {
             return (
                 <div>
                     <Helmet>

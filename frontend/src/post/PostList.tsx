@@ -50,7 +50,9 @@ class PostList extends React.Component<{ match: { params: { tag: string } } }, {
                     </Alert>
                 </div>
             );
-        } else if (!isLoaded) {
+        }
+
+        if (!isLoaded) {
             return (
                 <>
                     <Helmet>
