@@ -2,6 +2,8 @@ import * as React from "react";
 import HttpError from "../basetypes/HttpError"
 import {Remarkable} from "remarkable";
 import TagList from "./TagList";
+import {Helmet} from "react-helmet";
+import {Alert, Spinner} from "react-bootstrap";
 
 type PostModel = {
     slug: string,
@@ -46,9 +48,25 @@ class Post extends React.Component<{ match: { params: { slug: string } } }, { er
     render() {
         const {error, isLoaded, post} = this.state;
         if (error) {
-            return <div>Error: {error.message}</div>;
+            return (
+                <div>
+                    <Helmet>
+                        <title>Error</title>
+                    </Helmet>
+                    <Alert variant="danger">
+                        Error: {error.message}
+                    </Alert>
+                </div>
+            );
         } else if (!isLoaded) {
-            return <div>Loading...</div>;
+            return (
+                <div>
+                    <Helmet>
+                        <title>...</title>
+                    </Helmet>
+                    <Spinner animation="grow" variant="success"/>
+                </div>
+            );
         }
 
         // todo Do we really need to check this?
@@ -70,6 +88,9 @@ class Post extends React.Component<{ match: { params: { slug: string } } }, { er
 
         return (
             <div className="post">
+                <Helmet>
+                    <title>{post.title}</title>
+                </Helmet>
                 <h1>{post.title}</h1>
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"

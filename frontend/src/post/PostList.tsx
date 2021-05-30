@@ -1,7 +1,9 @@
 import * as React from "react";
 import HttpError from "../basetypes/HttpError";
 import PostPreview from "./PostPreview";
+import {Helmet} from "react-helmet";
 import Preview from "./Type/Preview"
+import {Alert, Spinner} from "react-bootstrap";
 
 type PostCollection = {
     data: Preview[],
@@ -38,14 +40,24 @@ class PostList extends React.Component<{ match: { params: { tag: string } } }, {
         const {error, isLoaded, posts} = this.state;
 
         if (error) {
-            return <div>Error: {error.message}</div>;
+            return (
+                <div>
+                    <Helmet>
+                        <title>Error</title>
+                    </Helmet>
+                    <Alert variant="danger">
+                        Error: {error.message}
+                    </Alert>
+                </div>
+            );
         } else if (!isLoaded) {
             return (
-                <div className="d-flex justify-content-center">
-                    <div className="spinner-grow" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                </div>
+                <>
+                    <Helmet>
+                        <title>Blog posts</title>
+                    </Helmet>
+                    <Spinner animation="grow" variant="success"/>
+                </>
             );
         }
 
@@ -53,8 +65,15 @@ class PostList extends React.Component<{ match: { params: { tag: string } } }, {
             return <div>Unexpected error. Post collection is not defined...</div>;
         }
 
+        let title = 'Blog posts';
+        if (this.props.match.params.tag) {
+            title = 'Blog posts tagged ' + this.props.match.params.tag;
+        }
         return (
             <div className="posts">
+                <Helmet>
+                    <title>{title}</title>
+                </Helmet>
                 {(posts.data.map(post => (
                     <PostPreview post={post} key={post.slug}/>
                 )))}
