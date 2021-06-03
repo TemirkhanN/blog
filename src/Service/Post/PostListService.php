@@ -35,6 +35,15 @@ class PostListService
         return $this->postRepository->getPostsByTag($tag, $limit, $offset);
     }
 
+    public function countPosts(?string $withTag = null): int
+    {
+        if ($withTag === null) {
+            return $this->postRepository->countPosts();
+        }
+
+        return $this->postRepository->countPostsByTag($withTag);
+    }
+
     /**
      * @param string $slug
      *

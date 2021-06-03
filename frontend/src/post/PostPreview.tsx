@@ -22,7 +22,7 @@ class PostPreview extends React.Component<{ post: Preview }, {}> {
         return (
             <>
                 <div className="post-preview">
-                    <Link className="preview-link" to={"/posts/" + this.props.post.slug}>{this.props.post.title}</Link>
+                    <Link className="preview-link" to={"/blog/" + this.props.post.slug}>{this.props.post.title}</Link>
                     <div>
                         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor"
                              className="bi bi-calendar" viewBox="0 0 16 16">

@@ -61,7 +61,7 @@ main {
   margin: 0;
 }
 
-header .info-block {
+.info-block {
   font-size:60px;
   font-weight: bold;
 }

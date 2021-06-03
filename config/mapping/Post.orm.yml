@@ -26,3 +26,5 @@ App\Entity\Post:
         inverseJoinColumns:
           tag_id:
             referencedColumnName: name
+      cascade:
+        - persist

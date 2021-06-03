@@ -12,6 +12,10 @@ interface PostRepositoryInterface
 
     public function getPostsByTag(string $tag, int $limit, int $offset): PostCollection;
 
+    public function countPosts(): int;
+
+    public function countPostsByTag(string $tag): int;
+
     public function findOneBySlug(string $slug): ?Post;
 
     public function save(Post $post): void;

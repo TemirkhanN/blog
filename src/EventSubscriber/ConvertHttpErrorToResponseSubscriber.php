@@ -7,7 +7,6 @@ namespace App\EventSubscriber;
 use App\Service\Response\ResponseFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -59,12 +58,7 @@ class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
                 $response = $this->responseFactory->createResponse($error->getMessage(), $error->getStatusCode());
                 break;
             default:
-                $response = $this->responseFactory->createResponse(
-                    'Internal error',
-                    Response::HTTP_INTERNAL_SERVER_ERROR
-                );
-                $this->logger->error('Unexpected error occurred', ['exception' => $error]);
-                break;
+                return;
         }
 
         $event->setResponse($response);

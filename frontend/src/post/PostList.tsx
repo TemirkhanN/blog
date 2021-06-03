@@ -1,9 +1,11 @@
 import * as React from "react";
+import {Link, useParams, generatePath} from "react-router-dom";
 import HttpError from "../basetypes/HttpError";
 import PostPreview from "./PostPreview";
 import {Helmet} from "react-helmet";
 import Preview from "./Type/Preview"
 import {Alert, Spinner} from "react-bootstrap";
+import {useEffect, useState} from "react";
 
 type PostCollection = {
     data: Preview[],
@@ -14,99 +16,145 @@ type PostCollection = {
     }
 }
 
-class PostList extends React.Component<{ match: { params: { tag: string } } }, { error: HttpError | null, isLoaded: boolean, posts: PostCollection | null }> {
-    constructor(props: { match: { params: { tag: string } } }) {
-        super(props);
-        this.state = {
-            error: null,
-            isLoaded: false,
-            posts: null
-        };
-    }
+function PostList() {
+    const routerParams = useParams<{ tag: string | undefined, page: string }>();
 
-    componentDidMount() {
-        this.fetchPosts(this.props.match.params.tag);
-    }
+    const [error, setError] = useState<HttpError | null>();
+    const [postsCollection, setPosts] = useState<PostCollection | null>(null);
+    const [isLoading, setLoading] = useState(false);
+    const page = {
+        tag: (typeof routerParams.tag === 'string') ? routerParams.tag : null,
+        number: parseInt(routerParams.page) > 0 ? parseInt(routerParams.page) : 1,
+        itemsPerPage: 10
+    };
 
-    componentDidUpdate(prevProps: Readonly<{ match: { params: { tag: string } } }>, prevState: Readonly<{ error: HttpError | null; isLoaded: boolean; posts: PostCollection | null }>, snapshot?: any) {
-        if (prevProps.match.params.tag === this.props.match.params.tag) {
-            return;
+    const fetchPosts = () => {
+        setLoading(true);
+
+        let filter = [];
+        filter.push('limit=' + page.itemsPerPage);
+        filter.push('offset=' + page.itemsPerPage * (page.number - 1));
+
+        if (page.tag) {
+            filter.push('tag=' + page.tag);
         }
 
-        this.fetchPosts(this.props.match.params.tag);
-    }
-
-    render() {
-        const {error, isLoaded, posts} = this.state;
-
-        if (error) {
-            return (
-                <div>
-                    <Helmet>
-                        <title>Error</title>
-                    </Helmet>
-                    <Alert variant="danger">
-                        Error: {error.message}
-                    </Alert>
-                </div>
-            );
-        }
-
-        if (!isLoaded) {
-            return (
-                <>
-                    <Helmet>
-                        <title>Blog posts</title>
-                    </Helmet>
-                    <Spinner animation="grow" variant="success"/>
-                </>
-            );
-        }
-
-        if (posts === null) {
-            return <div>Unexpected error. Post collection is not defined...</div>;
-        }
-
-        let title = 'Blog posts';
-        if (this.props.match.params.tag) {
-            title = 'Blog posts tagged ' + this.props.match.params.tag;
-        }
-        return (
-            <div className="posts">
-                <Helmet>
-                    <title>{title}</title>
-                </Helmet>
-                {(posts.data.map(post => (
-                    <PostPreview post={post} key={post.slug}/>
-                )))}
-            </div>
-        );
-    }
-
-    private fetchPosts(tag?: string) {
-        this.setState({isLoaded: false});
-
-        const tagFilter = tag ? "?tag=" + tag : '';
-        fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts" + tagFilter)
+        fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts?" + filter.join('&'))
             .then(res => res.json())
             .then(
-                (result) => {
-                    this.setState({
-                        isLoaded: true,
-                        posts: result
-                    });
+                (res) => {
+                    // TODO not always posts because it does not check status code
+                    setPosts(res);
                 },
                 // Note: it's important to handle errors here
                 // instead of a catch() block so that we don't swallow
                 // exceptions from actual bugs in components.
                 (error) => {
-                    this.setState({
-                        isLoaded: true,
-                        error
-                    });
+                    setError(error);
                 }
             )
+            .then(() => setLoading(false));
     }
+
+    useEffect(() => {
+        fetchPosts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page.tag, page.number, page.itemsPerPage]);
+
+    const title = () => {
+        let title = 'Blog posts';
+        if (page.tag) {
+            title = 'Blog posts tagged ' + page.tag;
+        }
+
+        return (
+            <Helmet>
+                <title>{title}</title>
+            </Helmet>
+        );
+    }
+
+    const errorPage = (errorMessage: string) => {
+        return (
+            <div>
+                <Helmet>
+                    <title>Error</title>
+                </Helmet>
+                <Alert variant="danger">
+                    Error: {errorMessage}
+                </Alert>
+            </div>
+        );
+    }
+
+    const pagination = (paginationInfo: PostCollection["pagination"]) => {
+        const generateRoute = (pageNumber: number, tagName: string | null) => {
+            if (page.tag != null) {
+                return generatePath('/blog/tags/:tag/page/:page', {
+                    // @ts-ignore
+                    tag: tagName,
+                    page: pageNumber
+                });
+            }
+
+            return generatePath('/blog/page/:page', {page: pageNumber});
+        };
+
+        const newerPostsExists = page.number > 1;
+        const olderPostsExists = paginationInfo.total > paginationInfo.offset + page.itemsPerPage;
+
+        return (
+            <nav aria-label="pagination">
+                <ul className="pagination justify-content-center">
+                    {
+                        newerPostsExists &&
+                        <li className="page-item">
+                            <Link to={generateRoute(page.number - 1, page.tag)} className="page-link">
+                                Newer
+                            </Link>
+                        </li>
+                    }
+                    {
+                        olderPostsExists &&
+                        <li className="page-item">
+                            <Link to={generateRoute(page.number + 1, page.tag)} className="page-link">
+                                Older
+                            </Link>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        );
+    }
+
+    if (error) {
+        return errorPage(error.message);
+    }
+
+    if (isLoading) {
+        return (
+            <>
+                <Helmet>
+                    <title>Blog posts</title>
+                </Helmet>
+                <Spinner animation="grow" variant="success"/>
+            </>
+        );
+    }
+
+    if (postsCollection === null) {
+        return errorPage('Unexpected error. Post collection is not defined...');
+    }
+
+    return (
+        <div className="posts">
+            {title()}
+            {(postsCollection.data.map(post => (
+                <PostPreview post={post} key={post.slug}/>
+            )))}
+            {pagination(postsCollection.pagination)}
+        </div>
+    );
 }
 
 export default PostList;

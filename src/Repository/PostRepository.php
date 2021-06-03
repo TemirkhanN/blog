@@ -25,15 +25,22 @@ class PostRepository implements PostRepositoryInterface
 
     public function getPosts(int $limit, int $offset): PostCollection
     {
+        assert($limit > 0);
+        assert($offset >= 0);
+
         return new PostCollection(
             (function (int $limit, int $offset) {
-                yield from $this->registry->getRepository(Post::class)->findBy([], [], $limit, $offset);
+                yield from $this->registry->getRepository(Post::class)
+                                          ->findBy([], ['publishedAt' => 'DESC'], $limit, $offset);
             })($limit, $offset)
         );
     }
 
     public function getPostsByTag(string $tag, int $limit, int $offset): PostCollection
     {
+        assert($limit > 0);
+        assert($offset >= 0);
+
         return new PostCollection(
             (function (string $tag, int $limit, int $offset) {
                 return $this->createQueryBuilder()->select('p')
@@ -46,6 +53,24 @@ class PostRepository implements PostRepositoryInterface
                             ->getQuery()->getResult();
             })($tag, $limit, $offset)
         );
+    }
+
+    public function countPosts(): int
+    {
+        return $this->createQueryBuilder()
+            ->select('COUNT(p)')
+            ->from(Post::class, 'p')
+            ->getQuery()->getSingleScalarResult();
+    }
+
+    public function countPostsByTag(string $tag): int
+    {
+        return $this->createQueryBuilder()
+                    ->select('COUNT(p)')
+                    ->from(Post::class, 'p')
+                    ->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag')
+                    ->setParameters(['tag' => $tag])
+                    ->getQuery()->getSingleScalarResult();
     }
 
     /**

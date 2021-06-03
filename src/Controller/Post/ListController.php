@@ -27,14 +27,19 @@ class ListController
     public function __invoke(Request $request): Response
     {
         $offset = $request->query->getInt('offset', 0);
-        $tag    = $request->query->get('tag');
+        if ($offset < 0) {
+            return $this->responseFactory->badRequest('Offset can not be less than 0');
+        }
+
+        $tag = $request->query->get('tag');
         if ($tag !== null) {
             $posts = $this->postListService->getPostsByTag($tag, $offset, self::POSTS_PER_PAGE);
         } else {
             $posts = $this->postListService->getPosts($offset, self::POSTS_PER_PAGE);
         }
+        $ofTotalPosts = $this->postListService->countPosts($tag);
 
-        $context = new CollectionChunk(self::POSTS_PER_PAGE, $offset, 0, $posts);
+        $context = new CollectionChunk(self::POSTS_PER_PAGE, $offset, $ofTotalPosts, $posts);
 
         return $this->responseFactory->view(['post.preview', $context], 'response.paginated_collection');
     }
