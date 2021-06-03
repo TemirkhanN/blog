@@ -35,11 +35,11 @@ class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
 
     public function onKernelError(ExceptionEvent $event)
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMainRequest()) {
             return;
         }
 
-        $error = $event->getException();
+        $error = $event->getThrowable();
 
         switch (true) {
             case $error instanceof NotFoundHttpException:

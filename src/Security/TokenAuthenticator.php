@@ -5,17 +5,21 @@ namespace App\Security;
 
 use App\Service\Response\ResponseFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\User\User;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Core\Exception\TokenNotFoundException;
+use Symfony\Component\Security\Core\User\InMemoryUser;
+use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
+use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-class TokenAuthenticator extends AbstractGuardAuthenticator
+class TokenAuthenticator extends AbstractAuthenticator
 {
     /**
-     * Authentication token for blog owner
+     * Authentication token for the blog owner
      *
      * @var string
      */
@@ -29,12 +33,26 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         $this->responseFactory = $responseFactory;
     }
 
-    public function start(Request $request, AuthenticationException $authException = null)
+    public function authenticate(Request $request): PassportInterface
     {
-        return $this->responseFactory->createResponse('Unauthenticated', 401);
+        $token = $request->headers->get('Authorization');
+
+        if ($token === null) {
+            throw new TokenNotFoundException('No API token provided');
+        }
+
+        if ($this->ownerToken !== $token) {
+            throw new CustomUserMessageAuthenticationException('Invalid token');
+        }
+
+        return new SelfValidatingPassport(
+            new UserBadge('admin', function () {
+                return new InMemoryUser('admin', null);
+            })
+        );
     }
 
-    public function supports(Request $request)
+    public function supports(Request $request): ?bool
     {
         if ($request->headers->has('Authorization')) {
             return true;
@@ -43,43 +61,13 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
         return false;
     }
 
-    public function getCredentials(Request $request)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        return [
-            'token' => $request->headers->get('Authorization'),
-        ];
+        return $this->responseFactory->createResponse('Authentication failure: ' . $exception->getMessage(), 401);
     }
 
-    public function getUser($credentials, UserProviderInterface $userProvider)
-    {
-        if ($this->ownerToken === $credentials['token']) {
-            return new User('admin', null);
-        }
-
-        return null;
-    }
-
-    public function checkCredentials($credentials, UserInterface $user)
-    {
-        if (!isset($credentials['token'])) {
-            return false;
-        }
-
-        return true;
-    }
-
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
-    {
-        return $this->responseFactory->createResponse('Authentication failure', 401);
-    }
-
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         return null;
-    }
-
-    public function supportsRememberMe()
-    {
-        return false;
     }
 }

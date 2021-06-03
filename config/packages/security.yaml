@@ -1,4 +1,5 @@
 security:
+    enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         in_memory: { memory: null }
@@ -8,10 +9,8 @@ security:
             security: false
         main:
             stateless: true
-            anonymous: true
-            guard:
-                authenticators:
-                    - App\Security\TokenAuthenticator
+            custom_authenticators:
+                - App\Security\TokenAuthenticator
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
