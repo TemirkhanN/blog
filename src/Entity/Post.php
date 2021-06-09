@@ -20,14 +20,17 @@ class Post
 
     private DateTimeImmutable $publishedAt;
 
+    private string $preview;
+
     private string $content;
 
     /** @var Collection<Tag> */
     private Collection $tags;
 
-    public function __construct(string $title, string $content)
+    public function __construct(string $title, string $preview, string $content)
     {
         $this->title       = $title;
+        $this->preview     = $preview;
         $this->content     = $content;
         $this->publishedAt = new DateTimeImmutable();
         $this->tags        = new ArrayCollection();
@@ -46,6 +49,11 @@ class Post
     public function getContent(): string
     {
         return $this->content;
+    }
+
+    public function getPreview(): string
+    {
+        return $this->preview;
     }
 
     public function getSlug(): string

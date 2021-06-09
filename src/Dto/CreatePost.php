@@ -12,16 +12,17 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CreatePost extends DataTransferObject
 {
     /**
-     * @var string
-     *
      * @Assert\NotBlank()
      */
-    public $title;
+    public string $title;
 
     /**
-     * @var string
-     *
      * @Assert\NotBlank()
      */
-    public $content;
+    public string $preview;
+
+    /**
+     * @Assert\NotBlank()
+     */
+    public string $content;
 }

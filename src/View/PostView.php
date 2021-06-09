@@ -6,15 +6,11 @@ namespace App\View;
 
 use App\Entity\Post;
 use App\Entity\Tag;
-use App\Service\TextFormatter;
 use Temirkhan\View\ViewInterface;
 
 class PostView implements ViewInterface
 {
-    /**
-     * @var bool
-     */
-    private $isFull;
+    private bool $isFull;
 
     public function __construct(bool $isFull = true)
     {
@@ -37,7 +33,7 @@ class PostView implements ViewInterface
         if ($this->isFull) {
             $view['content'] = $context->getContent();
         } else {
-            $view['preview'] = TextFormatter::cutFirstSentences($context->getContent(), 4);
+            $view['preview'] = $context->getPreview();
         }
 
         return $view;

@@ -11,6 +11,8 @@ App\Entity\Post:
     title:
       type: string
       length: 200
+    preview:
+      type: text
     content:
       type: text
     publishedAt:
