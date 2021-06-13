@@ -124,6 +124,9 @@
     "ramsey/uuid": {
         "version": "3.8.0"
     },
+    "roave/security-advisories": {
+        "version": "dev-latest"
+    },
     "spatie/data-transfer-object": {
         "version": "1.13.3"
     },

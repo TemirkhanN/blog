@@ -32,6 +32,9 @@
         "temirkhan/dto-bundle": "^0.1.0",
         "temirkhan/view": "dev-master"
     },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest"
+    },
     "config": {
         "preferred-install": {
             "*": "dist"
