@@ -10,7 +10,7 @@ interface PostRepositoryInterface
 {
     public function getPosts(int $limit, int $offset): PostCollection;
 
-    public function getPostsByTag(string $tag, int $limit, int $offset): PostCollection;
+    public function findPostsByTag(string $tag, int $limit, int $offset): PostCollection;
 
     public function countPosts(): int;
 

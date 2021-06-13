@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Service\DateTime\DateTimeFactory;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -32,7 +33,8 @@ class Post
         $this->title       = $title;
         $this->preview     = $preview;
         $this->content     = $content;
-        $this->publishedAt = new DateTimeImmutable();
+        $format            = DateTimeInterface::ATOM;
+        $this->publishedAt = DateTimeImmutable::createFromFormat($format, DateTimeFactory::now()->format($format));
         $this->tags        = new ArrayCollection();
         $this->slug        = sprintf(
             '%s_%s',

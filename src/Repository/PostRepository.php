@@ -36,7 +36,7 @@ class PostRepository implements PostRepositoryInterface
         );
     }
 
-    public function getPostsByTag(string $tag, int $limit, int $offset): PostCollection
+    public function findPostsByTag(string $tag, int $limit, int $offset): PostCollection
     {
         assert($limit > 0);
         assert($offset >= 0);
@@ -57,39 +57,27 @@ class PostRepository implements PostRepositoryInterface
 
     public function countPosts(): int
     {
-        return $this->createQueryBuilder()
-            ->select('COUNT(p)')
-            ->from(Post::class, 'p')
-            ->getQuery()->getSingleScalarResult();
+        return (int)$this->createQueryBuilder()
+                         ->select('COUNT(p)')
+                         ->from(Post::class, 'p')
+                         ->getQuery()->getSingleScalarResult();
     }
 
     public function countPostsByTag(string $tag): int
     {
-        return $this->createQueryBuilder()
-                    ->select('COUNT(p)')
-                    ->from(Post::class, 'p')
-                    ->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag')
-                    ->setParameters(['tag' => $tag])
-                    ->getQuery()->getSingleScalarResult();
+        return (int)$this->createQueryBuilder()
+                         ->select('COUNT(p)')
+                         ->from(Post::class, 'p')
+                         ->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag')
+                         ->setParameters(['tag' => $tag])
+                         ->getQuery()->getSingleScalarResult();
     }
 
-    /**
-     * Finds post by slug
-     *
-     * @param string $slug
-     *
-     * @return Post|null
-     */
     public function findOneBySlug(string $slug): ?Post
     {
         return $this->registry->getRepository(Post::class)->findOneBy(['slug' => $slug]);
     }
 
-    /**
-     * Saves post in repository
-     *
-     * @param Post $post
-     */
     public function save(Post $post): void
     {
         $em = $this->registry->getManagerForClass(Post::class);

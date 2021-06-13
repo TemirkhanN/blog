@@ -7,23 +7,10 @@ use App\Dto\CreatePost;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 
-/**
- * Post creation service
- */
 class CreatePostService
 {
-    /**
-     * Post repository
-     *
-     * @var PostRepositoryInterface
-     */
-    private $repository;
+    private PostRepositoryInterface $repository;
 
-    /**
-     * Constructor
-     *
-     * @param PostRepositoryInterface $postRepository
-     */
     public function __construct(PostRepositoryInterface $postRepository)
     {
         $this->repository = $postRepository;
@@ -40,7 +27,7 @@ class CreatePostService
     {
         $post = new Post($data->title, $data->preview, $data->content);
         if ($this->repository->findOneBySlug($post->getSlug())) {
-            throw new \DomainException(sprintf('Author already has post with very similar title'));
+            throw new \DomainException('There already exists the post with similar title');
         }
 
         $this->repository->save($post);

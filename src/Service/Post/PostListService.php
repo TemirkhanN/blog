@@ -10,16 +10,8 @@ use App\Repository\PostRepositoryInterface;
 
 class PostListService
 {
-    /**
-     * @var PostRepositoryInterface
-     */
-    private $postRepository;
+    private PostRepositoryInterface $postRepository;
 
-    /**
-     * Constructor
-     *
-     * @param PostRepositoryInterface $postRepository
-     */
     public function __construct(PostRepositoryInterface $postRepository)
     {
         $this->postRepository = $postRepository;
@@ -32,7 +24,7 @@ class PostListService
 
     public function getPostsByTag(string $tag, int $offset, int $limit): PostCollection
     {
-        return $this->postRepository->getPostsByTag($tag, $limit, $offset);
+        return $this->postRepository->findPostsByTag($tag, $limit, $offset);
     }
 
     public function countPosts(?string $withTag = null): int
@@ -44,11 +36,6 @@ class PostListService
         return $this->postRepository->countPostsByTag($withTag);
     }
 
-    /**
-     * @param string $slug
-     *
-     * @return Post|null
-     */
     public function getPostBySlug(string $slug): ?Post
     {
         return $this->postRepository->findOneBySlug($slug);
