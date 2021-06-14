@@ -18,6 +18,13 @@ class CreatePostVoter implements VoterInterface
      */
     private const ACTION_CREATE_POST = 'create_post';
 
+    /**
+     * @param TokenInterface $token
+     * @param mixed          $subject
+     * @param string[]       $attributes
+     *
+     * @return int
+     */
     public function vote(TokenInterface $token, $subject, array $attributes): int
     {
         if ($attributes !== [self::ACTION_CREATE_POST]) {

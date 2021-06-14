@@ -4,33 +4,28 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use Iterator;
 use IteratorAggregate;
+use Traversable;
 
-abstract class AbstractCollection implements IteratorAggregate
+/**
+ * @template   T
+ * @implements IteratorAggregate<T>
+ */
+class Collection implements IteratorAggregate
 {
-    /**
-     * @var iterable
-     */
+    /** @var iterable<T> */
     private $items;
 
+    /** @param iterable<T> $items */
     final public function __construct(iterable $items)
     {
         $this->items = $items;
     }
 
     /**
-     * @return Iterator
+     * @return Traversable<T>
      */
     final public function getIterator()
-    {
-        yield from $this->getItems();
-    }
-
-    /**
-     * @return iterable
-     */
-    final public function getItems(): iterable
     {
         yield from $this->items;
     }

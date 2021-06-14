@@ -32,8 +32,8 @@ interface ResponseBuilderInterface
     /**
      * Adds header info
      *
-     * @param string $name
-     * @param array  $info
+     * @param string   $name
+     * @param string[] $info
      *
      * @return ResponseBuilderInterface
      */
@@ -42,7 +42,7 @@ interface ResponseBuilderInterface
     /**
      * Adds multiple headers
      *
-     * @param array $headers
+     * @param array<string, string[]> $headers
      *
      * @return ResponseBuilderInterface
      */

@@ -9,6 +9,18 @@ use Temirkhan\View\AbstractAggregateView;
 
 class PaginatedView extends AbstractAggregateView
 {
+    /**
+     * @param mixed $context
+     *
+     * @return null|array{
+     *  data: mixed,
+     *  pagination: array{
+     *      limit: int,
+     *      offset: int,
+     *      total: int
+     *  }
+     * }
+     */
     public function getView($context)
     {
         if (!$context[1] instanceof CollectionChunk) {
@@ -28,6 +40,15 @@ class PaginatedView extends AbstractAggregateView
         ];
     }
 
+    /**
+     * @param CollectionChunk<object> $context
+     *
+     * @return array{
+     *  limit: int,
+     *  offset: int,
+     *  total: int
+     * }
+     */
     private function pagination(CollectionChunk $context): array
     {
         return [

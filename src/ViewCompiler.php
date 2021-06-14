@@ -11,6 +11,11 @@ use Temirkhan\View\ViewFactory;
 
 class ViewCompiler implements CompilerPassInterface
 {
+    /**
+     * @param ContainerBuilder $container
+     *
+     * @return void
+     */
     public function process(ContainerBuilder $container)
     {
         $viewTaggedServiceIds = $container->findTaggedServiceIds('view');

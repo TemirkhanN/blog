@@ -18,7 +18,7 @@ class ConstraintViolationsView implements ViewInterface
      *
      * @param mixed $context
      *
-     * @return array
+     * @return null|array<string, string>
      */
     public function getView($context)
     {
@@ -27,9 +27,9 @@ class ConstraintViolationsView implements ViewInterface
         }
 
         $view = [];
-        /* @var ConstraintViolationInterface $violation */
+        /** @var ConstraintViolationInterface $violation */
         foreach ($context as $violation) {
-            $view[$violation->getPropertyPath()] = $violation->getMessage();
+            $view[(string) $violation->getPropertyPath()] = (string) $violation->getMessage();
         }
 
         return $view;

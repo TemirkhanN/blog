@@ -8,10 +8,12 @@ use App\Dto\CreatePost;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 use DomainException;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class CreatePostServiceTest extends TestCase
 {
+    /** @var PostRepositoryInterface<Post>&MockObject */
     private PostRepositoryInterface $postRepository;
 
     private CreatePostService $service;

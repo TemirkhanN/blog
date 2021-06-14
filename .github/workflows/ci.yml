@@ -12,4 +12,5 @@ jobs:
           php-version: '7.4'
       - run: composer install --no-interaction
       - run: ./vendor/bin/phpcs
+      - run: ./vendor/bin/phpstan
       - run: ./vendor/bin/phpunit

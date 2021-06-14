@@ -15,6 +15,13 @@ class ViewPostVoter implements VoterInterface
      */
     private const ACTION_VIEW_POST = 'view_post';
 
+    /**
+     * @param TokenInterface $token
+     * @param mixed          $subject
+     * @param string[]       $attributes
+     *
+     * @return int
+     */
     public function vote(TokenInterface $token, $subject, array $attributes)
     {
         if ($attributes !== [self::ACTION_VIEW_POST]) {

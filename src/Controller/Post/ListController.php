@@ -31,8 +31,8 @@ class ListController
             return $this->responseFactory->badRequest('Offset can not be less than 0');
         }
 
-        $tag = $request->query->get('tag');
-        if ($tag !== null) {
+        $tag = $request->query->getAlnum('tag');
+        if ($tag !== '') {
             $posts = $this->postListService->getPostsByTag($tag, $offset, self::POSTS_PER_PAGE);
         } else {
             $posts = $this->postListService->getPosts($offset, self::POSTS_PER_PAGE);

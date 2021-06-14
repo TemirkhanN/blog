@@ -14,9 +14,9 @@ interface ResponseFactoryInterface
     /**
      * Creates response
      *
-     * @param string $content
-     * @param int    $statusCode
-     * @param array  $headers
+     * @param string                  $content
+     * @param int                     $statusCode
+     * @param array<string, string[]> $headers
      *
      * @return Response
      */

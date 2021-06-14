@@ -17,14 +17,29 @@
     <rule ref="Squiz.Commenting.FunctionComment.Missing">
             <severity>0</severity>
     </rule>
+    <rule ref="Squiz.Commenting.FunctionComment.IncorrectTypeHint">
+            <severity>0</severity>
+    </rule>
     <rule ref="Squiz.Commenting.VariableComment.Missing">
             <severity>0</severity>
     </rule>
     <rule ref="Squiz.Commenting.BlockComment.SingleLine">
             <severity>0</severity>
     </rule>
+    <rule ref="Squiz.Commenting.BlockComment.WrongStart">
+            <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.Commenting.InlineComment.DocBlock">
+            <severity>0</severity>
+    </rule>
 
     <rule ref="Generic.Commenting.DocComment.MissingShort">
+            <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Commenting.DocComment.ContentAfterOpen">
+            <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Commenting.DocComment.ContentBeforeClose">
             <severity>0</severity>
     </rule>
 

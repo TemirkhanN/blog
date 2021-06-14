@@ -4,14 +4,30 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Collection;
 use App\Entity\Post;
-use App\Entity\PostCollection;
 
+/**
+ * @template T of Post
+ */
 interface PostRepositoryInterface
 {
-    public function getPosts(int $limit, int $offset): PostCollection;
+    /**
+     * @param int $limit
+     * @param int $offset
+     *
+     * @return Collection<T>
+     */
+    public function getPosts(int $limit, int $offset): Collection;
 
-    public function findPostsByTag(string $tag, int $limit, int $offset): PostCollection;
+    /**
+     * @param string $tag
+     * @param int    $limit
+     * @param int    $offset
+     *
+     * @return Collection<T>
+     */
+    public function findPostsByTag(string $tag, int $limit, int $offset): Collection;
 
     public function countPosts(): int;
 

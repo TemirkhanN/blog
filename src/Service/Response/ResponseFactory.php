@@ -43,9 +43,9 @@ class ResponseFactory implements ResponseFactoryInterface
     /**
      * Creates response
      *
-     * @param mixed $content
-     * @param int   $statusCode
-     * @param array $headers
+     * @param mixed                   $content
+     * @param int                     $statusCode
+     * @param array<string, string[]> $headers
      *
      * @return Response
      */

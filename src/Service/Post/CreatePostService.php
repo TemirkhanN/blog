@@ -10,8 +10,10 @@ use App\Repository\PostRepositoryInterface;
 
 class CreatePostService
 {
+    /** @var PostRepositoryInterface<Post> */
     private PostRepositoryInterface $repository;
 
+    /** @param PostRepositoryInterface<Post> $postRepository */
     public function __construct(PostRepositoryInterface $postRepository)
     {
         $this->repository = $postRepository;

@@ -25,18 +25,20 @@ class Post
 
     private string $content;
 
-    /**
-     * @var Collection<Tag>
-     */
+    /** @var Collection<int, Tag> */
     private Collection $tags;
 
     public function __construct(string $title, string $preview, string $content)
     {
-        $this->title       = $title;
-        $this->preview     = $preview;
-        $this->content     = $content;
-        $format            = DateTimeInterface::ATOM;
-        $this->publishedAt = DateTimeImmutable::createFromFormat($format, DateTimeFactory::now()->format($format));
+        $this->title   = $title;
+        $this->preview = $preview;
+        $this->content = $content;
+        $format        = DateTimeInterface::ATOM;
+        $publishedAt   = DateTimeImmutable::createFromFormat($format, DateTimeFactory::now()->format($format));
+        if ($publishedAt === false) {
+            throw new \RuntimeException('Could not create immutable datetime');
+        }
+        $this->publishedAt = $publishedAt;
         $this->tags        = new ArrayCollection();
         $this->slug        = sprintf(
             '%s_%s',

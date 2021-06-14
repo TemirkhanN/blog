@@ -16,9 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class PostRepositoryTest extends KernelTestCase
 {
-    /**
-     * @var array<ClassMetadata>
-     */
+    /** @var array<ClassMetadata<object>> */
     private static array $cachedMetadata = [];
 
     private EntityManager $entityManager;
@@ -31,9 +29,9 @@ class PostRepositoryTest extends KernelTestCase
 
         self::bootKernel();
 
-        /* @var ManagerRegistry $doctrine */
+        /** @var ManagerRegistry $doctrine */
         $doctrine = self::$kernel->getContainer()->get('doctrine');
-        /* @var EntityManager $defaultEm */
+        /** @var EntityManager $defaultEm */
         $defaultEm           = $doctrine->getManager();
         $this->entityManager = $defaultEm;
         $schema              = new SchemaTool($this->entityManager);
@@ -82,6 +80,7 @@ class PostRepositoryTest extends KernelTestCase
         self::assertEquals($slug, $post->getSlug());
     }
 
+    /** @return iterable<string[]> */
     public function postSlugProvider(): iterable
     {
         $today = date('Y-m-d');
@@ -113,10 +112,10 @@ class PostRepositoryTest extends KernelTestCase
     }
 
     /**
-     * @param string $tag
-     * @param int    $limit
-     * @param int    $offset
-     * @param array  $expectedTitles
+     * @param string   $tag
+     * @param int      $limit
+     * @param int      $offset
+     * @param string[] $expectedTitles
      *
      * @dataProvider taggedPostsProvider
      */
@@ -132,6 +131,7 @@ class PostRepositoryTest extends KernelTestCase
         self::assertSame($expectedTitles, $existingTitles);
     }
 
+    /** @return iterable<array{string, int, int, string[]}> */
     public function taggedPostsProvider(): iterable
     {
         // Last 2
@@ -177,9 +177,9 @@ class PostRepositoryTest extends KernelTestCase
     }
 
     /**
-     * @param int   $limit
-     * @param int   $offset
-     * @param array $expectedTitles
+     * @param int      $limit
+     * @param int      $offset
+     * @param string[] $expectedTitles
      *
      * @dataProvider postsProvider
      */
@@ -195,6 +195,7 @@ class PostRepositoryTest extends KernelTestCase
         self::assertSame($expectedTitles, $existingTitles);
     }
 
+    /** @return iterable<array{int, int, string[]}> */
     public function postsProvider(): iterable
     {
         yield [

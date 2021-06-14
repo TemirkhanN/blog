@@ -78,8 +78,8 @@ class JsonResponseBuilder implements ResponseBuilderInterface
     /**
      * Adds response header info
      *
-     * @param string $name
-     * @param array  $info
+     * @param string   $name
+     * @param string[] $info
      *
      * @return ResponseBuilderInterface
      */
@@ -93,7 +93,7 @@ class JsonResponseBuilder implements ResponseBuilderInterface
     /**
      * Adds multiple headers
      *
-     * @param array $headers
+     * @param array<string, string[]> $headers
      *
      * @return ResponseBuilderInterface
      */

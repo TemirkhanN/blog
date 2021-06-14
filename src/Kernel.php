@@ -51,6 +51,11 @@ class Kernel extends BaseKernel
         $routes->import($confDir . '/{routes}' . self::CONFIG_EXTS, '/', 'glob');
     }
 
+    /**
+     * @param ContainerBuilder $container
+     *
+     * @return void
+     */
     protected function build(ContainerBuilder $container)
     {
         parent::build($container);

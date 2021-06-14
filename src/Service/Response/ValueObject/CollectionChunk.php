@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Response\ValueObject;
 
+/**
+ * @template T
+ */
 class CollectionChunk
 {
     public int $limit;
@@ -12,8 +15,17 @@ class CollectionChunk
 
     public int $ofTotalAmount;
 
+    /**
+     * @var iterable<T>
+     */
     public iterable $chunk;
 
+    /**
+     * @param int         $limit
+     * @param int         $offset
+     * @param int         $ofTotalAmount
+     * @param iterable<T> $chunk
+     */
     public function __construct(int $limit, int $offset, int $ofTotalAmount, iterable $chunk)
     {
         $this->limit         = $limit;

@@ -17,6 +17,18 @@ class PostView implements ViewInterface
         $this->isFull = $isFull;
     }
 
+    /**
+     * @param mixed $context
+     *
+     * @return null|array{
+     *  slug: string,
+     *  title: string,
+     *  preview: string,
+     *  content: ?string,
+     *  publishedAt: string,
+     *  tags: string[]
+     * }
+     */
     public function getView($context)
     {
         if (!$context instanceof Post) {
@@ -32,10 +44,10 @@ class PostView implements ViewInterface
             }, $context->getTags()),
         ];
 
+        $view['preview'] = $context->getPreview();
+        $view['content'] = null;
         if ($this->isFull) {
             $view['content'] = $context->getContent();
-        } else {
-            $view['preview'] = $context->getPreview();
         }
 
         return $view;

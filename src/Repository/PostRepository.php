@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Collection;
 use App\Entity\Post;
-use App\Entity\PostCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -14,6 +14,8 @@ use RuntimeException;
 
 /**
  * Post repository
+ *
+ * @implements PostRepositoryInterface<Post>
  */
 class PostRepository implements PostRepositoryInterface
 {
@@ -24,12 +26,12 @@ class PostRepository implements PostRepositoryInterface
         $this->registry = $registry;
     }
 
-    public function getPosts(int $limit, int $offset): PostCollection
+    public function getPosts(int $limit, int $offset): Collection
     {
         assert($limit > 0);
         assert($offset >= 0);
 
-        return new PostCollection(
+        return new Collection(
             (function (int $limit, int $offset) {
                 yield from $this->registry->getRepository(Post::class)
                                           ->findBy([], ['publishedAt' => 'DESC'], $limit, $offset);
@@ -37,12 +39,12 @@ class PostRepository implements PostRepositoryInterface
         );
     }
 
-    public function findPostsByTag(string $tag, int $limit, int $offset): PostCollection
+    public function findPostsByTag(string $tag, int $limit, int $offset): Collection
     {
         assert($limit > 0);
         assert($offset >= 0);
 
-        return new PostCollection(
+        return new Collection(
             (function (string $tag, int $limit, int $offset) {
                 return $this->createQueryBuilder()->select('p')
                             ->from(Post::class, 'p')
@@ -92,7 +94,7 @@ class PostRepository implements PostRepositoryInterface
 
     private function createQueryBuilder(): QueryBuilder
     {
-        /* @var EntityManager $em */
+        /** @var EntityManager $em */
         $em = $this->registry->getManager();
 
         return $em->createQueryBuilder();

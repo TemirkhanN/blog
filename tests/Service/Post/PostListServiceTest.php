@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace App\Service\Post;
 
 use App\Entity\Post;
-use App\Entity\PostCollection;
+use App\Entity\Collection;
 use App\Repository\PostRepositoryInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class PostListServiceTest extends TestCase
 {
+    /** @var PostRepositoryInterface<Post>&MockObject */
     private PostRepositoryInterface $postRepository;
 
     private PostListService $postListService;
@@ -66,7 +68,7 @@ class PostListServiceTest extends TestCase
             ->expects(self::once())
             ->method('findPostsByTag')
             ->with(self::equalTo($tag), self::equalTo($limit), self::equalTo($offset))
-            ->willReturn($posts = $this->createMock(PostCollection::class));
+            ->willReturn($posts = $this->createMock(Collection::class));
 
         $result = $this->postListService->getPostsByTag($tag, $offset, $limit);
 
@@ -81,7 +83,7 @@ class PostListServiceTest extends TestCase
             ->expects(self::once())
             ->method('getPosts')
             ->with(self::equalTo($limit), self::equalTo($offset))
-            ->willReturn($posts = $this->createMock(PostCollection::class));
+            ->willReturn($posts = $this->createMock(Collection::class));
 
         $result = $this->postListService->getPosts($offset, $limit);
 

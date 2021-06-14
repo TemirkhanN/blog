@@ -17,7 +17,10 @@ class SystemMessageView implements ViewInterface
      *
      * @param mixed $context
      *
-     * @return array|null
+     * @return null|array{
+     *  code: int,
+     *  message: string
+     * }
      */
     public function getView($context)
     {

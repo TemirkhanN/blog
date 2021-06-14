@@ -20,18 +20,18 @@ class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
 
     private LoggerInterface $logger;
 
-    public function __construct(ResponseFactoryInterface $responseFactory, LoggerInterface $logger)
+    public function __construct(ResponseFactoryInterface $responseFactory)
     {
         $this->responseFactory = $responseFactory;
-        $this->logger          = $logger;
     }
 
+    /** @return array<class-string, string> */
     public static function getSubscribedEvents()
     {
         return [ExceptionEvent::class => 'onKernelError'];
     }
 
-    public function onKernelError(ExceptionEvent $event)
+    public function onKernelError(ExceptionEvent $event): void
     {
         if (!$event->isMainRequest()) {
             return;
