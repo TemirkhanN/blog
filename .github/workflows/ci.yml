@@ -4,14 +4,10 @@ on: [ push ]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v2
-      - name: Install dependencies
-        uses: php-actions/composer@v6
-        with:
-          php_version: 7.4
-          php_extensions: redis
+      - run: composer install --no-interaction --prefer-dist --require-dev
       - run: ./vendor/bin/phpcs
       - run: ./vendor/bin/phpunit
