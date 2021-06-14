@@ -8,6 +8,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - run: composer install --no-interaction --prefer-dist --require-dev
+      - run: composer install --no-interaction --dev
       - run: ./vendor/bin/phpcs
       - run: ./vendor/bin/phpunit
