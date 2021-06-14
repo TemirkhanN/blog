@@ -12,7 +12,7 @@ class Header extends React.Component {
                           to="/">
                         <img src={logo} alt="Much wow! Let's go home"/>
                     </Link>
-                    <span>{process.env.REACT_APP_AUTHOR_NAME}</span>
+                    <span>Temirkhan</span>
                 </div>
                 <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
                     <div className="container-fluid">
