@@ -27,7 +27,9 @@ class PostView implements ViewInterface
             'slug'        => $context->getSlug(),
             'title'       => $context->getTitle(),
             'publishedAt' => $context->getPublishedAt()->format(\DateTimeInterface::ATOM),
-            'tags'        => array_map(static function (Tag $tag) {return (string)$tag;}, $context->getTags()),
+            'tags'        => array_map(static function (Tag $tag) {
+                return (string) $tag;
+            }, $context->getTags()),
         ];
 
         if ($this->isFull) {

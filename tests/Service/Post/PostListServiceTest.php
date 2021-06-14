@@ -19,7 +19,7 @@ class PostListServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->postRepository = $this->createMock(PostRepositoryInterface::class);
+        $this->postRepository  = $this->createMock(PostRepositoryInterface::class);
         $this->postListService = new PostListService($this->postRepository);
     }
 
@@ -59,9 +59,9 @@ class PostListServiceTest extends TestCase
 
     public function testGetPostsByTag(): void
     {
-        $tag = 'SomeTag';
+        $tag    = 'SomeTag';
         $offset = 1;
-        $limit = 2;
+        $limit  = 2;
         $this->postRepository
             ->expects(self::once())
             ->method('findPostsByTag')
@@ -76,7 +76,7 @@ class PostListServiceTest extends TestCase
     public function testGetPosts(): void
     {
         $offset = 1;
-        $limit = 2;
+        $limit  = 2;
         $this->postRepository
             ->expects(self::once())
             ->method('getPosts')

@@ -32,7 +32,7 @@ class CreatePostServiceTest extends TestCase
             'content' => 'Some content',
         ]);
 
-        $expectedSlug = date('Y-m-d') .'_Some-title';
+        $expectedSlug = date('Y-m-d') . '_Some-title';
         $this->postRepository
             ->expects(self::once())
             ->method('findOneBySlug')
@@ -53,7 +53,7 @@ class CreatePostServiceTest extends TestCase
             'content' => 'Some content',
         ]);
 
-        $expectedSlug = date('Y-m-d') .'_Some-title';
+        $expectedSlug = date('Y-m-d') . '_Some-title';
         $this->postRepository
             ->expects(self::once())
             ->method('findOneBySlug')

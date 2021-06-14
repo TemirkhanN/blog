@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\View;
@@ -26,9 +27,7 @@ class ConstraintViolationsView implements ViewInterface
         }
 
         $view = [];
-        /**
-         * @var ConstraintViolationInterface $violation
-         */
+        /* @var ConstraintViolationInterface $violation */
         foreach ($context as $violation) {
             $view[$violation->getPropertyPath()] = $violation->getMessage();
         }

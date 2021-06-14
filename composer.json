@@ -33,6 +33,7 @@
         "temirkhan/view": "dev-master"
     },
     "require-dev": {
+        "free2er/coding-standard": "^1.1",
         "phpunit/phpunit": "^9.5",
         "roave/security-advisories": "dev-latest"
     },
@@ -77,7 +78,7 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "5.3.*"
         }
     }

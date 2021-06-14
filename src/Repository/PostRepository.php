@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Repository;
@@ -57,7 +58,7 @@ class PostRepository implements PostRepositoryInterface
 
     public function countPosts(): int
     {
-        return (int)$this->createQueryBuilder()
+        return (int) $this->createQueryBuilder()
                          ->select('COUNT(p)')
                          ->from(Post::class, 'p')
                          ->getQuery()->getSingleScalarResult();
@@ -65,7 +66,7 @@ class PostRepository implements PostRepositoryInterface
 
     public function countPostsByTag(string $tag): int
     {
-        return (int)$this->createQueryBuilder()
+        return (int) $this->createQueryBuilder()
                          ->select('COUNT(p)')
                          ->from(Post::class, 'p')
                          ->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag')
@@ -91,7 +92,7 @@ class PostRepository implements PostRepositoryInterface
 
     private function createQueryBuilder(): QueryBuilder
     {
-        /** @var EntityManager $em */
+        /* @var EntityManager $em */
         $em = $this->registry->getManager();
 
         return $em->createQueryBuilder();

@@ -16,7 +16,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class PostRepositoryTest extends KernelTestCase
 {
-    /** @var array<ClassMetadata> */
+    /**
+     * @var array<ClassMetadata>
+     */
     private static array $cachedMetadata = [];
 
     private EntityManager $entityManager;
@@ -29,14 +31,13 @@ class PostRepositoryTest extends KernelTestCase
 
         self::bootKernel();
 
-        /** @var ManagerRegistry $doctrine */
+        /* @var ManagerRegistry $doctrine */
         $doctrine = self::$kernel->getContainer()->get('doctrine');
-        /** @var EntityManager $defaultEm */
+        /* @var EntityManager $defaultEm */
         $defaultEm           = $doctrine->getManager();
         $this->entityManager = $defaultEm;
         $schema              = new SchemaTool($this->entityManager);
-        // todo move to abstract repository testcase(cache with static) for further memory/time consumption mitigation
-
+        // TODO move to abstract repository testcase(cache with static) for further memory/time consumption mitigation
         if (static::$cachedMetadata === []) {
             static::$cachedMetadata = $defaultEm->getMetadataFactory()->getAllMetadata();
         }
@@ -133,7 +134,7 @@ class PostRepositoryTest extends KernelTestCase
 
     public function taggedPostsProvider(): iterable
     {
-        // last 2
+        // Last 2
         yield [
             'SomeTag',
             2,

@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Service\Response;
 
 use Symfony\Component\HttpFoundation\Response;
+use UnexpectedValueException;
 
 /**
  * Json response builder
@@ -22,14 +24,14 @@ class JsonResponseBuilder implements ResponseBuilderInterface
      *
      * @var int
      */
-    private $code;
+    private int $code;
 
     /**
      * Response headers
      *
-     * @var array
+     * @var array<string, string[]>
      */
-    private $headers;
+    private array $headers;
 
     /**
      * Constructor
@@ -45,13 +47,15 @@ class JsonResponseBuilder implements ResponseBuilderInterface
      * @param mixed $data
      *
      * @return ResponseBuilderInterface
+     *
+     * @throws UnexpectedValueException
      */
     public function setContent($data): ResponseBuilderInterface
     {
         // JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT = 15
         $this->content = json_encode($data, 15);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \UnexpectedValueException(json_last_error_msg());
+            throw new UnexpectedValueException(json_last_error_msg());
         }
 
         return $this;

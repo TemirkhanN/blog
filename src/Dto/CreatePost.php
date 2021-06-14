@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Dto;
@@ -12,16 +13,22 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CreatePost extends DataTransferObject
 {
     /**
+     * @var string
+     *
      * @Assert\NotBlank()
      */
     public string $title;
 
     /**
+     * @var string
+     *
      * @Assert\NotBlank()
      */
     public string $preview;
 
     /**
+     * @var string
+     *
      * @Assert\NotBlank()
      */
     public string $content;

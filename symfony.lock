@@ -82,6 +82,9 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
+    "free2er/coding-standard": {
+        "version": "1.1.1"
+    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
@@ -230,6 +233,18 @@
     },
     "spatie/data-transfer-object": {
         "version": "1.13.3"
+    },
+    "squizlabs/php_codesniffer": {
+        "version": "3.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "3.6",
+            "ref": "1019e5c08d4821cb9b77f4891f8e9c31ff20ac6f"
+        },
+        "files": [
+            "phpcs.xml.dist"
+        ]
     },
     "symfony/cache": {
         "version": "v4.3.4"

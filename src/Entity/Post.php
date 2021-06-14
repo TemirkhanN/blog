@@ -25,7 +25,9 @@ class Post
 
     private string $content;
 
-    /** @var Collection<Tag> */
+    /**
+     * @var Collection<Tag>
+     */
     private Collection $tags;
 
     public function __construct(string $title, string $preview, string $content)
@@ -39,7 +41,7 @@ class Post
         $this->slug        = sprintf(
             '%s_%s',
             $this->getPublishedAt()->format('Y-m-d'),
-            (string)preg_replace('#\W#u', '-', $title)
+            (string) preg_replace('#\W#u', '-', $title)
         );
     }
 

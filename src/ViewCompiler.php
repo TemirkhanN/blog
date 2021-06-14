@@ -24,7 +24,8 @@ class ViewCompiler implements CompilerPassInterface
 
             $viewFactoryDefinition->addMethodCall(
                 'registerView',
-                [$tagInfo[0]['view'],
+                [
+                $tagInfo[0]['view'],
                  new Reference($viewTaggedServiceId),
                 ]
             );

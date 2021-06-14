@@ -14,3 +14,5 @@ jobs:
           php_version: 7.4
           php_extensions: redis
       - uses: php-actions/phpunit@v3
+      - uses: php-actions/phpunit@v3
+      - run: ./vendor/bin/phpcs

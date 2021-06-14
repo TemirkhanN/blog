@@ -6,14 +6,13 @@ namespace App\Service\Response\ValueObject;
 
 class CollectionChunk
 {
-    /** @var int */
-    public $limit;
-    /** @var int */
-    public $offset;
-    /** @var int */
-    public $ofTotalAmount;
-    /** @var iterable */
-    public $chunk;
+    public int $limit;
+
+    public int $offset;
+
+    public int $ofTotalAmount;
+
+    public iterable $chunk;
 
     public function __construct(int $limit, int $offset, int $ofTotalAmount, iterable $chunk)
     {

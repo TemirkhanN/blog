@@ -28,9 +28,7 @@ class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return [
-            ExceptionEvent::class => 'onKernelError',
-        ];
+        return [ExceptionEvent::class => 'onKernelError'];
     }
 
     public function onKernelError(ExceptionEvent $event)
