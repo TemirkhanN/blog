@@ -5,12 +5,11 @@ on: [ push ]
 jobs:
   test:
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        php: [7.4]
-
     steps:
       - uses: actions/checkout@v2
-      - run: composer install --no-interaction --dev
+      - uses: nanasess/setup-php@master
+        with:
+          php-version: '7.4'
+      - run: composer install --no-interaction
       - run: ./vendor/bin/phpcs
       - run: ./vendor/bin/phpunit
