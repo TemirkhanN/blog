@@ -1,7 +1,0 @@
-build:
-  docker:
-    web: Dockerfile.heroku
-release:
-  image: web
-  command:
-    - php bin/console doctrine:migrations:migrate --no-interaction
