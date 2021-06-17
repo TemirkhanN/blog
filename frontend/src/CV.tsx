@@ -1,8 +1,7 @@
 import {Remarkable} from "remarkable";
 import {useEffect, useState} from "react";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 import {Alert, Spinner} from "react-bootstrap";
-import * as React from "react";
 import HttpError from "./basetypes/HttpError";
 
 const markdownRenderer = new Remarkable();

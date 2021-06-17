@@ -1,5 +1,4 @@
 import PostList from "./post/PostList";
-import * as React from "react";
 import {Route, Switch} from "react-router-dom";
 import Post from "./post/Post";
 import Header from "./Header";

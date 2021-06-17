@@ -1,8 +1,7 @@
-import * as React from "react";
 import {Link, useParams, generatePath} from "react-router-dom";
 import HttpError from "../basetypes/HttpError";
 import PostPreview from "./PostPreview";
-import {Helmet} from "react-helmet";
+import {Helmet} from "react-helmet-async";
 import Preview from "./Type/Preview"
 import {Alert, Spinner} from "react-bootstrap";
 import {useEffect, useState} from "react";
