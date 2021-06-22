@@ -12,13 +12,8 @@ code {
     monospace;
 }
 
-.menu ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.menu ul li {
-  display: inline;
+#main-menu ul li a svg {
+  vertical-align: baseline;
 }
 
 .much-wow img {
