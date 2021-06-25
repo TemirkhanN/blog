@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import logo from './resources/img/doge-sleepy.png'
+import logo from './resources/img/doge.png'
 
 function Header() {
     return (
