@@ -60,3 +60,18 @@ main {
   font-size:60px;
   font-weight: bold;
 }
+
+#disclaimer {
+  border-top: 1px solid lightgrey;
+  color: gray;
+  font-style: italic;
+}
+
+#disclaimer p {
+  margin: 0;
+  text-align: center;
+}
+
+#disclaimer p a:visited {
+  color: blue;
+}
