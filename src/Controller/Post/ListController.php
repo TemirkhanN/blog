@@ -33,10 +33,10 @@ class ListController
 
         $tag = $request->query->getAlnum('tag');
         if ($tag !== '') {
-            $posts = $this->postListService->getPostsByTag($tag, $offset, self::POSTS_PER_PAGE);
+            $posts        = $this->postListService->getPostsByTag($tag, $offset, self::POSTS_PER_PAGE);
             $ofTotalPosts = $this->postListService->countPosts($tag);
         } else {
-            $posts = $this->postListService->getPosts($offset, self::POSTS_PER_PAGE);
+            $posts        = $this->postListService->getPosts($offset, self::POSTS_PER_PAGE);
             $ofTotalPosts = $this->postListService->countPosts();
         }
 

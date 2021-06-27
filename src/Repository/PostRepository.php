@@ -31,10 +31,16 @@ class PostRepository implements PostRepositoryInterface
         assert($limit > 0);
         assert($offset >= 0);
 
+        // TODO multi-queries shall be replaced with something better. At worst scenario - cache it
         return new Collection(
             (function (int $limit, int $offset) {
-                yield from $this->registry->getRepository(Post::class)
-                                          ->findBy([], ['publishedAt' => 'DESC'], $limit, $offset);
+                yield from $this->createQueryBuilder()
+                                ->select('p')
+                                ->from(Post::class, 'p')
+                                ->orderBy('p.publishedAt', 'DESC')
+                                ->setMaxResults($limit)
+                                ->setFirstResult($offset)
+                                ->getQuery()->getResult();
             })($limit, $offset)
         );
     }
@@ -46,14 +52,15 @@ class PostRepository implements PostRepositoryInterface
 
         return new Collection(
             (function (string $tag, int $limit, int $offset) {
-                return $this->createQueryBuilder()->select('p')
-                            ->from(Post::class, 'p')
-                            ->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag')
-                            ->setParameters(['tag' => $tag])
-                            ->orderBy('p.publishedAt', 'DESC')
-                            ->setMaxResults($limit)
-                            ->setFirstResult($offset)
-                            ->getQuery()->getResult();
+                yield from $this->createQueryBuilder()
+                                ->select('p, t')
+                                ->from(Post::class, 'p')
+                                ->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag')
+                                ->setParameters(['tag' => $tag])
+                                ->orderBy('p.publishedAt', 'DESC')
+                                ->setMaxResults($limit)
+                                ->setFirstResult($offset)
+                                ->getQuery()->getResult();
             })($tag, $limit, $offset)
         );
     }
