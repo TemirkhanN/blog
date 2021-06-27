@@ -1,6 +1,7 @@
 App\Entity\Tag:
   type: entity
   table: tags
+  readOnly: true
   id:
     name:
       type: string

@@ -1,6 +1,7 @@
 App\Entity\Comment:
   type: entity
   table: comments
+  readOnly: true
   id:
     guid:
       type: string
@@ -22,5 +23,6 @@ App\Entity\Comment:
       joinColumn:
         name: post_slug
         referencedColumnName: slug
+        nullable: false
         cascade: [remove]
         onDelete: CASCADE
