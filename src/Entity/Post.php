@@ -28,6 +28,9 @@ class Post
     /** @var Collection<int, Tag> */
     private Collection $tags;
 
+    /** @var Collection<int, Comment> */
+    private Collection $comments;
+
     public function __construct(string $title, string $preview, string $content)
     {
         $this->title   = $title;
@@ -40,6 +43,7 @@ class Post
         }
         $this->publishedAt = $publishedAt;
         $this->tags        = new ArrayCollection();
+        $this->comments    = new ArrayCollection();
         $this->slug        = sprintf(
             '%s_%s',
             $this->getPublishedAt()->format('Y-m-d'),

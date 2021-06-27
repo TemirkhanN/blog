@@ -30,3 +30,7 @@ App\Entity\Post:
             referencedColumnName: name
       cascade:
         - persist
+  oneToMany:
+    comments:
+      targetEntity: App\Entity\Comment
+      mappedBy: post

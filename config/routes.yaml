@@ -1,13 +1,27 @@
-
 index:
-    path: /api/posts
-    methods: [GET]
-    controller:  App\Controller\Post\ListController
+  path: /api/posts
+  methods: [ GET ]
+  controller: App\Controller\Post\ListController
 create_post:
-    path: /api/posts
-    methods: [POST]
-    controller:  App\Controller\Post\CreateController
+  path: /api/posts
+  methods: [ POST ]
+  controller: App\Controller\Post\CreateController
 view_post:
-    path: /api/posts/{slug}
-    methods: [GET]
-    controller:  App\Controller\Post\ViewController
+  path: /api/posts/{slug}
+  requirements:
+    slug: '[a-zA-Z0-9_-]{10,}'
+  methods: [ GET ]
+  controller: App\Controller\Post\ViewController
+add_comment:
+  path: /api/posts/{slug}/comments
+  requirements:
+    slug: '[a-zA-Z0-9_-]{10,}'
+  methods: [ POST ]
+  controller: App\Controller\Comment\AddController
+reply_comment:
+  path: /api/posts/{slug}/comments/{replyTo}
+  requirements:
+    slug: '[a-zA-Z0-9_-]{10,}'
+    replyTo: '[a-z0-9]{8}(-[a-z0-9]{4}){3}-[a-z0-9]{12}'
+  methods: [ POST ]
+  controller: App\Controller\Comment\ReplyController
