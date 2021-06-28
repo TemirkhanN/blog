@@ -27,8 +27,14 @@ class ListController
     public function __invoke(Request $request): Response
     {
         $offset = $request->query->getInt('offset', 0);
+        $limit  = $request->query->getInt('limit', self::POSTS_PER_PAGE);
+
         if ($offset < 0) {
             return $this->responseFactory->badRequest('Offset can not be less than 0');
+        }
+
+        if ($limit < 1 || $limit > self::POSTS_PER_PAGE * 2) {
+            return $this->responseFactory->badRequest('Limit can not be less than 1 or too high');
         }
 
         $tag = $request->query->getAlnum('tag');
