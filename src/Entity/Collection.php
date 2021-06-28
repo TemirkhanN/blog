@@ -14,7 +14,7 @@ use Traversable;
 class Collection implements IteratorAggregate
 {
     /** @var iterable<T> */
-    private $items;
+    private iterable $items;
 
     /** @param iterable<T> $items */
     final public function __construct(iterable $items)

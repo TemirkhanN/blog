@@ -14,26 +14,10 @@ use Temirkhan\View\ViewFactoryInterface;
  */
 class ResponseFactory implements ResponseFactoryInterface
 {
-    /**
-     * View factory
-     *
-     * @var ViewFactoryInterface
-     */
-    private $viewFactory;
+    private ViewFactoryInterface $viewFactory;
 
-    /**
-     * Response builder
-     *
-     * @var ResponseBuilderInterface
-     */
-    private $builder;
+    private ResponseBuilderInterface $builder;
 
-    /**
-     * Constructor
-     *
-     * @param ResponseBuilderInterface $builder
-     * @param ViewFactoryInterface     $viewFactory
-     */
     public function __construct(ResponseBuilderInterface $builder, ViewFactoryInterface $viewFactory)
     {
         $this->builder     = $builder;

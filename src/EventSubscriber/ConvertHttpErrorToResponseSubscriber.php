@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use App\Service\Response\ResponseFactoryInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -17,8 +16,6 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
 {
     private ResponseFactoryInterface $responseFactory;
-
-    private LoggerInterface $logger;
 
     public function __construct(ResponseFactoryInterface $responseFactory)
     {

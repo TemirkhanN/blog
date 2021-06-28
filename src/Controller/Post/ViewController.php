@@ -11,28 +11,12 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ViewController
 {
-    /**
-     * @var PostListService
-     */
-    private $postListService;
+    private PostListService $postListService;
 
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $security;
+    private AuthorizationCheckerInterface $security;
 
-    /**
-     * @var ResponseFactoryInterface
-     */
-    private $responseFactory;
+    private ResponseFactoryInterface $responseFactory;
 
-    /**
-     * Constructor
-     *
-     * @param PostListService               $postListService
-     * @param AuthorizationCheckerInterface $security
-     * @param ResponseFactoryInterface      $responseFactory
-     */
     public function __construct(
         PostListService $postListService,
         AuthorizationCheckerInterface $security,
@@ -43,11 +27,6 @@ class ViewController
         $this->responseFactory = $responseFactory;
     }
 
-    /**
-     * @param string $slug
-     *
-     * @return Response
-     */
     public function __invoke(string $slug): Response
     {
         $post = $this->postListService->getPostBySlug($slug);

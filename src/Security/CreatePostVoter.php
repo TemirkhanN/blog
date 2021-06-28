@@ -40,7 +40,7 @@ class CreatePostVoter implements VoterInterface
             return VoterInterface::ACCESS_DENIED;
         }
 
-        if ($user->getUsername() !== 'admin') {
+        if ($user->getUserIdentifier() !== 'admin') {
             return VoterInterface::ACCESS_DENIED;
         }
 
