@@ -9,6 +9,7 @@ use App\Entity\Post;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use RuntimeException;
 
@@ -34,13 +35,14 @@ class PostRepository implements PostRepositoryInterface
         // TODO multi-queries shall be replaced with something better. At worst scenario - cache it
         return new Collection(
             (function (int $limit, int $offset) {
-                yield from $this->createQueryBuilder()
-                                ->select('p')
+                return new Paginator($this->createQueryBuilder()
+                                ->addSelect('p', 't')
                                 ->from(Post::class, 'p')
+                                ->leftJoin('p.tags', 't')
                                 ->orderBy('p.publishedAt', 'DESC')
                                 ->setMaxResults($limit)
                                 ->setFirstResult($offset)
-                                ->getQuery()->getResult();
+                                ->getQuery());
             })($limit, $offset)
         );
     }
@@ -52,15 +54,17 @@ class PostRepository implements PostRepositoryInterface
 
         return new Collection(
             (function (string $tag, int $limit, int $offset) {
-                yield from $this->createQueryBuilder()
-                                ->select('p, t')
+                return new Paginator($this->createQueryBuilder()
+                                ->select('p')
+                                ->addSelect('t')
                                 ->from(Post::class, 'p')
-                                ->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag')
+                                ->leftJoin('p.tags', 't')
+                                ->andWhere(':tag MEMBER OF p.tags')
                                 ->setParameters(['tag' => $tag])
                                 ->orderBy('p.publishedAt', 'DESC')
                                 ->setMaxResults($limit)
                                 ->setFirstResult($offset)
-                                ->getQuery()->getResult();
+                                ->getQuery());
             })($tag, $limit, $offset)
         );
     }
