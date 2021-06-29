@@ -20,6 +20,7 @@
         "doctrine/orm": "^2.7",
         "ramsey/uuid": "^3.8",
         "spatie/data-transfer-object": "^1.13",
+        "symfony/cache": "5.3.*",
         "symfony/console": "5.3.*",
         "symfony/dotenv": "5.3.*",
         "symfony/flex": "^1.3.1",

@@ -30,14 +30,6 @@ services:
     Temirkhan\View\ViewFactory: ~
     Temirkhan\View\ViewFactoryInterface: '@Temirkhan\View\ViewFactory'
 
-    Redis:
-        class: RedisCluster
-        factory: [Symfony\Component\Cache\Adapter\RedisAdapter, createConnection]
-        arguments:
-            - '%env(REDIS_URL)%'
-            -
-                persistent: 1
-
     App\Security\TokenAuthenticator:
         arguments:
             $ownerToken: '%env(MY_VERY_SECRET_TOKEN)%'
