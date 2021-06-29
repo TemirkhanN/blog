@@ -33,14 +33,10 @@ class Post
 
     public function __construct(string $title, string $preview, string $content)
     {
-        $this->title   = $title;
-        $this->preview = $preview;
-        $this->content = $content;
-        $format        = DateTimeInterface::ATOM;
-        $publishedAt   = DateTimeImmutable::createFromFormat($format, DateTimeFactory::now()->format($format));
-        if ($publishedAt === false) {
-            throw new \RuntimeException('Could not create immutable datetime');
-        }
+        $this->title       = $title;
+        $this->preview     = $preview;
+        $this->content     = $content;
+        $publishedAt       = DateTimeFactory::now();
         $this->publishedAt = $publishedAt;
         $this->tags        = new ArrayCollection();
         $this->comments    = new ArrayCollection();

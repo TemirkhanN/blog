@@ -2,6 +2,9 @@ App\Entity\Comment:
   type: entity
   table: comments
   readOnly: true
+  indexes:
+    created_at_idx:
+      columns: [created_at]
   id:
     guid:
       type: string
@@ -16,6 +19,10 @@ App\Entity\Comment:
       type: string
       length: 36
       nullable: true
+    createdAt:
+      type: datetime_immutable
+      options:
+        default: CURRENT_TIMESTAMP
   manyToOne:
     post:
       targetEntity: App\Entity\Post

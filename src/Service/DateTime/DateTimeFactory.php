@@ -9,9 +9,9 @@ use DateTimeInterface;
 
 final class DateTimeFactory
 {
-    private static ?DateTimeInterface $stub;
+    private static ?DateTimeImmutable $stub;
 
-    public static function now(): DateTimeInterface
+    public static function now(): DateTimeImmutable
     {
         return self::$stub ?? new DateTimeImmutable();
     }

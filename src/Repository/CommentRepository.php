@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use _HumbugBox15516bb2b566\Nette\Utils\DateTime;
 use App\Entity\Comment;
+use DateInterval;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use RuntimeException;
@@ -34,6 +38,16 @@ class CommentRepository implements CommentRepositoryInterface
         return $this->getEntityManager()->find(Comment::class, $guid);
     }
 
+    public function countCommentsInLastInterval(DateInterval $interval): int
+    {
+        return (int) $this->createQueryBuilder()
+            ->select('COUNT(c)')
+            ->from(Comment::class, 'c')
+            ->where('c.createdAt > :fromTime')
+            ->setParameters(['fromTime' => (new DateTime())->sub($interval)])
+            ->getQuery()->getSingleScalarResult();
+    }
+
     private function getEntityManager(): ObjectManager
     {
         $em = $this->registry->getManagerForClass(Comment::class);
@@ -42,5 +56,13 @@ class CommentRepository implements CommentRepositoryInterface
         }
 
         return $em;
+    }
+
+    private function createQueryBuilder(): QueryBuilder
+    {
+        /** @var EntityManager $em */
+        $em = $this->getEntityManager();
+
+        return $em->createQueryBuilder();
     }
 }

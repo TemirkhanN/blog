@@ -8,6 +8,7 @@ use App\Dto\NewComment;
 use App\Entity\Comment;
 use App\Service\Post\CommentService;
 use App\Service\Response\ResponseFactoryInterface;
+use App\Service\Response\ValueObject\SystemMessage;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -33,6 +34,15 @@ class ReplyController
 
     public function __invoke(string $slug, string $replyTo, NewComment $commentData): Response
     {
+        $commentsInLastTenMinutes = $this->commentService->countCommentsInInterval(new \DateInterval('PT10M'));
+        if ($commentsInLastTenMinutes > 10) {
+            return $this->responseFactory->view(
+                new SystemMessage('Request limit match', 429),
+                'response.system_message',
+                429
+            );
+        }
+
         $replyToComment = $this->commentService->findCommentByGuid($replyTo);
         if (
             $replyToComment === null

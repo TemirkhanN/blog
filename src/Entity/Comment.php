@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Service\DateTime\DateTimeFactory;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
 
 class Comment
@@ -11,6 +14,8 @@ class Comment
     private string $guid;
 
     private string $comment;
+
+    private DateTimeImmutable $createdAt;
 
     private Post $post;
 
@@ -26,9 +31,10 @@ class Comment
 
     public function __construct(Post $post, string $comment)
     {
-        $this->guid    = Uuid::uuid4()->toString();
-        $this->post    = $post;
-        $this->comment = $comment;
+        $this->guid      = Uuid::uuid4()->toString();
+        $this->post      = $post;
+        $this->comment   = $comment;
+        $this->createdAt = DateTimeFactory::now();
     }
 
     public function getGuid(): string
@@ -49,5 +55,10 @@ class Comment
     public function getRepliedCommentGuid(): ?string
     {
         return $this->repliedToCommentGuid;
+    }
+
+    public function getCreationDate(): DateTimeInterface
+    {
+        return $this->createdAt;
     }
 }

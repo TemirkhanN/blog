@@ -9,6 +9,7 @@ use App\Entity\Comment;
 use App\Service\Post\CommentService;
 use App\Service\Post\PostListService;
 use App\Service\Response\ResponseFactoryInterface;
+use App\Service\Response\ValueObject\SystemMessage;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -37,6 +38,15 @@ class AddController
 
     public function __invoke(string $slug, NewComment $commentData): Response
     {
+        $commentsInLastTenMinutes = $this->commentService->countCommentsInInterval(new \DateInterval('PT10M'));
+        if ($commentsInLastTenMinutes > 10) {
+            return $this->responseFactory->view(
+                new SystemMessage('Request limit match', 429),
+                'response.system_message',
+                429
+            );
+        }
+
         $post = $this->postListService->getPostBySlug($slug);
         if ($post === null) {
             return $this->responseFactory->notFound('Target post does not exist');
