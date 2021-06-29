@@ -15,15 +15,3 @@ framework:
     php_errors:
         log: true
 
-    cache:
-      default_redis_provider: '%env(REDIS_URL)%'
-      pools:
-        cache.doctrine.result:
-          adapter: cache.adapter.redis
-          default_lifetime: PT10M
-        cache.doctrine.query:
-          adapter: cache.adapter.redis
-          default_lifetime: PT1H
-        cache.doctrine.metadata:
-          adapter: cache.adapter.redis
-          default_lifetime: P1D
