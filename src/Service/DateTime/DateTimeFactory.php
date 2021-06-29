@@ -16,7 +16,7 @@ final class DateTimeFactory
         return self::$stub ?? new DateTimeImmutable();
     }
 
-    public static function alwaysReturn(?DateTimeInterface $stub): void
+    public static function alwaysReturn(?DateTimeImmutable $stub): void
     {
         self::$stub = $stub;
     }
