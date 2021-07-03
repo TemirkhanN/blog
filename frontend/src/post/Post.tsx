@@ -5,14 +5,8 @@ import {Helmet} from "react-helmet-async";
 import {Alert, Spinner} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import Disclaimer from "../Disclaimer";
-
-type PostModel = {
-    slug: string,
-    title: string,
-    content: string,
-    publishedAt: string,
-    tags: string[]
-}
+import CommentList from "../comment/CommentList";
+import PostModel from "./Type/PostModel";
 
 function Post(props: { match: { params: { slug: string } } }) {
     const [error, setError] = useState<HttpError | null>();
@@ -99,6 +93,7 @@ function Post(props: { match: { params: { slug: string } } }) {
                 <div className="content" dangerouslySetInnerHTML={{__html: content}}/>
             </div>
             <Disclaimer/>
+            <CommentList postSlug={post.slug}/>
         </>
     );
 }

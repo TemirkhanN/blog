@@ -23,3 +23,7 @@ services:
   response.paginated_view:
     class: App\View\PaginatedView
     tags: [{name: view, view: response.paginated_collection}]
+
+  blog.post.comments:
+    class: App\View\CommentsView
+    tags: [{name: view, view: post.comments}]

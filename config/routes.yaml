@@ -25,3 +25,9 @@ reply_comment:
     replyTo: '[a-z0-9]{8}(-[a-z0-9]{4}){3}-[a-z0-9]{12}'
   methods: [ POST ]
   controller: App\Controller\Comment\ReplyController
+view_comments:
+  path: /api/posts/{slug}/comments
+  requirements:
+    slug: '[a-zA-Z0-9_-]{10,}'
+  methods: [ GET ]
+  controller: App\Controller\Comment\ListController

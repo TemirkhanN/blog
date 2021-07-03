@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use _HumbugBox15516bb2b566\Nette\Utils\DateTime;
+use App\Entity\Collection;
 use App\Entity\Comment;
 use DateInterval;
 use Doctrine\ORM\EntityManager;
@@ -13,9 +13,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use RuntimeException;
 
-/**
- * @template C of Comment
- */
 class CommentRepository implements CommentRepositoryInterface
 {
     private ManagerRegistry $registry;
@@ -44,8 +41,24 @@ class CommentRepository implements CommentRepositoryInterface
             ->select('COUNT(c)')
             ->from(Comment::class, 'c')
             ->where('c.createdAt > :fromTime')
-            ->setParameters(['fromTime' => (new DateTime())->sub($interval)])
+            ->setParameters(['fromTime' => (new \DateTime())->sub($interval)])
             ->getQuery()->getSingleScalarResult();
+    }
+
+    public function findCommentsByPost(string $postId): Collection
+    {
+        return new Collection(
+            (function (string $postId) {
+                yield from $this->createQueryBuilder()
+                    ->select('c')
+                    ->from(Comment::class, 'c')
+                    ->where('c.post = :post')
+                    ->setParameters(['post' => $postId])
+                    ->orderBy('c.createdAt', 'DESC')
+                    ->getQuery()
+                    ->getResult();
+            })($postId)
+        );
     }
 
     private function getEntityManager(): ObjectManager

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Post;
 
+use App\Entity\Collection;
 use App\Entity\Comment;
+use App\Entity\Post;
 use App\Repository\CommentRepositoryInterface;
 use DateInterval;
 
@@ -25,6 +27,11 @@ class CommentService
     public function findCommentByGuid(string $guid): ?Comment
     {
         return $this->commentRepository->findCommentByGuid($guid);
+    }
+
+    public function getCommentsByPost(Post $post): Collection
+    {
+        return $this->commentRepository->findCommentsByPost($post->getSlug());
     }
 
     public function countCommentsInInterval(DateInterval $interval): int
