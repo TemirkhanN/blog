@@ -29,6 +29,11 @@ class CommentService
         return $this->commentRepository->findCommentByGuid($guid);
     }
 
+    /**
+     * @param Post $post
+     *
+     * @return Collection<Comment>
+     */
     public function getCommentsByPost(Post $post): Collection
     {
         return $this->commentRepository->findCommentsByPost($post->getSlug());

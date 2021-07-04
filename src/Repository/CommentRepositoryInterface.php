@@ -8,9 +8,6 @@ use App\Entity\Collection;
 use App\Entity\Comment;
 use DateInterval;
 
-/**
- * @template T of Comment
- */
 interface CommentRepositoryInterface
 {
     public function save(Comment $comment): void;
@@ -20,7 +17,7 @@ interface CommentRepositoryInterface
     /**
      * @param string $postId
      *
-     * @return Collection<T>
+     * @return Collection<Comment>
      */
     public function findCommentsByPost(string $postId): Collection;
 

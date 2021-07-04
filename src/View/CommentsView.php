@@ -11,6 +11,16 @@ use Temirkhan\View\ViewInterface;
 
 class CommentsView implements ViewInterface
 {
+    /**
+     * @param mixed $context
+     *
+     * @return array{
+     *  guid: string,
+     *  creationDate: string,
+     *  comment: string,
+     *  replies: array
+     * }[]
+     */
     public function getView($context)
     {
         assert($context instanceof Collection);
@@ -37,6 +47,17 @@ class CommentsView implements ViewInterface
         return $view;
     }
 
+    /**
+     * @param Comment                  $comment
+     * @param array<string, Comment[]> $allReplies
+     *
+     * @return array{
+     *  guid: string,
+     *  creationDate: string,
+     *  comment: string,
+     *  replies: array
+     * }
+     */
     public function createCommentView(Comment $comment, array &$allReplies): array
     {
         $view = [
