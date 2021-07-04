@@ -10,7 +10,7 @@ function App() {
     return (
         <div className="application-class">
             <Header/>
-            <main>
+            <main className="container">
                 <Switch>
                     <Route exact path='/blog/tags/:tag([A-Za-z]+)/page/:page(\d+)' component={PostList}/>
                     <Route exact path='/blog/tags/:tag([A-Za-z]+)' component={PostList}/>

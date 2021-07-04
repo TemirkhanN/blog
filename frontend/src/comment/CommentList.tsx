@@ -73,9 +73,12 @@ function CommentList(props: {postSlug: string}) {
         return (
             <>
                 <div className="comment" key={comment.guid}>
-                    <p>{creationDate}</p>
-                    <p>
+                    <p className="pub-date">{creationDate}</p>
+                    <p className="comment-text">
                         {comment.comment}
+                        <div>
+                            <button>reply</button>
+                        </div>
                     </p>
                     {replies}
                 </div>
@@ -85,7 +88,6 @@ function CommentList(props: {postSlug: string}) {
 
     return (
         <div className="comments clearfix">
-            <p>Comments:</p>
             {comments.map(showComment)}
         </div>
     );

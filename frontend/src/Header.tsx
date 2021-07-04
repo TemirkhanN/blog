@@ -1,17 +1,8 @@
 import {Link} from "react-router-dom";
-import logo from './resources/img/doge.png'
 
 function Header() {
     return (
         <header>
-            <div className="info-block">
-                <Link className="much-wow"
-                      title="Much wow! Let's go home"
-                      to="/">
-                    <img src={logo} alt="Much wow! Let's go home"/>
-                </Link>
-                <span>Temirkhan</span>
-            </div>
             <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
                 <div className="container-fluid">
                     <button className="navbar-toggler"
@@ -23,7 +14,7 @@ function Header() {
                             aria-label="Toggle menu">
                         <span className="navbar-toggler-icon"> </span>
                     </button>
-                    <div className="collapse navbar-collapse" id="main-menu">
+                    <div className="collapse navbar-collapse container" id="main-menu">
                         <ul className="navbar-nav me-auto mb-2 mb-sm-0">
                             <li className="nav-item fs-4">
                                 <Link className="nav-link" to="/">

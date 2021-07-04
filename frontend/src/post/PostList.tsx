@@ -103,13 +103,13 @@ function PostList() {
         const olderPostsExists = paginationInfo.total > paginationInfo.offset + page.itemsPerPage;
 
         return (
-            <nav aria-label="pagination">
+            <nav className="pagination" aria-label="pagination">
                 <ul className="pagination justify-content-center">
                     {
                         newerPostsExists &&
                         <li className="page-item">
                             <Link to={generateRoute(page.number - 1, page.tag)} className="page-link">
-                                Newer
+                                &laquo; Newer
                             </Link>
                         </li>
                     }
@@ -117,7 +117,7 @@ function PostList() {
                         olderPostsExists &&
                         <li className="page-item">
                             <Link to={generateRoute(page.number + 1, page.tag)} className="page-link">
-                                Older
+                                Older &raquo;
                             </Link>
                         </li>
                     }
