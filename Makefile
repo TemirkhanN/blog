@@ -24,3 +24,9 @@ ps:
 .PHONY: migrate
 migrate:
 	docker-compose exec -u www-data backend php bin/console doctrine:migrations:migrate --no-interaction
+
+.PHONY: code-check
+code-check:
+	php ./vendor/bin/phpcs
+	php -d memory_limit=512M ./vendor/bin/phpstan
+	php ./vendor/bin/phpunit
