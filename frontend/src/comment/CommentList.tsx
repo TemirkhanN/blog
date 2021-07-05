@@ -9,7 +9,7 @@ type Comment = {
     replies: Comment[]
 };
 
-function CommentList(props: {postSlug: string}) {
+function CommentList(props: { postSlug: string }) {
     const [error, setError] = useState<HttpError | null>();
     const [isLoading, setLoading] = useState(false);
     const [comments, setComments] = useState<Comment[] | null>(null);
@@ -71,18 +71,16 @@ function CommentList(props: {postSlug: string}) {
         }
 
         return (
-            <>
-                <div className="comment" key={comment.guid}>
-                    <p className="pub-date">{creationDate}</p>
-                    <div className="comment-text">
-                        {comment.comment}
-                        <div>
-                            <button>reply</button>
-                        </div>
+            <div className="comment" key={comment.guid}>
+                <p className="pub-date">{creationDate}</p>
+                <div className="comment-text">
+                    {comment.comment}
+                    <div>
+                        <button>reply</button>
                     </div>
-                    {replies}
                 </div>
-            </>
+                {replies}
+            </div>
         );
     }
 
