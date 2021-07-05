@@ -28,10 +28,17 @@ class CreatePostService
      */
     public function execute(CreatePost $data): Post
     {
-        $post = new Post($data->title, $data->preview, $data->content);
-        if ($this->repository->findOneBySlug($post->getSlug())) {
+        $slug = sprintf(
+            '%s_%s',
+            date('Y-m-d'),
+            (string) preg_replace('#\W#u', '-', $data->title)
+        );
+
+        if ($this->repository->findOneBySlug($slug)) {
             throw new \DomainException('There already exists the post with similar title');
         }
+
+        $post = new Post($slug, $data->title, $data->preview, $data->content);
 
         $this->repository->save($post);
 

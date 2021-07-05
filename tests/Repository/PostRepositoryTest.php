@@ -83,27 +83,24 @@ class PostRepositoryTest extends KernelTestCase
     /** @return iterable<string[]> */
     public function postSlugProvider(): iterable
     {
-        $today = date('Y-m-d');
-
-        yield [$today . '_Some-title-1'];
-        yield [$today . '_Some-title-2'];
-        yield [$today . '_Some-title-3'];
-        yield [$today . '_Some-title-4'];
-        yield [$today . '_Some-title-5'];
-        yield [$today . '_Another-title-1'];
-        yield [$today . '_Another-title-2'];
-        yield [$today . '_Another-title-3'];
-        yield [$today . '_Another-title-4'];
-        yield [$today . '_Multitagged-post'];
+        yield ['Some-slug-1'];
+        yield ['Some-slug-2'];
+        yield ['Some-slug-3'];
+        yield ['Some-slug-4'];
+        yield ['Some-slug-5'];
+        yield ['Another-slug-1'];
+        yield ['Another-slug-2'];
+        yield ['Another-slug-3'];
+        yield ['Another-slug-4'];
+        yield ['Multitagged-slug'];
     }
 
     public function testSave(): void
     {
-        $post = new Post('Some new post', 'Some preview', 'Some content');
-        $slug = $post->getSlug();
-
+        $slug = 'Some-new-post-slug';
         self::assertNull($this->repository->findOneBySlug($slug));
 
+        $post = new Post($slug, 'Some new post', 'Some preview', 'Some content');
         $this->repository->save($post);
 
         $savedPost = $this->repository->findOneBySlug($slug);
@@ -243,10 +240,12 @@ class PostRepositoryTest extends KernelTestCase
         $someTag    = new Tag('SomeTag');
         $anotherTag = new Tag('AnotherTag');
 
-        $counter = 60;
+        // An artificial time gap between posts with step >=1second
+        $counter = -60;
         foreach (range(1, 5) as $postWithSomeTag) {
-            DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
+            DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('%d seconds', ++$counter)));
             $post = new Post(
+                'Some-slug-' . $postWithSomeTag,
                 'Some title ' . $postWithSomeTag,
                 'Some preview ' . $postWithSomeTag,
                 'Some content ' . $postWithSomeTag
@@ -258,6 +257,7 @@ class PostRepositoryTest extends KernelTestCase
         foreach (range(1, 4) as $postWithAnotherTag) {
             DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
             $post2 = new Post(
+                'Another-slug-' . $postWithAnotherTag,
                 'Another title ' . $postWithAnotherTag,
                 'Another preview ' . $postWithAnotherTag,
                 'Another content ' . $postWithAnotherTag
@@ -268,6 +268,7 @@ class PostRepositoryTest extends KernelTestCase
 
         DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
         $postWithMultipleTags = new Post(
+            'Multitagged-slug',
             'Multitagged post',
             'Some multitag preview',
             'Some multitag content'

@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Collection;
 use App\Entity\Comment;
+use App\Entity\Post;
 use DateInterval;
 
 interface CommentRepositoryInterface
@@ -15,11 +16,11 @@ interface CommentRepositoryInterface
     public function findCommentByGuid(string $guid): ?Comment;
 
     /**
-     * @param string $postId
+     * @param Post $post
      *
      * @return Collection<Comment>
      */
-    public function findCommentsByPost(string $postId): Collection;
+    public function findCommentsByPost(Post $post): Collection;
 
     public function countCommentsInLastInterval(DateInterval $interval): int;
 }

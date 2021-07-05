@@ -2,12 +2,17 @@ App\Entity\Post:
   type: entity
   table: posts
   id:
+    id:
+      type: integer
+      generator:
+        strategy: IDENTITY
+      options:
+        unsigned: true
+  fields:
     slug:
       type: string
       length: 255
-      generator:
-        strategy: NONE
-  fields:
+      unique: true
     title:
       type: string
       length: 200
@@ -24,7 +29,7 @@ App\Entity\Post:
         name: posts_tags
         joinColumns:
           post_id:
-            referencedColumnName: slug
+            referencedColumnName: id
         inverseJoinColumns:
           tag_id:
             referencedColumnName: name

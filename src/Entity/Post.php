@@ -15,6 +15,8 @@ use Doctrine\Common\Collections\Collection;
  */
 class Post
 {
+    private int $id;
+
     private string $title;
 
     private string $slug;
@@ -31,7 +33,7 @@ class Post
     /** @var Collection<int, Comment> */
     private Collection $comments;
 
-    public function __construct(string $title, string $preview, string $content)
+    public function __construct(string $slug, string $title, string $preview, string $content)
     {
         $this->title       = $title;
         $this->preview     = $preview;
@@ -40,11 +42,7 @@ class Post
         $this->publishedAt = $publishedAt;
         $this->tags        = new ArrayCollection();
         $this->comments    = new ArrayCollection();
-        $this->slug        = sprintf(
-            '%s_%s',
-            $this->getPublishedAt()->format('Y-m-d'),
-            (string) preg_replace('#\W#u', '-', $title)
-        );
+        $this->slug        = $slug;
     }
 
     public function getTitle(): string

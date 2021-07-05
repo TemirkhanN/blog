@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Collection;
 use App\Entity\Comment;
+use App\Entity\Post;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -46,19 +47,19 @@ class CommentRepository implements CommentRepositoryInterface
             ->getQuery()->getSingleScalarResult();
     }
 
-    public function findCommentsByPost(string $postId): Collection
+    public function findCommentsByPost(Post $post): Collection
     {
         return new Collection(
-            (function (string $postId) {
+            (function (Post $post) {
                 yield from $this->createQueryBuilder()
                     ->select('c')
                     ->from(Comment::class, 'c')
                     ->where('c.post = :post')
-                    ->setParameters(['post' => $postId])
+                    ->setParameters(['post' => $post])
                     ->orderBy('c.createdAt', 'DESC')
                     ->getQuery()
                     ->getResult();
-            })($postId)
+            })($post)
         );
     }
 

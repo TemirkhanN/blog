@@ -36,7 +36,7 @@ class CommentService
      */
     public function getCommentsByPost(Post $post): Collection
     {
-        return $this->commentRepository->findCommentsByPost($post->getSlug());
+        return $this->commentRepository->findCommentsByPost($post);
     }
 
     public function countCommentsInInterval(DateInterval $interval): int

@@ -28,8 +28,8 @@ App\Entity\Comment:
       targetEntity: App\Entity\Post
       inversedBy: comments
       joinColumn:
-        name: post_slug
-        referencedColumnName: slug
+        name: post_id
+        referencedColumnName: id
         nullable: false
         cascade: [remove]
         onDelete: CASCADE
