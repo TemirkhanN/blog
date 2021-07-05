@@ -74,12 +74,12 @@ function CommentList(props: {postSlug: string}) {
             <>
                 <div className="comment" key={comment.guid}>
                     <p className="pub-date">{creationDate}</p>
-                    <p className="comment-text">
+                    <div className="comment-text">
                         {comment.comment}
                         <div>
                             <button>reply</button>
                         </div>
-                    </p>
+                    </div>
                     {replies}
                 </div>
             </>
