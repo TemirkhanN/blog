@@ -102,3 +102,24 @@ main {
 .pagination ul {
   margin: 1rem 0;
 }
+
+/* || markdown */
+pre {
+  margin: 0.5rem 2rem;
+  padding: 0.5rem;
+  background-color: black;
+  border-radius: 5px;
+}
+
+pre code {
+  font-family: Consolas, Monaco, monospace;
+  color: rgb(123, 214, 148);
+  #color: rgb(252, 194, 140);
+}
+
+blockquote {
+  color: #505050;
+  margin-left: 1rem;
+  border-left: 3px solid #c0c0c0;
+  padding: 0 0.5rem;
+}
