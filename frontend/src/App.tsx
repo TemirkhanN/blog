@@ -7,6 +7,7 @@ import NotFound from "./NotFound";
 import CV from "./CV";
 
 function App() {
+    // @ts-ignore
     return (
         <div className="application-class">
             <Header/>

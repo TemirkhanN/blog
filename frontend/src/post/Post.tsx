@@ -19,7 +19,13 @@ function Post(props: { match: { params: { slug: string } } }) {
         fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts/" + props.match.params.slug)
             .then(res => res.json())
             .then(
-                (result: PostModel) => setPost(result),
+                (result) => {
+                    if (result.hasOwnProperty('code')) {
+                        setError(result);
+                    } else {
+                        setPost(result);
+                    }
+                },
                 (error: HttpError) => setError(error)
             )
             .then(() => setLoading(false));
@@ -50,16 +56,7 @@ function Post(props: { match: { params: { slug: string } } }) {
     }
 
     if (post === null) {
-        return (
-            <div>
-                <Helmet>
-                    <title>Error</title>
-                </Helmet>
-                <Alert variant="danger">
-                    Error: Post is not loaded
-                </Alert>
-            </div>
-        );
+        return null;
     }
 
     const md = new Remarkable();
