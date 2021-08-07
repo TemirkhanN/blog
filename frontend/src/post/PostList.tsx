@@ -102,6 +102,10 @@ function PostList() {
         const newerPostsExists = page.number > 1;
         const olderPostsExists = paginationInfo.total > paginationInfo.offset + page.itemsPerPage;
 
+        if (!newerPostsExists && !olderPostsExists) {
+            return;
+        }
+
         return (
             <nav className="pagination" aria-label="pagination">
                 <ul className="pagination justify-content-center">
