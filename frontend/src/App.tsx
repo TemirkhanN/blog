@@ -9,9 +9,9 @@ import CV from "./CV";
 function App() {
     // @ts-ignore
     return (
-        <div className="application-class">
+        <>
             <Header/>
-            <main className="container">
+            <main className="container-fluid">
                 <Switch>
                     <Route exact path='/blog/tags/:tag([A-Za-z]+)/page/:page(\d+)' component={PostList}/>
                     <Route exact path='/blog/tags/:tag([A-Za-z]+)' component={PostList}/>
@@ -24,7 +24,7 @@ function App() {
                 </Switch>
             </main>
             <Footer/>
-        </div>
+        </>
     );
 }
 

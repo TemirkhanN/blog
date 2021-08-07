@@ -1,5 +1,6 @@
 html {
   height: 100%;
+  font-size: 18px;
 }
 
 body {
@@ -12,15 +13,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.application-class {
-  min-height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-}
-
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 /* || header */
@@ -40,31 +34,27 @@ main {
   border-bottom: 1px dashed lightgray;
 }
 
-.preview {
-  font-size: 14px;
-}
-
 .preview p {
   margin: 0;
 }
 
 .preview-link {
   color: black;
-  font-size: 18px;
+  font-size: 1.2rem;
   text-decoration: none;
 }
 
 .pub-date {
   color: gray;
   margin:0 0 0 2px;
-  font-size: 14px;
+  font-size: 0.8rem;
 }
 
 .tags a {
   display: inline;
   color: gray;
   text-decoration: none;
-  font-size:12px;
+  font-size: 0.6rem;
 }
 
 #disclaimer p {
@@ -93,28 +83,21 @@ main {
   padding: 0.5rem;
 }
 
-/* || footer */
-.footer {
-  grid-row-start: 3;
-  grid-row-end: 4;
-}
-
 .pagination ul {
   margin: 1rem 0;
 }
 
 /* || markdown */
 pre {
-  margin: 0.5rem 2rem;
-  padding: 0.5rem;
+  margin: 0.5rem;
+  padding: 0.2rem;
   background-color: black;
   border-radius: 5px;
+  overflow-x: scroll;
 }
 
 pre code {
-  font-family: Consolas, Monaco, monospace;
   color: rgb(123, 214, 148);
-  #color: rgb(252, 194, 140);
 }
 
 blockquote {
