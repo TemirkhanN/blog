@@ -234,6 +234,9 @@
             "phpcs.xml.dist"
         ]
     },
+    "symfony/browser-kit": {
+        "version": "v5.3.4"
+    },
     "symfony/cache": {
         "version": "v4.3.4"
     },
@@ -263,6 +266,9 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v4.3.11"
+    },
+    "symfony/dom-crawler": {
+        "version": "v5.3.4"
     },
     "symfony/dotenv": {
         "version": "v4.3.4"

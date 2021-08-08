@@ -8,10 +8,16 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
-class FunctionalTestCase extends KernelTestCase
+class FunctionalTestCase extends WebTestCase
 {
+    private ?string $authToken = null;
+
+    private ?KernelBrowser $browser;
+
     /** @var array<ClassMetadata<object>> */
     private static array $cachedMetadata = [];
 
@@ -21,7 +27,7 @@ class FunctionalTestCase extends KernelTestCase
     {
         parent::setUp();
 
-        self::bootKernel();
+        $this->browser = self::createClient();
 
         /** @var ManagerRegistry $doctrineRegistry */
         $doctrineRegistry       = self::$kernel->getContainer()->get('doctrine');
@@ -29,8 +35,8 @@ class FunctionalTestCase extends KernelTestCase
 
         $schema = new SchemaTool($this->getEntityManager());
 
-        if (static::$cachedMetadata === []) {
-            static::$cachedMetadata = $this->getEntityManager()->getMetadataFactory()->getAllMetadata();
+        if (self::$cachedMetadata === []) {
+            self::$cachedMetadata = $this->getEntityManager()->getMetadataFactory()->getAllMetadata();
         }
 
         $schema->createSchema(static::$cachedMetadata);
@@ -40,6 +46,9 @@ class FunctionalTestCase extends KernelTestCase
     {
         $schema = new SchemaTool($this->getEntityManager());
         $schema->dropSchema(static::$cachedMetadata);
+
+        $this->browser   = null;
+        $this->authToken = null;
 
         parent::tearDown();
     }
@@ -55,5 +64,31 @@ class FunctionalTestCase extends KernelTestCase
         $manager = $this->doctrineRegistry->getManager();
 
         return $manager;
+    }
+
+    final protected function authenticate(string $token): void
+    {
+        $this->authToken = $token;
+    }
+
+    final protected function sendRequest(string $method, string $uri, array $parameters = []): Response
+    {
+        $server = [];
+        if ($this->authToken !== null) {
+            $server['HTTP_Authorization'] = $this->authToken;
+        }
+
+        $this->browser->jsonRequest($method, $uri, $parameters, $server);
+
+        return $this->browser->getResponse();
+    }
+
+    final protected static function assertJsonEqualsToData(string $actualJson, $expectedData): void
+    {
+        self::assertJson($actualJson);
+
+        $actualData = json_decode($actualJson, true);
+
+        self::assertEquals($expectedData, $actualData);
     }
 }
