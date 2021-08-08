@@ -53,7 +53,7 @@ class CreateControllerTest extends FunctionalTestCase
 
         self::assertEquals(400, $response->getStatusCode());
         self::assertJsonEqualsToData(
-            $response->getContent(),
+            (string) $response->getContent(),
             [
                 'title'   => 'This value should not be blank.',
                 'preview' => 'This value should not be blank.',
@@ -73,11 +73,11 @@ class CreateControllerTest extends FunctionalTestCase
         $this->authenticate('SomeHardCodedToken');
 
         $response = $this->sendRequest('POST', self::API_URI, $data);
+        $content  = (string) $response->getContent();
 
         self::assertEquals(201, $response->getStatusCode());
-        self::assertJson($response->getContent());
-
-        $responseData = json_decode($response->getContent());
+        self::assertJson($content);
+        $responseData = json_decode($content);
 
         $post = $this->getEntityManager()
                      ->getRepository(Post::class)
@@ -86,7 +86,7 @@ class CreateControllerTest extends FunctionalTestCase
         self::assertNotNull($post);
 
         self::assertJsonEqualsToData(
-            $response->getContent(),
+            $content,
             [
                 'slug'        => $post->getSlug(),
                 'title'       => 'Some title',

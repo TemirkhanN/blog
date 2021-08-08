@@ -16,7 +16,7 @@ class FunctionalTestCase extends WebTestCase
 {
     private ?string $authToken = null;
 
-    private ?KernelBrowser $browser;
+    private KernelBrowser $browser;
 
     /** @var array<ClassMetadata<object>> */
     private static array $cachedMetadata = [];
@@ -47,7 +47,6 @@ class FunctionalTestCase extends WebTestCase
         $schema = new SchemaTool($this->getEntityManager());
         $schema->dropSchema(static::$cachedMetadata);
 
-        $this->browser   = null;
         $this->authToken = null;
 
         parent::tearDown();
@@ -71,6 +70,13 @@ class FunctionalTestCase extends WebTestCase
         $this->authToken = $token;
     }
 
+    /**
+     * @param string               $method
+     * @param string               $uri
+     * @param array<string, mixed> $parameters
+     *
+     * @return Response
+     */
     final protected function sendRequest(string $method, string $uri, array $parameters = []): Response
     {
         $server = [];
@@ -83,6 +89,10 @@ class FunctionalTestCase extends WebTestCase
         return $this->browser->getResponse();
     }
 
+    /**
+     * @param string $actualJson
+     * @param mixed  $expectedData
+     */
     final protected static function assertJsonEqualsToData(string $actualJson, $expectedData): void
     {
         self::assertJson($actualJson);
