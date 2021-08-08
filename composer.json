@@ -38,7 +38,8 @@
         "phpstan/phpstan": "^0.12.89",
         "phpstan/phpstan-phpunit": "^0.12.19",
         "phpunit/phpunit": "^9.5",
-        "roave/security-advisories": "dev-latest"
+        "roave/security-advisories": "dev-latest",
+        "symfony/phpunit-bridge": "^5.3"
     },
     "config": {
         "preferred-install": {
