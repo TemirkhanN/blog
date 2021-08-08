@@ -6,51 +6,25 @@ namespace App\Repository;
 
 use App\Entity\Post;
 use App\Entity\Tag;
+use App\FunctionalTestCase;
 use App\Service\DateTime\DateTimeFactory;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class PostRepositoryTest extends KernelTestCase
+class PostRepositoryTest extends FunctionalTestCase
 {
-    /** @var array<ClassMetadata<object>> */
-    private static array $cachedMetadata = [];
-
-    private EntityManager $entityManager;
-
     private PostRepository $repository;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        self::bootKernel();
-
-        /** @var ManagerRegistry $doctrine */
-        $doctrine = self::$kernel->getContainer()->get('doctrine');
-        /** @var EntityManager $defaultEm */
-        $defaultEm           = $doctrine->getManager();
-        $this->entityManager = $defaultEm;
-        $schema              = new SchemaTool($this->entityManager);
-        // TODO move to abstract repository testcase(cache with static) for further memory/time consumption mitigation
-        if (static::$cachedMetadata === []) {
-            static::$cachedMetadata = $defaultEm->getMetadataFactory()->getAllMetadata();
-        }
-
-        $schema->createSchema(static::$cachedMetadata);
-
-        $this->repository = new PostRepository($doctrine);
+        $this->repository = new PostRepository($this->getDoctrineRegistry());
 
         $this->createFixtures();
     }
 
     protected function tearDown(): void
     {
-        $schema = new SchemaTool($this->entityManager);
-        $schema->dropSchema(static::$cachedMetadata);
         DateTimeFactory::alwaysReturn(null);
 
         parent::tearDown();
@@ -237,6 +211,8 @@ class PostRepositoryTest extends KernelTestCase
 
     private function createFixtures(): void
     {
+        $entityManager = $this->getEntityManager();
+
         $someTag    = new Tag('SomeTag');
         $anotherTag = new Tag('AnotherTag');
 
@@ -251,7 +227,7 @@ class PostRepositoryTest extends KernelTestCase
                 'Some content ' . $postWithSomeTag
             );
             $post->addTag($someTag);
-            $this->entityManager->persist($post);
+            $entityManager->persist($post);
         }
 
         foreach (range(1, 4) as $postWithAnotherTag) {
@@ -263,7 +239,7 @@ class PostRepositoryTest extends KernelTestCase
                 'Another content ' . $postWithAnotherTag
             );
             $post2->addTag($anotherTag);
-            $this->entityManager->persist($post2);
+            $entityManager->persist($post2);
         }
 
         DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
@@ -275,8 +251,8 @@ class PostRepositoryTest extends KernelTestCase
         );
         $postWithMultipleTags->addTag($someTag);
         $postWithMultipleTags->addTag($anotherTag);
-        $this->entityManager->persist($postWithMultipleTags);
+        $entityManager->persist($postWithMultipleTags);
 
-        $this->entityManager->flush();
+        $entityManager->flush();
     }
 }
