@@ -32,6 +32,7 @@ main {
 
 .post-preview {
   border-bottom: 1px dashed lightgray;
+  margin-top: 1rem;
 }
 
 .preview p {
