@@ -11,7 +11,7 @@ function App() {
     return (
         <>
             <Header/>
-            <main className="container-fluid">
+            <main className="container-fluid container-md">
                 <Switch>
                     <Route exact path='/blog/tags/:tag([A-Za-z]+)/page/:page(\d+)' component={PostList}/>
                     <Route exact path='/blog/tags/:tag([A-Za-z]+)' component={PostList}/>
