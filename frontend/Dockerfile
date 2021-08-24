@@ -15,7 +15,7 @@ COPY ./ ./
 RUN npm install && npm run build --prod
 
 
-FROM nginx:alpine AS release
+FROM nginx:1.21 AS release
 
 WORKDIR /app/public
 
