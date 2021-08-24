@@ -11,12 +11,10 @@ type Comment = {
 
 function CommentList(props: { postSlug: string }) {
     const [error, setError] = useState<HttpError | null>();
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     const [comments, setComments] = useState<Comment[] | null>(null);
 
     useEffect(() => {
-        setLoading(true);
-
         fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts/" + props.postSlug + "/comments")
             .then(res => res.json())
             .then(

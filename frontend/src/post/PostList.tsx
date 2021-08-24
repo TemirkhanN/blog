@@ -20,7 +20,7 @@ function PostList() {
 
     const [error, setError] = useState<HttpError | null>();
     const [postsCollection, setPosts] = useState<PostCollection | null>(null);
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     const page = {
         tag: (typeof routerParams.tag === 'string') ? routerParams.tag : null,
         number: parseInt(routerParams.page) > 0 ? parseInt(routerParams.page) : 1,
@@ -28,8 +28,6 @@ function PostList() {
     };
 
     const fetchPosts = () => {
-        setLoading(true);
-
         let filter = [];
         filter.push('limit=' + page.itemsPerPage);
         filter.push('offset=' + page.itemsPerPage * (page.number - 1));

@@ -10,12 +10,10 @@ import PostModel from "./Type/PostModel";
 
 function Post(props: { match: { params: { slug: string } } }) {
     const [error, setError] = useState<HttpError | null>();
-    const [isLoading, setLoading] = useState(false);
+    const [isLoading, setLoading] = useState(true);
     const [post, setPost] = useState<PostModel | null>(null);
 
     useEffect(() => {
-        setLoading(true);
-
         fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts/" + props.match.params.slug)
             .then(res => res.json())
             .then(
@@ -56,7 +54,16 @@ function Post(props: { match: { params: { slug: string } } }) {
     }
 
     if (post === null) {
-        return null;
+        return (
+            <div>
+                <Helmet>
+                    <title>Error</title>
+                </Helmet>
+                <Alert variant="danger">
+                    Unexpected workflow error occurred! Post is null!
+                </Alert>
+            </div>
+        );;
     }
 
     const md = new Remarkable();
