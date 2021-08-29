@@ -20,6 +20,7 @@ FROM nginx:1.21 AS release
 WORKDIR /app/public
 
 COPY ./docker/nginx.conf /etc/nginx/templates/default.conf.template
+COPY ./docker/certbot-nginx.sh /app/
 COPY --from=builder /app/build/ ./
 
 EXPOSE 80
