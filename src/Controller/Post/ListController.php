@@ -39,14 +39,14 @@ class ListController
 
         $tag = $request->query->getAlnum('tag');
         if ($tag !== '') {
-            $posts        = $this->postListService->getPostsByTag($tag, $offset, self::POSTS_PER_PAGE);
+            $posts        = $this->postListService->getPostsByTag($tag, $offset, $limit);
             $ofTotalPosts = $this->postListService->countPosts($tag);
         } else {
-            $posts        = $this->postListService->getPosts($offset, self::POSTS_PER_PAGE);
+            $posts        = $this->postListService->getPosts($offset, $limit);
             $ofTotalPosts = $this->postListService->countPosts();
         }
 
-        $context = new CollectionChunk(self::POSTS_PER_PAGE, $offset, $ofTotalPosts, $posts);
+        $context = new CollectionChunk($limit, $offset, $ofTotalPosts, $posts);
 
         return $this->responseFactory->view(['post.preview', $context], 'response.paginated_collection');
     }

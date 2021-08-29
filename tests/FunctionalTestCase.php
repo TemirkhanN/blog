@@ -101,4 +101,27 @@ class FunctionalTestCase extends WebTestCase
 
         self::assertEquals($expectedData, $actualData);
     }
+
+    final protected static function assertResponseContainsPagination(
+        Response $response,
+        int $limit,
+        int $offset,
+        int $totalItems
+    ): void {
+        $content = $response->getContent();
+
+        self::assertJson($content);
+
+        $data = json_decode($content, true);
+
+        self::assertArrayHasKey('pagination', $data);
+        self::assertEquals(
+            [
+                'limit'  => $limit,
+                'offset' => $offset,
+                'total'  => $totalItems,
+            ],
+            $data['pagination']
+        );
+    }
 }
