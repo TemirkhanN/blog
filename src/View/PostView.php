@@ -24,7 +24,7 @@ class PostView implements ViewInterface
      *  slug: string,
      *  title: string,
      *  preview: string,
-     *  content?: ?string,
+     *  content?: string,
      *  publishedAt: string,
      *  tags: string[]
      * }
