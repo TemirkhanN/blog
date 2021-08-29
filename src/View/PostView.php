@@ -24,7 +24,7 @@ class PostView implements ViewInterface
      *  slug: string,
      *  title: string,
      *  preview: string,
-     *  content: ?string,
+     *  content?: ?string,
      *  publishedAt: string,
      *  tags: string[]
      * }
@@ -42,7 +42,7 @@ class PostView implements ViewInterface
             'preview'     => $context->getPreview(),
             'tags'        => array_map(
                 static function (Tag $tag) {
-                    return (string)$tag;
+                    return (string) $tag;
                 },
                 $context->getTags()
             ),

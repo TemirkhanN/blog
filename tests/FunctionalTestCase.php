@@ -108,7 +108,7 @@ class FunctionalTestCase extends WebTestCase
         int $offset,
         int $totalItems
     ): void {
-        $content = $response->getContent();
+        $content = (string) $response->getContent();
 
         self::assertJson($content);
 

@@ -22,8 +22,8 @@ class ListControllerTest extends FunctionalTestCase
     }
 
     /**
-     * @param array  $query
-     * @param string $error
+     * @param array<string, int|string> $query
+     * @param string                    $error
      *
      * @dataProvider badRequestProvider
      */
@@ -35,21 +35,24 @@ class ListControllerTest extends FunctionalTestCase
         self::assertEquals($error, $response->getContent());
     }
 
+    /**
+     * @return iterable<array>
+     */
     public function badRequestProvider(): iterable
     {
-        # 1 Invalid offset
+        // 1 Invalid offset
         yield [
             'query' => ['offset' => -1],
             'error' => '{"code":400,"message":"Offset can not be less than 0"}',
         ];
 
-        # 2 Invalid limit
+        // 2 Invalid limit
         yield [
             'query' => ['limit' => 0],
             'error' => '{"code":400,"message":"Limit can not be less than 1 or too high"}',
         ];
 
-        # 3 Too high limit
+        // 3 Too high limit
         yield [
             'query' => ['limit' => 21],
             'error' => '{"code":400,"message":"Limit can not be less than 1 or too high"}',
@@ -57,13 +60,9 @@ class ListControllerTest extends FunctionalTestCase
     }
 
     /**
-     * @param array    $query
-     * @param string[] $matchingPosts
-     * @param array{
-     *     limit: int,
-     *     offset: int,
-     *     total: int
-     *     } $pagination
+     * @param array<string, int|string>                  $query
+     * @param string[]                                   $matchingPosts
+     * @param array{limit: int, offset: int, total: int} $pagination
      *
      * @dataProvider postFilterProvider
      */
@@ -83,9 +82,12 @@ class ListControllerTest extends FunctionalTestCase
         $this->assertResponseContainsPosts($matchingPosts, $response);
     }
 
+    /**
+     * @return iterable<array>
+     */
     public function postFilterProvider(): iterable
     {
-        # 0 Last 10 posts(default behaviour)
+        // 0 Last 10 posts
         yield [
             'query'         => [],
             'matchingPosts' => [
@@ -107,11 +109,9 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        # 1 Last 5 posts
+        // 1 Last 5 posts
         yield [
-            'query'         => [
-                'limit' => 5,
-            ],
+            'query'         => ['limit' => 5],
             'matchingPosts' => [
                 '22th-post-slug',
                 '21th-post-slug',
@@ -126,7 +126,7 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        # 2 Last 5 posts from 4th position
+        // 2 Last 5 posts from 4th position
         yield [
             'query'         => [
                 'limit'  => 5,
@@ -146,11 +146,9 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        # 3 Maximum allowed limit
+        // 3 Maximum allowed limit
         yield [
-            'query'         => [
-                'limit' => 20,
-            ],
+            'query'         => ['limit' => 20],
             'matchingPosts' => [
                 '22th-post-slug',
                 '21th-post-slug',
@@ -180,7 +178,7 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        # 4 Offset and limit over total amount
+        // 4 Offset and limit over total amount
         yield [
             'query'         => [
                 'limit'  => 5,
@@ -197,11 +195,9 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        # 5 Posts tagged with "SomeTag"
+        // 5 Posts tagged with "SomeTag"
         yield [
-            'query'         => [
-                'tag' => 'SomeTag',
-            ],
+            'query'         => ['tag' => 'SomeTag'],
             'matchingPosts' => [
                 '14th-post-slug',
                 '13th-post-slug',
@@ -217,11 +213,9 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        # 6 Posts tagged with "AnotherTag"
+        // 6 Posts tagged with "AnotherTag"
         yield [
-            'query'         => [
-                'tag' => 'AnotherTag',
-            ],
+            'query'         => ['tag' => 'AnotherTag'],
             'matchingPosts' => [
                 '13th-post-slug',
                 '11th-post-slug',
@@ -236,11 +230,9 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        # 7 Posts tagged with "OneMoreTag"
+        // 7 Posts tagged with "OneMoreTag"
         yield [
-            'query'         => [
-                'tag' => 'OneMoreTag',
-            ],
+            'query'         => ['tag' => 'OneMoreTag'],
             'matchingPosts' => [
                 '22th-post-slug',
                 '15th-post-slug',
@@ -258,7 +250,7 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        # 7 Posts tagged with "OneMoreTag" with limit and offset
+        // 7 Posts tagged with "OneMoreTag" with limit and offset
         yield [
             'query'         => [
                 'tag'    => 'OneMoreTag',
@@ -330,23 +322,39 @@ class ListControllerTest extends FunctionalTestCase
             ],
             [
                 'slug' => '10th-post-slug',
-                'tags' => [$tag1, $tag2],
+                'tags' => [
+                    $tag1,
+                    $tag2,
+                ],
             ],
             [
                 'slug' => '11th-post-slug',
-                'tags' => [$tag2, $tag3],
+                'tags' => [
+                    $tag2,
+                    $tag3,
+                ],
             ],
             [
                 'slug' => '12th-post-slug',
-                'tags' => [$tag3, $tag1],
+                'tags' => [
+                    $tag3,
+                    $tag1,
+                ],
             ],
             [
                 'slug' => '13th-post-slug',
-                'tags' => [$tag1, $tag2, $tag3],
+                'tags' => [
+                    $tag1,
+                    $tag2,
+                    $tag3,
+                ],
             ],
             [
                 'slug' => '14th-post-slug',
-                'tags' => [$tag1, $tag3],
+                'tags' => [
+                    $tag1,
+                    $tag3,
+                ],
             ],
             [
                 'slug' => '15th-post-slug',
@@ -400,9 +408,13 @@ class ListControllerTest extends FunctionalTestCase
         $em->flush();
     }
 
+    /**
+     * @param array<string> $postsSlugs
+     * @param Response      $response
+     */
     private function assertResponseContainsPosts(array $postsSlugs, Response $response): void
     {
-        $content = $response->getContent();
+        $content = (string) $response->getContent();
         self::assertJson($content);
         $responseData = json_decode($content, true);
 
@@ -426,7 +438,7 @@ class ListControllerTest extends FunctionalTestCase
                 'preview'     => $post->getPreview(),
                 'tags'        => array_map(
                     static function (Tag $tag) {
-                        return (string)$tag;
+                        return (string) $tag;
                     },
                     $post->getTags()
                 ),

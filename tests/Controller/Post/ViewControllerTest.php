@@ -50,7 +50,7 @@ class ViewControllerTest extends FunctionalTestCase
         $post = $postRepository->findOneBy(['slug' => $slug]);
         self::assertNotNull($post);
         self::assertJsonEqualsToData(
-            $response->getContent(),
+            (string) $response->getContent(),
             [
                 'slug'        => $post->getSlug(),
                 'title'       => $post->getTitle(),
@@ -67,6 +67,9 @@ class ViewControllerTest extends FunctionalTestCase
         );
     }
 
+    /**
+     * @return iterable<array<string>>
+     */
     public function slugProvider(): iterable
     {
         yield ['some-slug_link123'];
