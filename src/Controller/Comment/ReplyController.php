@@ -47,7 +47,7 @@ class ReplyController
         if (
             $replyToComment === null
             ||
-            $replyToComment->getPost()->getSlug() !== $slug
+            $replyToComment->getPost()->slug() !== $slug
         ) {
             return $this->responseFactory->notFound('Target comment does not exist');
         }

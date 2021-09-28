@@ -52,17 +52,17 @@ class ViewControllerTest extends FunctionalTestCase
         self::assertJsonEqualsToData(
             (string) $response->getContent(),
             [
-                'slug'        => $post->getSlug(),
-                'title'       => $post->getTitle(),
-                'preview'     => $post->getPreview(),
-                'content'     => $post->getContent(),
+                'slug'        => $post->slug(),
+                'title'       => $post->title(),
+                'preview'     => $post->preview(),
+                'content'     => $post->content(),
                 'tags'        => array_map(
                     function (Tag $tag): string {
-                        return $tag->getName();
+                        return $tag->name();
                     },
-                    $post->getTags()
+                    $post->tags()
                 ),
-                'publishedAt' => $post->getPublishedAt()->format(DATE_ATOM),
+                'publishedAt' => $post->publishedAt()->format(DATE_ATOM),
             ]
         );
     }

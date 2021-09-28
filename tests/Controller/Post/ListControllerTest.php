@@ -432,15 +432,15 @@ class ListControllerTest extends FunctionalTestCase
             self::assertNotNull($post);
 
             $posts[] = [
-                'slug'        => $post->getSlug(),
-                'title'       => $post->getTitle(),
-                'publishedAt' => $post->getPublishedAt()->format(\DateTimeInterface::W3C),
-                'preview'     => $post->getPreview(),
+                'slug'        => $post->slug(),
+                'title'       => $post->title(),
+                'publishedAt' => $post->publishedAt()->format(\DateTimeInterface::W3C),
+                'preview'     => $post->preview(),
                 'tags'        => array_map(
                     static function (Tag $tag) {
                         return (string) $tag;
                     },
-                    $post->getTags()
+                    $post->tags()
                 ),
             ];
         }

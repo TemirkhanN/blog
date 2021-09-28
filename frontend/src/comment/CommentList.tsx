@@ -4,7 +4,7 @@ import {Alert, Spinner} from "react-bootstrap";
 
 type Comment = {
     guid: string,
-    creationDate: string,
+    createdAt: string,
     comment: string,
     replies: Comment[]
 };
@@ -53,7 +53,7 @@ function CommentList(props: { postSlug: string }) {
     }
 
     const showComment = (comment: Comment, depth: number) => {
-        const creationDate = (new Date(comment.creationDate)).toLocaleDateString(
+        const createdAt = (new Date(comment.createdAt)).toLocaleDateString(
             'en-gb',
             {
                 hour: '2-digit',
@@ -70,7 +70,7 @@ function CommentList(props: { postSlug: string }) {
 
         return (
             <div className="comment" key={comment.guid}>
-                <p className="pub-date">{creationDate}</p>
+                <p className="pub-date">{createdAt}</p>
                 <div className="comment-text">
                     {comment.comment}
                     <div>

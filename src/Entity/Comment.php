@@ -24,7 +24,7 @@ class Comment
     public static function replyTo(Comment $to, string $reply): self
     {
         $comment                       = new self($to->post, $reply);
-        $comment->repliedToCommentGuid = $to->getGuid();
+        $comment->repliedToCommentGuid = $to->guid();
 
         return $comment;
     }
@@ -37,7 +37,7 @@ class Comment
         $this->createdAt = DateTimeFactory::now();
     }
 
-    public function getGuid(): string
+    public function guid(): string
     {
         return $this->guid;
     }
@@ -47,17 +47,17 @@ class Comment
         return $this->post;
     }
 
-    public function getComment(): string
+    public function text(): string
     {
         return $this->comment;
     }
 
-    public function getRepliedCommentGuid(): ?string
+    public function repliedTo(): ?string
     {
         return $this->repliedToCommentGuid;
     }
 
-    public function getCreationDate(): DateTimeInterface
+    public function createdAt(): DateTimeInterface
     {
         return $this->createdAt;
     }

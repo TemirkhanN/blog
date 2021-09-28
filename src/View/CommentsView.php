@@ -16,7 +16,7 @@ class CommentsView implements ViewInterface
      *
      * @return array{
      *  guid: string,
-     *  creationDate: string,
+     *  createdAt: string,
      *  comment: string,
      *  replies: array
      * }[]
@@ -31,7 +31,7 @@ class CommentsView implements ViewInterface
             assert($item instanceof Comment);
             $comments[] = $item;
 
-            $repliedTo = $item->getRepliedCommentGuid();
+            $repliedTo = $item->repliedTo();
             if ($repliedTo !== null) {
                 $replies[$repliedTo][] = $item;
             } else {
@@ -53,7 +53,7 @@ class CommentsView implements ViewInterface
      *
      * @return array{
      *  guid: string,
-     *  creationDate: string,
+     *  createdAt: string,
      *  comment: string,
      *  replies: array
      * }
@@ -61,17 +61,17 @@ class CommentsView implements ViewInterface
     public function createCommentView(Comment $comment, array &$allReplies): array
     {
         $view = [
-            'guid'         => $comment->getGuid(),
-            'creationDate' => $comment->getCreationDate()->format(DateTimeInterface::ATOM),
-            'comment'      => $comment->getComment(),
-            'replies'      => [],
+            'guid'      => $comment->guid(),
+            'createdAt' => $comment->createdAt()->format(DateTimeInterface::ATOM),
+            'comment'   => $comment->text(),
+            'replies'   => [],
         ];
-        if (!isset($allReplies[$comment->getGuid()])) {
+        if (!isset($allReplies[$comment->guid()])) {
             return $view;
         }
 
-        $replies = $allReplies[$comment->getGuid()];
-        unset($allReplies[$comment->getGuid()]);
+        $replies = $allReplies[$comment->guid()];
+        unset($allReplies[$comment->guid()]);
         foreach ($replies as $reply) {
             $view['replies'][] = $this->createCommentView($reply, $allReplies);
         }

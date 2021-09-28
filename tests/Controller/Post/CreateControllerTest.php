@@ -88,12 +88,12 @@ class CreateControllerTest extends FunctionalTestCase
         self::assertJsonEqualsToData(
             $content,
             [
-                'slug'        => $post->getSlug(),
+                'slug'        => $post->slug(),
                 'title'       => 'Some title',
                 'preview'     => 'Some preview',
                 'content'     => 'Some content',
                 'tags'        => [],
-                'publishedAt' => $post->getPublishedAt()->format(DATE_ATOM),
+                'publishedAt' => $post->publishedAt()->format(DATE_ATOM),
             ]
         );
     }

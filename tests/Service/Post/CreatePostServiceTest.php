@@ -67,12 +67,12 @@ class CreatePostServiceTest extends TestCase
             ->expects(self::once())
             ->method('save')
             ->with(self::callback(function (Post $actualPost) use (&$expectedPost, $expectedSlug): bool {
-                self::assertEquals($expectedSlug, $actualPost->getSlug());
-                self::assertEquals('Some content', $actualPost->getContent());
-                self::assertEquals('Some preview', $actualPost->getPreview());
-                self::assertEqualsWithDelta(time(), $actualPost->getPublishedAt()->getTimestamp(), 2);
-                self::assertEquals('Some title', $actualPost->getTitle());
-                self::assertEmpty($actualPost->getTags());
+                self::assertEquals($expectedSlug, $actualPost->slug());
+                self::assertEquals('Some content', $actualPost->content());
+                self::assertEquals('Some preview', $actualPost->preview());
+                self::assertEqualsWithDelta(time(), $actualPost->publishedAt()->getTimestamp(), 2);
+                self::assertEquals('Some title', $actualPost->title());
+                self::assertEmpty($actualPost->tags());
                 $expectedPost = $actualPost;
 
                 return true;

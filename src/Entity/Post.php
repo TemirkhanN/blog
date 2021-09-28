@@ -10,9 +10,6 @@ use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-/**
- * Publication
- */
 class Post
 {
     private int $id;
@@ -45,27 +42,27 @@ class Post
         $this->slug        = $slug;
     }
 
-    public function getTitle(): string
+    public function title(): string
     {
         return $this->title;
     }
 
-    public function getContent(): string
+    public function content(): string
     {
         return $this->content;
     }
 
-    public function getPreview(): string
+    public function preview(): string
     {
         return $this->preview;
     }
 
-    public function getSlug(): string
+    public function slug(): string
     {
         return $this->slug;
     }
 
-    public function getPublishedAt(): DateTimeInterface
+    public function publishedAt(): DateTimeInterface
     {
         return $this->publishedAt;
     }
@@ -80,7 +77,7 @@ class Post
     /**
      * @return Tag[]
      */
-    public function getTags(): array
+    public function tags(): array
     {
         return $this->tags->toArray();
     }

@@ -51,7 +51,7 @@ class PostRepositoryTest extends FunctionalTestCase
         $post = $this->repository->findOneBySlug($slug);
 
         self::assertNotNull($post);
-        self::assertEquals($slug, $post->getSlug());
+        self::assertEquals($slug, $post->slug());
     }
 
     /** @return iterable<string[]> */
@@ -96,7 +96,7 @@ class PostRepositoryTest extends FunctionalTestCase
 
         $existingTitles = [];
         foreach ($posts as $post) {
-            $existingTitles[] = $post->getTitle();
+            $existingTitles[] = $post->title();
         }
 
         self::assertSame($expectedTitles, $existingTitles);
@@ -160,7 +160,7 @@ class PostRepositoryTest extends FunctionalTestCase
 
         $existingTitles = [];
         foreach ($posts as $post) {
-            $existingTitles[] = $post->getTitle();
+            $existingTitles[] = $post->title();
         }
 
         self::assertSame($expectedTitles, $existingTitles);
