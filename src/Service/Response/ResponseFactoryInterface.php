@@ -14,13 +14,13 @@ interface ResponseFactoryInterface
     /**
      * Creates response
      *
-     * @param string                  $content
+     * @param mixed                   $content
      * @param int                     $statusCode
      * @param array<string, string[]> $headers
      *
      * @return Response
      */
-    public function createResponse(string $content, int $statusCode = Response::HTTP_OK, array $headers = []): Response;
+    public function createResponse($content, int $statusCode = Response::HTTP_OK, array $headers = []): Response;
 
     /**
      * Creates response with data represented

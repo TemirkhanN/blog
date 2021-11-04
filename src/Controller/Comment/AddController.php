@@ -9,7 +9,7 @@ use App\Entity\Comment;
 use App\Service\Post\CommentService;
 use App\Service\Post\PostListService;
 use App\Service\Response\ResponseFactoryInterface;
-use App\Service\Response\ValueObject\SystemMessage;
+use App\Service\Response\Dto\SystemMessage;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

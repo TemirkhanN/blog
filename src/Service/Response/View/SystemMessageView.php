@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Response\View;
 
-use App\Service\Response\ValueObject\SystemMessage;
+use App\Service\Response\Dto\SystemMessage;
 use Temirkhan\View\ViewInterface;
 
 /**

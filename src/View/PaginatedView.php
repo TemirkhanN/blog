@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\View;
 
-use App\Service\Response\ValueObject\CollectionChunk;
+use App\Service\Response\Dto\CollectionChunk;
 use Temirkhan\View\AbstractAggregateView;
 
 class PaginatedView extends AbstractAggregateView

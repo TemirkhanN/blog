@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Response;
 
-use App\Service\Response\ValueObject\SystemMessage;
+use App\Service\Response\Dto\SystemMessage;
 use Symfony\Component\HttpFoundation\Response;
 use Temirkhan\View\Exception\UnknownViewException;
 use Temirkhan\View\ViewFactoryInterface;

@@ -6,7 +6,7 @@ namespace App\Controller\Post;
 
 use App\Service\Post\PostListService;
 use App\Service\Response\ResponseFactoryInterface;
-use App\Service\Response\ValueObject\CollectionChunk;
+use App\Service\Response\Dto\CollectionChunk;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
