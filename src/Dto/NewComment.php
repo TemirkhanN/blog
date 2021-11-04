@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace App\Dto;
 
-use Spatie\DataTransferObject\DataTransferObject;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vseinstrumentiru\DataObjectBundle\Object\AbstractObject;
 
-class NewComment extends DataTransferObject
+class NewComment extends AbstractObject
 {
     /**
-     * @var string
-     *
      * @Assert\NotBlank
      * @Assert\Length(
      *     min=30,

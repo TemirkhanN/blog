@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9866c8174e62d0c70d5faf7cca5b6ebb",
+    "content-hash": "9633c1298f60f235a0c08c6f2bc7c1da",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -1923,6 +1923,68 @@
                 "source": "https://github.com/spatie/data-transfer-object/tree/master"
             },
             "time": "2020-01-29T15:10:20+00:00"
+        },
+        {
+            "name": "symfony-bundles/json-request-bundle",
+            "version": "4.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony-bundles/json-request-bundle.git",
+                "reference": "96fb1ba9c593fc28d61206b590308d318aa58988"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony-bundles/json-request-bundle/zipball/96fb1ba9c593fc28d61206b590308d318aa58988",
+                "reference": "96fb1ba9c593fc28d61206b590308d318aa58988",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.4 || ^8.0",
+                "symfony/framework-bundle": "^4.3||^5.0"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^1.0",
+                "phpstan/phpstan": "^0.12",
+                "phpunit/php-code-coverage": "^9.2",
+                "phpunit/phpunit": "^9.5",
+                "symfony/browser-kit": "^5.2",
+                "symfony/yaml": "^5.2"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SymfonyBundles\\JsonRequestBundle\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Dmitry Khaperets",
+                    "email": "khaperets@gmail.com"
+                }
+            ],
+            "description": "Symfony JsonRequest Bundle",
+            "homepage": "https://github.com/symfony-bundles/json-request-bundle",
+            "keywords": [
+                "angular",
+                "bundle",
+                "json",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/symfony-bundles/json-request-bundle/issues",
+                "source": "https://github.com/symfony-bundles/json-request-bundle/tree/4.0.6"
+            },
+            "time": "2021-09-13T13:23:29+00:00"
         },
         {
             "name": "symfony/cache",
@@ -5515,54 +5577,6 @@
             "time": "2021-06-06T09:51:56+00:00"
         },
         {
-            "name": "temirkhan/dto-bundle",
-            "version": "0.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/TemirkhanN/dto-bundle.git",
-                "reference": "0b70b8526a1439a529de4095b9bcf7157a22353f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/TemirkhanN/dto-bundle/zipball/0b70b8526a1439a529de4095b9bcf7157a22353f",
-                "reference": "0b70b8526a1439a529de4095b9bcf7157a22353f",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^7.3",
-                "spatie/data-transfer-object": "^1.13|^2.5",
-                "symfony/dependency-injection": "^4.1|^5.0",
-                "symfony/http-kernel": "^4.1|^5.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Temirkhan\\DataObjectBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "temirkhan",
-                    "email": "temirkhan@nasukhov.me"
-                }
-            ],
-            "description": "DTO handler bundle for symfony projects",
-            "support": {
-                "issues": "https://github.com/TemirkhanN/dto-bundle/issues",
-                "source": "https://github.com/TemirkhanN/dto-bundle/tree/0.1.0"
-            },
-            "abandoned": "vi-tech/dto-bundle",
-            "time": "2020-09-03T21:14:34+00:00"
-        },
-        {
             "name": "temirkhan/view",
             "version": "dev-master",
             "source": {
@@ -5591,6 +5605,56 @@
                 "issues": "https://github.com/TemirkhanN/view/issues"
             },
             "time": "2019-09-18T21:13:02+00:00"
+        },
+        {
+            "name": "vi-tech/dto-bundle",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/vseinstrumentiru/dto-bundle.git",
+                "reference": "5d33cf8d5bb26d83783e21dce796826638b15683"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/vseinstrumentiru/dto-bundle/zipball/5d33cf8d5bb26d83783e21dce796826638b15683",
+                "reference": "5d33cf8d5bb26d83783e21dce796826638b15683",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "~7.4.0|~8.0.0",
+                "spatie/data-transfer-object": "^1.13|^2.5",
+                "symfony/dependency-injection": "^4.1|^5.0",
+                "symfony/http-kernel": "^4.1|^5.1"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^2.2",
+                "phpunit/phpunit": "^9.3",
+                "roave/security-advisories": "dev-master",
+                "squizlabs/php_codesniffer": "^3.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Vseinstrumentiru\\DataObjectBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Temirkhan",
+                    "email": "temirkhan@nasukhov.me"
+                }
+            ],
+            "description": "DTO resolver for symfony projects",
+            "support": {
+                "issues": "https://github.com/vseinstrumentiru/dto-bundle/issues",
+                "source": "https://github.com/vseinstrumentiru/dto-bundle/tree/2.0.0"
+            },
+            "time": "2021-10-14T10:19:48+00:00"
         }
     ],
     "packages-dev": [

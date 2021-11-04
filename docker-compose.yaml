@@ -17,6 +17,7 @@ services:
       - .env
     volumes:
       - ./:/app
+      - .composer/:/var/www/.composer/
     networks:
       - appnet
       - infranet

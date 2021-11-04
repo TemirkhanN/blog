@@ -4,31 +4,25 @@ declare(strict_types=1);
 
 namespace App\Dto;
 
-use Spatie\DataTransferObject\DataTransferObject;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vseinstrumentiru\DataObjectBundle\Object\AbstractObject;
 
 /**
  * Post creation data transfer object.
  */
-class CreatePost extends DataTransferObject
+class CreatePost extends AbstractObject
 {
     /**
-     * @var string
-     *
      * @Assert\NotBlank()
      */
     public string $title;
 
     /**
-     * @var string
-     *
      * @Assert\NotBlank()
      */
     public string $preview;
 
     /**
-     * @var string
-     *
      * @Assert\NotBlank()
      */
     public string $content;

@@ -234,6 +234,9 @@
             "phpcs.xml.dist"
         ]
     },
+    "symfony-bundles/json-request-bundle": {
+        "version": "4.0.6"
+    },
     "symfony/browser-kit": {
         "version": "v5.3.4"
     },
@@ -452,14 +455,14 @@
     "symfony/yaml": {
         "version": "v4.3.4"
     },
-    "temirkhan/dto-bundle": {
-        "version": "0.1.0"
-    },
     "temirkhan/view": {
         "version": "dev-master"
     },
     "theseer/tokenizer": {
         "version": "1.2.0"
+    },
+    "vi-tech/dto-bundle": {
+        "version": "2.0.0"
     },
     "webmozart/assert": {
         "version": "1.10.0"
