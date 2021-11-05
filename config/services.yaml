@@ -18,6 +18,7 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/{EventSubscriber,Service,Security}'
+        exclude: '../src/Service/Response'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -34,9 +35,3 @@ services:
         arguments:
             $ownerToken: '%env(MY_VERY_SECRET_TOKEN)%'
 
-    App\Service\Response\CorsAllowingDecorator:
-        arguments:
-            $allowedOrigin: '%env(CORS_ALLOWED_ORIGIN)%'
-            $factory: '@App\Service\Response\ResponseFactory'
-
-    App\Service\Response\ResponseFactoryInterface: '@App\Service\Response\CorsAllowingDecorator'

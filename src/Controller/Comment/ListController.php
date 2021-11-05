@@ -6,6 +6,8 @@ namespace App\Controller\Comment;
 
 use App\Service\Post\CommentService;
 use App\Service\Post\PostListService;
+use App\Service\Response\Cache\CacheGatewayInterface;
+use App\Service\Response\Cache\TTL;
 use App\Service\Response\ResponseFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -25,7 +27,7 @@ class ListController
         $this->responseFactory = $responseFactory;
     }
 
-    public function __invoke(string $slug): Response
+    public function __invoke(string $slug, CacheGatewayInterface $cacheGateway): Response
     {
         $post = $this->postListService->getPostBySlug($slug);
         if (!$post) {
@@ -34,6 +36,8 @@ class ListController
 
         $comments = $this->commentService->getCommentsByPost($post);
 
-        return $this->responseFactory->view($comments, 'post.comments');
+        $response = $this->responseFactory->view($comments, 'post.comments');
+
+        return $cacheGateway->cache($response, TTL::minutes(1));
     }
 }

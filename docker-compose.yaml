@@ -23,7 +23,6 @@ services:
       - infranet
     depends_on:
       - db
-      - cache
   db:
     image: sameersbn/postgresql:12-20200524
     environment:
@@ -36,10 +35,6 @@ services:
       - infranet
     volumes:
       - db-storage:/var/lib/postgresql
-  cache:
-    image: redis
-    networks:
-      - infranet
 
 networks:
   infranet:

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Service\Post\PostListService;
+use App\Service\Response\Cache\CacheGatewayInterface;
+use App\Service\Response\Cache\TTL;
 use App\Service\Response\ResponseFactoryInterface;
 use App\Service\Response\Dto\CollectionChunk;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +26,7 @@ class ListController
         $this->responseFactory = $responseFactory;
     }
 
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request, CacheGatewayInterface $cacheGateway): Response
     {
         $offset = $request->query->getInt('offset', 0);
         $limit  = $request->query->getInt('limit', self::POSTS_PER_PAGE);
@@ -48,6 +50,8 @@ class ListController
 
         $context = new CollectionChunk($limit, $offset, $ofTotalPosts, $posts);
 
-        return $this->responseFactory->view(['post.preview', $context], 'response.paginated_collection');
+        $response = $this->responseFactory->view(['post.preview', $context], 'response.paginated_collection');
+
+        return $cacheGateway->cache($response, TTL::minutes(10));
     }
 }

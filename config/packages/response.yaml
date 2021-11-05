@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autowire: true
+
+    App\Service\Response\:
+        resource: '../../src/Service/Response'
+
+    response.decorator.cors:
+        class: App\Service\Response\CorsAllowingDecorator
+        arguments:
+          $allowedOrigin: '%env(CORS_ALLOWED_ORIGIN)%'
+          $factory: '@App\Service\Response\ResponseFactory'
+
+    App\Service\Response\ResponseFactoryInterface: '@response.decorator.cors'
