@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import HttpError from "../basetypes/HttpError";
-import {Alert, Spinner} from "react-bootstrap";
+import {Alert, Button, Spinner} from "react-bootstrap";
+import {CommentReference, NewComment} from "./NewComment";
 
 type Comment = {
     guid: string,
@@ -13,6 +14,7 @@ function CommentList(props: { postSlug: string }) {
     const [error, setError] = useState<HttpError | null>();
     const [isLoading, setLoading] = useState(true);
     const [comments, setComments] = useState<Comment[] | null>(null);
+    const [replyTo, setReplyTo] = useState<CommentReference|null>(null);
 
     useEffect(() => {
         fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts/" + props.postSlug + "/comments")
@@ -74,7 +76,13 @@ function CommentList(props: { postSlug: string }) {
                 <div className="comment-text">
                     {comment.comment}
                     <div>
-                        <button>reply</button>
+                        <Button
+                            size="sm"
+                            className="btn btn-primary"
+                            onClick={(e) => {
+                                setReplyTo({guid: comment.guid, comment: comment.comment})
+                            }}
+                        >reply</Button>
                     </div>
                 </div>
                 {replies}
@@ -84,6 +92,7 @@ function CommentList(props: { postSlug: string }) {
 
     return (
         <div className="comments clearfix">
+            <NewComment postSlug={props.postSlug} replyToComment={replyTo}/>
             {comments.map(showComment)}
         </div>
     );
