@@ -1,5 +1,7 @@
 include .env
 
+BACKEND_CLI=docker-compose exec -u www-data backend
+
 .PHONY: build
 build:
 	docker-compose build
@@ -11,7 +13,7 @@ up:
 
 .PHONY: bash
 bash:
-	docker-compose exec -u www-data backend bash
+	$(BACKEND_CLI) bash
 
 .PHONY: down
 down:
@@ -23,10 +25,14 @@ ps:
 
 .PHONY: migrate
 migrate:
-	docker-compose exec -u www-data backend php bin/console doctrine:migrations:migrate --no-interaction
+	$(BACKEND_CLI) php bin/console doctrine:migrations:migrate --no-interaction
 
 .PHONY: code-check
 code-check:
-	php ./vendor/bin/phpcs
-	php -d memory_limit=512M ./vendor/bin/phpstan
-	php ./vendor/bin/phpunit
+	$(BACKEND_CLI) php ./vendor/bin/phpcs
+	$(BACKEND_CLI) php -d memory_limit=512M ./vendor/bin/phpstan
+	$(BACKEND_CLI) php ./vendor/bin/phpunit
+
+.PHONY: build-frontend
+build-frontend:
+	cd frontend && npm run build
