@@ -1,10 +1,14 @@
-version: '3'
+version: '3.4'
 services:
   frontend:
-    image: nginx:alpine
+    build:
+      context: ./frontend
+      target: dev
+    env_file:
+      - ./frontend/.env
     volumes:
       - ./frontend/docker/nginx.conf:/etc/nginx/templates/default.conf.template:ro
-      - ./frontend/build:/app/public:ro
+      - ./frontend:/frontend
     ports:
       - "80:80"
     networks:
