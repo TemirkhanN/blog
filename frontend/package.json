@@ -14,6 +14,7 @@
     "axios": "^0.24.0",
     "bootstrap": "^4.6.0",
     "glob-parent": "^6.0.1",
+    "js-cookie": "^3.0.1",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.0",
     "react-dom": "^17.0.2",
@@ -27,8 +28,21 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "watch": "npm-watch",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "watch": {
+    "build": {
+      "delay": 2500,
+      "patterns": [
+        "src",
+        "public"
+      ],
+      "runOnChangeOnly": false,
+      "legacyWatch": true,
+      "extensions": "ts, tsx, css"
+    }
   },
   "eslintConfig": {
     "extends": [
@@ -49,7 +63,9 @@
     ]
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.1",
     "@types/react-router-dom": "^5.1.7",
-    "@types/remarkable": "^2.0.1"
+    "@types/remarkable": "^2.0.1",
+    "npm-watch": "^0.11.0"
   }
 }

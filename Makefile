@@ -12,7 +12,7 @@ up:
 	docker-compose up -d
 	make composer
 	make migrate
-	make build-frontend
+	make watch-frontend
 
 .PHONY: bash
 bash:
@@ -40,7 +40,7 @@ code-check:
 	$(BACKEND_CLI) php -d memory_limit=512M ./vendor/bin/phpstan
 	$(BACKEND_CLI) php ./vendor/bin/phpunit
 
-.PHONY: build-frontend
-build-frontend:
+.PHONY: watch-frontend
+watch-frontend:
 	$(FRONTEND_CLI) npm install
-	$(FRONTEND_CLI) npm run build
+	$(FRONTEND_CLI) npm run watch

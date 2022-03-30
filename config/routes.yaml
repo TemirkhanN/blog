@@ -1,3 +1,8 @@
+create_token:
+  path: /api/auth/tokens
+  methods: [ POST ]
+  controller: App\Controller\IssueTokenController
+
 index:
   path: /api/posts
   methods: [ GET ]

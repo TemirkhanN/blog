@@ -19,30 +19,24 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class TokenAuthenticator extends AbstractAuthenticator
 {
-    /**
-     * Authentication token for the blog owner
-     *
-     * @var string
-     */
-    private string $ownerToken;
+    private string $ownerPassword;
 
     private ResponseFactoryInterface $responseFactory;
 
-    public function __construct(string $ownerToken, ResponseFactoryInterface $responseFactory)
+    public function __construct(string $ownerPassword, ResponseFactoryInterface $responseFactory)
     {
-        $this->ownerToken      = $ownerToken;
+        $this->ownerPassword      = $ownerPassword;
         $this->responseFactory = $responseFactory;
     }
 
     public function authenticate(Request $request): PassportInterface
     {
         $token = $request->headers->get('Authorization');
-
         if ($token === null) {
             throw new TokenNotFoundException('No API token provided');
         }
 
-        if ($this->ownerToken !== $token) {
+        if (!password_verify($this->ownerPassword, $token)) {
             throw new CustomUserMessageAuthenticationException('Invalid token');
         }
 

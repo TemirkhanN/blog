@@ -33,5 +33,11 @@ services:
 
     App\Security\TokenAuthenticator:
         arguments:
-            $ownerToken: '%env(MY_VERY_SECRET_TOKEN)%'
+            $ownerPassword: '%env(MY_VERY_SECRET_TOKEN)%'
 
+    App\Service\TokenIssuer:
+        arguments:
+            $users:
+                -
+                  login: admin
+                  password: '%env(MY_VERY_SECRET_TOKEN)%'
