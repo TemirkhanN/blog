@@ -23,7 +23,7 @@ class CreatePostServiceTest extends TestCase
         parent::setUp();
 
         $this->postRepository = $this->createMock(PostRepositoryInterface::class);
-        $this->service        = new CreatePostService($this->postRepository);
+        $this->service        = new CreatePostService($this->postRepository, $this->createMock(TagService::class));
     }
 
     public function testDuplicatePostCreation(): void
@@ -32,6 +32,7 @@ class CreatePostServiceTest extends TestCase
             'title'   => 'Some title',
             'preview' => 'Some preview',
             'content' => 'Some content',
+            'tags'    => [],
         ]);
 
         $expectedSlug = date('Y-m-d') . '_Some-title';
@@ -53,6 +54,7 @@ class CreatePostServiceTest extends TestCase
             'title'   => 'Some title',
             'preview' => 'Some preview',
             'content' => 'Some content',
+            'tags'    => [],
         ]);
 
         $expectedSlug = date('Y-m-d') . '_Some-title';

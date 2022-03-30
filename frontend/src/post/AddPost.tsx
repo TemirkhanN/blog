@@ -37,7 +37,7 @@ export default function AddPost() {
 
     return (
         <>
-            <Form.Group className="mb-3" controlId="login">
+            <Form.Group className="mb-3" controlId="title">
                 <Form.Label>Title</Form.Label>
                 <Form.Control
                     type="text"
@@ -45,7 +45,7 @@ export default function AddPost() {
                     onChange={(e) => setTitle(e.target.value)}
                 />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="login">
+            <Form.Group className="mb-3" controlId="intro">
                 <Form.Label>Intro/Preview</Form.Label>
                 <Form.Control
                     as="textarea"
@@ -54,13 +54,21 @@ export default function AddPost() {
                     onChange={(e) => setPreview(e.target.value)}
                 />
             </Form.Group>
-            <Form.Group className="mb-3" controlId="login">
+            <Form.Group className="mb-3" controlId="content">
                 <Form.Label>Content</Form.Label>
                 <Form.Control
                     as="textarea"
                     placeholder="Write post content"
                     rows={10}
                     onChange={(e) => setContent(e.target.value)}
+                />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="tags">
+                <Form.Label>Tags</Form.Label>
+                <Form.Control
+                    type="text"
+                    placeholder="Set tags separated by comma"
+                    onChange={(e) => setTags(e.target.value.split(',').map((tag: string) => tag.trim()))}
                 />
             </Form.Group>
             <Button variant="primary" type="submit" onClick={handleSubmit} disabled={isLoading}>

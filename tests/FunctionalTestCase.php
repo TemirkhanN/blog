@@ -67,7 +67,7 @@ class FunctionalTestCase extends WebTestCase
 
     final protected function authenticate(string $token): void
     {
-        $this->authToken = $token;
+        $this->authToken = (string) password_hash($token, PASSWORD_BCRYPT);
     }
 
     /**

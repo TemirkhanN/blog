@@ -26,4 +26,14 @@ class CreatePost extends AbstractObject
      * @Assert\NotBlank()
      */
     public string $content;
+
+    /**
+     * @var string[]
+     *
+     * @Assert\All({
+     * @Assert\NotBlank(),
+     * @Assert\Type("alnum")
+     * })
+     */
+    public array $tags;
 }

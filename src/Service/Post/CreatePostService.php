@@ -13,10 +13,16 @@ class CreatePostService
     /** @var PostRepositoryInterface<Post> */
     private PostRepositoryInterface $repository;
 
-    /** @param PostRepositoryInterface<Post> $postRepository */
-    public function __construct(PostRepositoryInterface $postRepository)
+    private TagService $tagService;
+
+    /**
+     * @param PostRepositoryInterface<Post> $postRepository
+     * @param TagService                    $tagService
+     */
+    public function __construct(PostRepositoryInterface $postRepository, TagService $tagService)
     {
         $this->repository = $postRepository;
+        $this->tagService = $tagService;
     }
 
     /**
@@ -39,6 +45,10 @@ class CreatePostService
         }
 
         $post = new Post($slug, $data->title, $data->preview, $data->content);
+
+        foreach ($this->tagService->createTags($data->tags) as $tag) {
+            $post->addTag($tag);
+        }
 
         $this->repository->save($post);
 

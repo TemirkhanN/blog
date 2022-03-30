@@ -28,6 +28,7 @@ class CreateControllerTest extends FunctionalTestCase
             'title'   => 'Some title',
             'preview' => 'Some preview',
             'content' => 'Some content',
+            'tags'    => [],
         ];
 
         $response = $this->sendRequest('POST', self::API_URI, $data);
@@ -45,6 +46,7 @@ class CreateControllerTest extends FunctionalTestCase
             'title'   => '',
             'preview' => '',
             'content' => '',
+            'tags'    => [''],
         ];
 
         $this->authenticate('SomeHardCodedToken');
@@ -58,6 +60,7 @@ class CreateControllerTest extends FunctionalTestCase
                 'title'   => 'This value should not be blank.',
                 'preview' => 'This value should not be blank.',
                 'content' => 'This value should not be blank.',
+                'tags[0]' => 'This value should be of type alnum.',
             ]
         );
     }
@@ -68,6 +71,10 @@ class CreateControllerTest extends FunctionalTestCase
             'title'   => 'Some title',
             'preview' => 'Some preview',
             'content' => 'Some content',
+            'tags'    => [
+                'Tag2',
+                'Tag1',
+            ],
         ];
 
         $this->authenticate('SomeHardCodedToken');
@@ -92,7 +99,10 @@ class CreateControllerTest extends FunctionalTestCase
                 'title'       => 'Some title',
                 'preview'     => 'Some preview',
                 'content'     => 'Some content',
-                'tags'        => [],
+                'tags'        => [
+                    'Tag2',
+                    'Tag1',
+                ],
                 'publishedAt' => $post->publishedAt()->format(DATE_ATOM),
             ]
         );

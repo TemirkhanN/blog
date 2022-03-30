@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+/**
+ * @phpstan-type UserCredentials array{login: string, password: string}
+ */
 class TokenIssuer
 {
     /**
-     * @var array<{
-     *   login: string,
-     *   password: string
-     * }>
+     * @var array<UserCredentials>
      */
     private array $users;
 
+    /**
+     * @param array<UserCredentials> $users
+     */
     public function __construct(array $users)
     {
         $this->users = $users;
@@ -24,7 +27,7 @@ class TokenIssuer
         foreach ($this->users as $user) {
             if ($user['login'] === $login) {
                 if ($password === $user['password']) {
-                    return password_hash($password, PASSWORD_BCRYPT);
+                    return password_hash($password, PASSWORD_BCRYPT) ?: null;
                 }
             }
         }
