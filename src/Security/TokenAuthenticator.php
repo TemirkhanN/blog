@@ -25,7 +25,7 @@ class TokenAuthenticator extends AbstractAuthenticator
 
     public function __construct(string $ownerPassword, ResponseFactoryInterface $responseFactory)
     {
-        $this->ownerPassword      = $ownerPassword;
+        $this->ownerPassword   = $ownerPassword;
         $this->responseFactory = $responseFactory;
     }
 

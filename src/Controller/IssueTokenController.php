@@ -16,13 +16,13 @@ class IssueTokenController
 
     public function __construct(TokenIssuer $tokenIssuer, ResponseFactoryInterface $responseFactory)
     {
-        $this->tokenIssuer = $tokenIssuer;
+        $this->tokenIssuer     = $tokenIssuer;
         $this->responseFactory = $responseFactory;
     }
 
     public function __invoke(Request $request): Response
     {
-        $login = (string) $request->request->get('login');
+        $login    = (string) $request->request->get('login');
         $password = (string) $request->request->get('password');
         if ($login === '' || $password === '') {
             return $this->responseFactory->badRequest('Login or password can not be empty');
