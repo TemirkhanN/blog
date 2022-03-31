@@ -58,7 +58,7 @@ class CommentsTreeView extends AbstractAggregateView
      */
     public function createCommentView(Comment $comment, array &$allReplies): array
     {
-        $view = $this->createView('comment', $comment);
+        $view            = $this->createView('comment', $comment);
         $view['replies'] = [];
 
         if (!isset($allReplies[$comment->guid()])) {

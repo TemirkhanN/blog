@@ -17,7 +17,7 @@ class CommentView implements ViewInterface
      *  guid: string,
      *  createdAt: string,
      *  comment: string
-     * }[]
+     * }
      */
     public function getView($context)
     {
