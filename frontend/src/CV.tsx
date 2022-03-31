@@ -11,7 +11,7 @@ function CV() {
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<HttpError | null>(null);
 
-    const cvPath = 'https://raw.githubusercontent.com/TemirkhanN/cv/master/README.md';
+    const cvPath = process.env.REACT_APP_CV_MARKDOWN_LINK;
 
     useEffect(() => {
         setLoading(true);
