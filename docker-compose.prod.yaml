@@ -13,11 +13,6 @@ services:
       target: prod
     environment:
       - BLOG_DOMAIN_NAME
-      - REACT_APP_BACKEND_URL
-      - REACT_APP_AUTHOR_NAME
-      - REACT_APP_GITHUB_LINK
-      - REACT_APP_LINKEDIN_LINK
-      - REACT_APP_CV_MARKDOWN_LINK
     ports:
       - "80:80"
       - "443:443"
