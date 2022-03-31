@@ -1,21 +1,11 @@
 import {FormEvent, useState} from "react";
-import axios from "axios";
 import {Alert, Button} from "react-bootstrap";
+import {API, Comment} from "../utils/API";
 
-export type CommentReference = {
-    guid: string
-    comment: string
-}
-
-export function NewComment(props: { "postSlug": string, replyToComment: CommentReference | null }) {
+export default function NewComment(props: { "postSlug": string, replyToComment?: Comment, onCommentAdd: (comment: Comment) => void }) {
     const [comment, setComment] = useState("");
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<string|null>();
-
-    let endpoint = process.env.REACT_APP_BACKEND_URL + "/api/posts/" + props.postSlug + "/comments";
-    if (props.replyToComment !== null) {
-        endpoint += '/' + props.replyToComment.guid;
-    }
 
     const addComment = (e: FormEvent) => {
         e.preventDefault();
@@ -32,13 +22,14 @@ export function NewComment(props: { "postSlug": string, replyToComment: CommentR
 
         setLoading(true);
         setError(null);
-        axios
-            .post(endpoint, {
-                "text": comment
-            })
+
+        API.addComment(props.postSlug, comment, props.replyToComment)
             .then((response) => {
-                if (response.status === 201) {
+                if (response.isSuccessful()) {
                     setComment("");
+                    props.onCommentAdd(response.getData());
+                } else {
+                    setError(response.getError().message);
                 }
             })
             .catch((err) => {
@@ -49,7 +40,7 @@ export function NewComment(props: { "postSlug": string, replyToComment: CommentR
     return (
         <div className="comment-form">
             {
-                props.replyToComment != null &&
+                props.replyToComment !== undefined &&
                 <div>
                     <p>replying to:</p>
                     <p>{props.replyToComment.comment}</p>

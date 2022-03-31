@@ -24,6 +24,10 @@ services:
     class: App\View\PaginatedView
     tags: [{name: view, view: response.paginated_collection}]
 
+  blog.comment:
+    class: App\View\CommentView
+    tags: [{name: view, view: comment}]
+
   blog.post.comments:
-    class: App\View\CommentsView
-    tags: [{name: view, view: post.comments}]
+    class: App\View\CommentsTreeView
+    tags: [{name: view, view: post.comments_tree}]

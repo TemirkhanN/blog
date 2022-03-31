@@ -64,6 +64,6 @@ class ReplyController
         $comment = Comment::replyTo($replyToComment, $commentData->text);
         $this->commentService->save($comment);
 
-        return $this->responseFactory->createResponse('', Response::HTTP_CREATED);
+        return $this->responseFactory->view($comment, 'comment', Response::HTTP_CREATED);
     }
 }

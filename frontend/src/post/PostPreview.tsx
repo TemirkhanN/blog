@@ -1,7 +1,7 @@
 import {Link} from "react-router-dom";
-import Preview from "./Type/Preview";
 import {Remarkable} from 'remarkable';
 import TagList from "./TagList";
+import {Preview} from "../utils/API";
 
 const markdownRenderer = new Remarkable();
 

@@ -36,7 +36,7 @@ class ListController
 
         $comments = $this->commentService->getCommentsByPost($post);
 
-        $response = $this->responseFactory->view($comments, 'post.comments');
+        $response = $this->responseFactory->view($comments, 'post.comments_tree');
 
         return $cacheGateway->cache($response, TTL::minutes(1));
     }

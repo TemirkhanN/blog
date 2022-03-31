@@ -2,24 +2,15 @@ import {Link, useParams, generatePath} from "react-router-dom";
 import HttpError from "../basetypes/HttpError";
 import PostPreview from "./PostPreview";
 import {Helmet} from "react-helmet-async";
-import Preview from "./Type/Preview"
 import {Alert, Spinner} from "react-bootstrap";
 import {useEffect, useState} from "react";
-
-type PostCollection = {
-    data: Preview[],
-    pagination: {
-        limit: number,
-        offset: number,
-        total: number
-    }
-}
+import {API, PaginatedCollection, Preview} from "../utils/API";
 
 function PostList() {
     const routerParams = useParams<{ tag: string | undefined, page: string }>();
 
     const [error, setError] = useState<HttpError | null>();
-    const [postsCollection, setPosts] = useState<PostCollection | null>(null);
+    const [postsCollection, setPosts] = useState<PaginatedCollection<Preview> | null>(null);
     const [isLoading, setLoading] = useState(true);
     const page = {
         tag: (typeof routerParams.tag === 'string') ? routerParams.tag : null,
@@ -28,26 +19,14 @@ function PostList() {
     };
 
     const fetchPosts = () => {
-        let filter = [];
-        filter.push('limit=' + page.itemsPerPage);
-        filter.push('offset=' + page.itemsPerPage * (page.number - 1));
-
-        if (page.tag) {
-            filter.push('tag=' + page.tag);
-        }
-
-        fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts?" + filter.join('&'))
-            .then(res => res.json())
+        API.getPosts(page.number, page.itemsPerPage, page.tag)
             .then(
                 (res) => {
-                    // TODO not always posts because it does not check status code
-                    setPosts(res);
-                },
-                // Note: it's important to handle errors here
-                // instead of a catch() block so that we don't swallow
-                // exceptions from actual bugs in components.
-                (error) => {
-                    setError(error);
+                    if (res.isSuccessful()) {
+                        setPosts(res.getData());
+                    } else {
+                        setError(res.getError())
+                    }
                 }
             )
             .then(() => setLoading(false));
@@ -84,7 +63,7 @@ function PostList() {
         );
     }
 
-    const pagination = (paginationInfo: PostCollection["pagination"]) => {
+    const pagination = (paginationInfo: PaginatedCollection<Preview>["pagination"]) => {
         const generateRoute = (pageNumber: number, tagName: string | null) => {
             if (page.tag != null) {
                 return generatePath('/blog/tags/:tag/page/:page', {

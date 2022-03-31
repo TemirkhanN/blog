@@ -5,27 +5,23 @@ import {Helmet} from "react-helmet-async";
 import {Alert, Spinner} from "react-bootstrap";
 import {useEffect, useState} from "react";
 import Disclaimer from "../Disclaimer";
-import CommentList from "../comment/CommentList";
-import PostModel from "./Type/PostModel";
+import CommentsTree from "../comment/CommentsTree";
+import {API, PostModel} from "../utils/API";
 
-function Post(props: { match: { params: { slug: string } } }) {
+export default function Post(props: { match: { params: { slug: string } } }) {
     const [error, setError] = useState<HttpError | null>();
     const [isLoading, setLoading] = useState(true);
     const [post, setPost] = useState<PostModel | null>(null);
 
     useEffect(() => {
-        fetch(process.env.REACT_APP_BACKEND_URL + "/api/posts/" + props.match.params.slug)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    if (result.hasOwnProperty('code')) {
-                        setError(result);
-                    } else {
-                        setPost(result);
-                    }
-                },
-                (error: HttpError) => setError(error)
-            )
+        API.getPost(props.match.params.slug)
+            .then((result) => {
+                if (result.isSuccessful()) {
+                    setPost(result.getData());
+                } else {
+                    setError(result.getError());
+                }
+            })
             .then(() => setLoading(false));
     }, [props.match.params.slug]);
 
@@ -63,7 +59,7 @@ function Post(props: { match: { params: { slug: string } } }) {
                     Unexpected workflow error occurred! Post is null!
                 </Alert>
             </div>
-        );;
+        );
     }
 
     const md = new Remarkable();
@@ -97,9 +93,7 @@ function Post(props: { match: { params: { slug: string } } }) {
                 <div className="content" dangerouslySetInnerHTML={{__html: content}}/>
             </div>
             <Disclaimer/>
-            <CommentList postSlug={post.slug}/>
+            <CommentsTree postSlug={post.slug}/>
         </>
     );
 }
-
-export default Post;

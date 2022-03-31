@@ -6,10 +6,9 @@ namespace App\View;
 
 use App\Entity\Collection;
 use App\Entity\Comment;
-use DateTimeInterface;
-use Temirkhan\View\ViewInterface;
+use Temirkhan\View\AbstractAggregateView;
 
-class CommentsView implements ViewInterface
+class CommentsTreeView extends AbstractAggregateView
 {
     /**
      * @param mixed $context
@@ -29,7 +28,6 @@ class CommentsView implements ViewInterface
         $replies      = [];
         foreach ($context as $item) {
             assert($item instanceof Comment);
-            $comments[] = $item;
 
             $repliedTo = $item->repliedTo();
             if ($repliedTo !== null) {
@@ -60,12 +58,9 @@ class CommentsView implements ViewInterface
      */
     public function createCommentView(Comment $comment, array &$allReplies): array
     {
-        $view = [
-            'guid'      => $comment->guid(),
-            'createdAt' => $comment->createdAt()->format(DateTimeInterface::ATOM),
-            'comment'   => $comment->text(),
-            'replies'   => [],
-        ];
+        $view = $this->createView('comment', $comment);
+        $view['replies'] = [];
+
         if (!isset($allReplies[$comment->guid()])) {
             return $view;
         }

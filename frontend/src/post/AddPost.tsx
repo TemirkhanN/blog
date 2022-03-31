@@ -24,15 +24,16 @@ export default function AddPost() {
         setLoading(true);
 
         API.createPost(title, preview, content, tags)
-            .then((response) => {
-                if (response.status === 201) {
-                    history.push('/blog/'+ response.data.slug)
+            .then((result) => {
+                if (result.isSuccessful()) {
+                    history.push('/blog/'+ result.getData().slug);
+                } else {
+                    console.log(result.getError());
                 }
             })
             .catch((err) => {
                 console.log(err);
             }).finally(() => setLoading(false))
-
     }
 
     return (

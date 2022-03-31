@@ -30,8 +30,8 @@ export default function SignIn(props: {stateObserver: (isSignedIn: boolean) => v
 
         API.createToken(login, password)
             .then((response) => {
-                if (response.status === 201) {
-                    saveAuthToken(response.data.token);
+                if (response.isSuccessful()) {
+                    saveAuthToken(response.getData().token);
                     setSignedInWrapper(true);
                 }
             })
