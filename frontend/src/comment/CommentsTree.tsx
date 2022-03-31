@@ -74,16 +74,6 @@ function CommentsTree(props: { postSlug: string }) {
         );
     }
 
-    if (comments.length === 0) {
-        return (
-            <div>
-                <Alert variant="danger">
-                    Error: Comments are not loaded
-                </Alert>
-            </div>
-        );
-    }
-
     const showComment = (comment: CommentBranch, depth: number) => {
         const createdAt = (new Date(comment.createdAt)).toLocaleDateString(
             'en-gb',
