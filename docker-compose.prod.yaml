@@ -5,7 +5,6 @@ services:
       context: ./frontend
       args:
         BACKEND_URL: ${REACT_APP_BACKEND_URL}
-        BLOG_DOMAIN: ${BLOG_DOMAIN_NAME}
         BLOG_AUTHOR: ${REACT_APP_AUTHOR_NAME}
         AUTHOR_GITHUB: ${REACT_APP_GITHUB_LINK}
         AUTHOR_LINKEDIN: ${REACT_APP_LINKEDIN_LINK}
