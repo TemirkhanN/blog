@@ -10,8 +10,9 @@ ENV REACT_APP_GITHUB_LINK=$AUTHOR_GITHUB
 ENV REACT_APP_LINKEDIN_LINK=$AUTHOR_LINKEDIN
 ENV REACT_APP_CV_MARKDOWN_LINK=$AUTHOR_CV
 
-RUN apt update -yq && apt install --no-install-recommends --no-install-suggests -y \
-    npm
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
+
+RUN apt-get install -yq nodejs && npm install -g npm@latest
 
 WORKDIR /frontend
 
