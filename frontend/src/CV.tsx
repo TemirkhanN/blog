@@ -11,7 +11,7 @@ function CV() {
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<HttpError | null>(null);
 
-    const cvPath = process.env.REACT_APP_CV_MARKDOWN_LINK;
+    const cvPath = process.env.REACT_APP_CV_MARKDOWN_LINK ?? '';
 
     useEffect(() => {
         setLoading(true);

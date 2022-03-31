@@ -3,14 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "@types/jest": "^26.0.23",
-    "@types/node": "^12.20.13",
-    "@types/react": "^17.0.8",
-    "@types/react-dom": "^17.0.5",
-    "@types/react-router": "^5.1.14",
     "axios": "^0.24.0",
     "bootstrap": "^4.6.0",
     "glob-parent": "^6.0.1",
@@ -20,7 +12,7 @@
     "react-dom": "^17.0.2",
     "react-helmet-async": "^1.0.9",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.0",
     "remarkable": "^2.0.1",
     "typescript": "^4.3.2",
     "web-vitals": "^1.1.2"
@@ -63,9 +55,16 @@
     ]
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.3",
+    "@testing-library/user-event": "^14.0.3",
+    "@types/jest": "^27.4.1",
     "@types/js-cookie": "^3.0.1",
+    "@types/node": "^17.0.23",
+    "@types/react": "^17.0.43",
+    "@types/react-dom": "^17.0.14",
+    "@types/react-router": "^5.1.18",
     "@types/react-router-dom": "^5.1.7",
-    "@types/remarkable": "^2.0.1",
+    "@types/remarkable": "^1.7.5",
     "npm-watch": "^0.11.0"
   }
 }

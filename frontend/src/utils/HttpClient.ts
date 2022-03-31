@@ -30,7 +30,7 @@ class Result<Data> implements Response<Data>{
             console.log('This method was not expected to be called for result is not successful.');
         }
 
-        return <Data>this.data;
+        return this.data as Data;
     }
 
     getError(): SystemMessage {
@@ -38,7 +38,7 @@ class Result<Data> implements Response<Data>{
             console.log('This method was not expected to be called for result is successful.');
         }
 
-        return <SystemMessage>this.error;
+        return this.error as SystemMessage;
     }
 }
 
