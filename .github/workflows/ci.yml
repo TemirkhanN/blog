@@ -3,14 +3,29 @@ name: CI
 on: [ push ]
 
 jobs:
-  test:
+  backend_quality_check:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - uses: nanasess/setup-php@master
         with:
           php-version: '7.4'
-      - run: composer install --no-interaction
-      - run: ./vendor/bin/phpcs
-      - run: ./vendor/bin/phpstan
-      - run: ./vendor/bin/phpunit
+      - name: install dependencies
+        run: composer install --no-interaction
+      - name: codestyle
+        run: ./vendor/bin/phpcs
+      - name: static analyze
+        run: ./vendor/bin/phpstan
+      - name: tests
+        run: ./vendor/bin/phpunit
+  frontend_quality_check:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+      - name: Codestyle
+        working-directory: frontend
+        run: npm run lint
