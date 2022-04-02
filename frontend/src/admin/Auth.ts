@@ -1,22 +1,22 @@
-import Cookies from "js-cookie";
+import Cookies from 'js-cookie';
 
 export function getAuthToken() {
-    return Cookies.get('_authToken');
+  return Cookies.get('_authToken');
 }
 
 export function saveAuthToken(token: string) {
-    return Cookies.set('_authToken', token);
+  return Cookies.set('_authToken', token);
 }
 
 export function signOut() {
-    Cookies.remove('_authToken');
+  Cookies.remove('_authToken');
 }
 
 export function isAuthenticated() {
-    const token = getAuthToken()
-    if (token === undefined) {
-        return false;
-    }
+  const token = getAuthToken();
+  if (token === undefined) {
+    return false;
+  }
 
-    return token !== '';
+  return token !== '';
 }

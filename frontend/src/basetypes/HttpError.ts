@@ -1,5 +1,5 @@
 interface HttpError {
-    message: string
+  message: string
 }
 
-export default HttpError
+export default HttpError;
