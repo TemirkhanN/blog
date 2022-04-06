@@ -1,7 +1,7 @@
 import { Button, Form } from 'react-bootstrap';
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { API } from '../utils/API';
+import API from '../utils/API';
 import Logger from '../utils/Logger';
 
 export default function AddPost() {

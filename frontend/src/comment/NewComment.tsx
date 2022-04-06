@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { Alert, Button } from 'react-bootstrap';
-import { API, Comment } from '../utils/API';
+import API, { Comment } from '../utils/API';
 import Logger from '../utils/Logger';
 
 export default function NewComment(

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Alert, Button, Spinner } from 'react-bootstrap';
 import HttpError from '../basetypes/HttpError';
-import { API, Comment, CommentBranch } from '../utils/API';
+import API, { Comment, CommentBranch } from '../utils/API';
 import NewComment from './NewComment';
 
 function CommentsTree({ postSlug }: { postSlug: string }) {

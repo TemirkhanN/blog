@@ -5,12 +5,15 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import AuthProvider from './admin/Auth';
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
       <HelmetProvider>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </HelmetProvider>
     </Router>
   </React.StrictMode>,

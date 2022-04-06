@@ -1,21 +1,16 @@
 import { Button, Form } from 'react-bootstrap';
 import { useState } from 'react';
-import { API } from '../utils/API';
-import { isAuthenticated, saveAuthToken } from './Auth';
 import Logger from '../utils/Logger';
+import { useAuthContext } from './Auth';
 
-export default function SignIn(props: {stateObserver: (isSignedIn: boolean) => void}) {
+export default function SignIn() {
+  const User = useAuthContext();
+
   const [login, setLogin] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [inProgress, setInProgress] = useState<boolean>(false);
-  const [signedIn, setSignedIn] = useState<boolean>(isAuthenticated());
-  const setSignedInWrapper = (isSignedIn: boolean) => {
-    setSignedIn(isSignedIn);
-    /* eslint-disable-next-line react/destructuring-assignment */
-    props.stateObserver(isSignedIn);
-  };
 
-  if (signedIn) {
+  if (User.isLoggedIn()) {
     return null;
   }
 
@@ -30,16 +25,9 @@ export default function SignIn(props: {stateObserver: (isSignedIn: boolean) => v
 
     setInProgress(true);
 
-    API.createToken(login, password)
-      .then((response) => {
-        if (response.isSuccessful()) {
-          saveAuthToken(response.getData().token);
-          setSignedInWrapper(true);
-        }
-      })
-      .catch((err) => {
-        Logger.error(err);
-      }).finally(() => setInProgress(false));
+    User.login(login, password)
+      .catch((err) => Logger.error(err))
+      .finally(() => setInProgress(false));
   };
 
   return (

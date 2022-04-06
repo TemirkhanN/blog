@@ -6,7 +6,7 @@ import TagList from './TagList';
 import HttpError from '../basetypes/HttpError';
 import Disclaimer from '../Disclaimer';
 import CommentsTree from '../comment/CommentsTree';
-import { API, PostModel } from '../utils/API';
+import API, { PostModel } from '../utils/API';
 
 export default function Post(props: { match: { params: { slug: string } } }) {
   const [error, setError] = useState<HttpError | null>();

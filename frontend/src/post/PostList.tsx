@@ -4,7 +4,7 @@ import { Alert, Spinner } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import PostPreview from './PostPreview';
 import HttpError from '../basetypes/HttpError';
-import { API, PaginatedCollection, Preview } from '../utils/API';
+import API, { PaginatedCollection, Preview } from '../utils/API';
 
 function PostList() {
   const routerParams = useParams<{ tag: string | undefined, page: string }>();

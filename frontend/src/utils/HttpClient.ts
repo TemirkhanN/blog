@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { getAuthToken } from '../admin/Auth';
 import Logger from './Logger';
+import { getAuthToken } from '../admin/User';
 
 type SystemMessage = {
     readonly code: number,

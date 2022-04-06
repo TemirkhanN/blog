@@ -96,7 +96,7 @@ function addComment(
   });
 }
 
-export const API = {
+const API = {
   createToken,
   createPost,
   getPost,
@@ -104,3 +104,5 @@ export const API = {
   getCommentsTree,
   addComment,
 };
+
+export default API;

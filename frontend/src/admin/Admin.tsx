@@ -1,19 +1,13 @@
-import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import SignIn from './SignIn';
 import AddPost from '../post/AddPost';
-import { isAuthenticated, signOut } from './Auth';
+import { useAuthContext } from './Auth';
 
 export default function Admin() {
-  const [signedIn, setSignedIn] = useState<boolean>(isAuthenticated());
+  const User = useAuthContext();
 
-  const handleSignOut = () => {
-    signOut();
-    setSignedIn(false);
-  };
-
-  if (!signedIn) {
-    return <SignIn stateObserver={(isSignedIn: boolean) => setSignedIn(isSignedIn)} />;
+  if (!User.isLoggedIn()) {
+    return <SignIn />;
   }
 
   return (
@@ -22,7 +16,7 @@ export default function Admin() {
         <AddPost />
       </div>
       <div>
-        <Button onClick={handleSignOut}>Sign out</Button>
+        <Button onClick={() => User.logout()}>Sign out</Button>
       </div>
     </>
   );
