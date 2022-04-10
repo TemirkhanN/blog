@@ -2,6 +2,7 @@ import { Button } from 'react-bootstrap';
 import SignIn from './SignIn';
 import AddPost from '../post/AddPost';
 import { useAuthContext } from './Auth';
+import AdminAccess from './AdminAccess';
 
 export default function Admin() {
   const User = useAuthContext();
@@ -11,13 +12,9 @@ export default function Admin() {
   }
 
   return (
-    <>
-      <div>
-        <AddPost />
-      </div>
-      <div>
-        <Button onClick={() => User.logout()}>Sign out</Button>
-      </div>
-    </>
+    <AdminAccess>
+      <AddPost />
+      <Button onClick={() => User.logout()}>Sign out</Button>
+    </AdminAccess>
   );
 }
