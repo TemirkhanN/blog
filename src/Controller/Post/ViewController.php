@@ -32,12 +32,8 @@ class ViewController
     public function __invoke(string $slug, CacheGatewayInterface $cacheGateway): Response
     {
         $post = $this->postListService->getPostBySlug($slug);
-        if ($post === null) {
+        if ($post === null || !$this->security->isGranted('view_post', $post)) {
             return $this->responseFactory->notFound("Publication doesn't exist");
-        }
-
-        if (!$this->security->isGranted('view_post', $post)) {
-            return $this->responseFactory->forbidden("You're not allowed to view this publication");
         }
 
         $response = $this->responseFactory->view($post, 'post.view');

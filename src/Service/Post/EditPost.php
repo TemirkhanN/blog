@@ -8,7 +8,7 @@ use App\Dto\PostData;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 
-class CreatePostService
+class EditPost
 {
     private PostRepositoryInterface $repository;
     private TagService $tagService;
@@ -24,28 +24,22 @@ class CreatePostService
         $this->slugGenerator = $slugGenerator;
     }
 
-    /**
-     * @param PostData $data
-     *
-     * @return Post
-     *
-     * @throws \DomainException
-     */
-    public function execute(PostData $data): Post
+    public function execute(PostData $newData, Post $post): void
     {
-        $slug = $this->slugGenerator->generate($data->title);
-        if ($this->repository->findOneBySlug($slug)) {
+        $newSlug = $this->slugGenerator->regenerate($post->slug(), $newData->title);
+
+        if ($post->slug() !== $newSlug && $this->repository->findOneBySlug($newSlug)) {
             throw new \DomainException('There already exists the post with similar title');
         }
 
-        $post = new Post($slug, $data->title, $data->preview, $data->content);
+        $post->changeSlug($newSlug);
+        $post->changeTitle($newData->title);
+        $post->changePreview($newData->preview);
+        $post->changeContent($newData->content);
 
-        foreach ($this->tagService->createTags($data->tags) as $tag) {
-            $post->addTag($tag);
-        }
+        $newTags = $this->tagService->createTags($newData->tags);
+        $post->setTags(...$newTags);
 
         $this->repository->save($post);
-
-        return $post;
     }
 }

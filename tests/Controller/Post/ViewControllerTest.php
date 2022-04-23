@@ -16,15 +16,24 @@ class ViewControllerTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->createPost('some-slug_link123', 'Some title', 'Some preview', 'Some content');
-        $this->createPost('456another-slug_link', 'Another title', 'Preview', 'Content');
+        $draftPost    = $this->createPost('789draft-post-slug', 'Draft post title', 'Preview', 'Content');
+        $archivedPost = $this->createPost('012archived-post-slug', 'Archived post title', 'Preview', 'Content');
+        $archivedPost->archive();
+        $publishedPost1 = $this->createPost('some-slug_link123', 'Some title', 'Some preview', 'Some content');
+        $publishedPost1->publish();
+        $publishedPost2 = $this->createPost('456another-slug_link', 'Another title', 'Preview', 'Content');
+        $publishedPost2->publish();
+
+        $this->saveState($draftPost, $archivedPost, $publishedPost1, $publishedPost2);
     }
 
-
-    public function testNotFound(): void
+    /**
+     * @param string $slug
+     *
+     * @dataProvider unreachablePostSlugProvider
+     */
+    public function testNotFound(string $slug): void
     {
-        $slug = 'some-non-existent-post-slug';
-
         $response = $this->sendRequest('GET', sprintf(self::API_URL, $slug));
 
         self::assertEquals(404, $response->getStatusCode());
@@ -32,6 +41,18 @@ class ViewControllerTest extends FunctionalTestCase
             '{"code":404,"message":"Publication doesn\u0027t exist"}',
             $response->getContent()
         );
+    }
+
+    /**
+     * @return iterable<array{0: string}>
+     */
+    public function unreachablePostSlugProvider(): iterable
+    {
+        yield 'archived post' => ['012archived-post-slug'];
+
+        yield 'draft post' => ['789draft-post-slug'];
+
+        yield 'non existent post' => ['some-non-existent-post-slug'];
     }
 
     /**
@@ -49,6 +70,7 @@ class ViewControllerTest extends FunctionalTestCase
         /** @var Post $post */
         $post = $postRepository->findOneBy(['slug' => $slug]);
         self::assertNotNull($post);
+        self::assertNotNull($post->publishedAt());
         self::assertJsonEqualsToData(
             (string) $response->getContent(),
             [
@@ -62,13 +84,15 @@ class ViewControllerTest extends FunctionalTestCase
                     },
                     $post->tags()
                 ),
+                'createdAt'   => $post->createdAt()->format(DATE_ATOM),
+                'updatedAt'   => null,
                 'publishedAt' => $post->publishedAt()->format(DATE_ATOM),
             ]
         );
     }
 
     /**
-     * @return iterable<array<string>>
+     * @return iterable<array{0: string}>
      */
     public function slugProvider(): iterable
     {
@@ -84,11 +108,17 @@ class ViewControllerTest extends FunctionalTestCase
         string $content
     ): Post {
         $post = new Post($slug, $title, $preview, $content);
-
-        $em = $this->getEntityManager();
-        $em->persist($post);
-        $em->flush();
+        $this->saveState($post);
 
         return $post;
+    }
+
+    private function saveState(Post ...$posts): void
+    {
+        $em = $this->getEntityManager();
+        foreach ($posts as $post) {
+            $em->persist($post);
+        }
+        $em->flush();
     }
 }

@@ -13,11 +13,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use RuntimeException;
 
-/**
- * Post repository
- *
- * @implements PostRepositoryInterface<Post>
- */
 class PostRepository implements PostRepositoryInterface
 {
     private ManagerRegistry $registry;
@@ -39,6 +34,8 @@ class PostRepository implements PostRepositoryInterface
                                 ->addSelect('p', 't')
                                 ->from(Post::class, 'p')
                                 ->leftJoin('p.tags', 't')
+                                ->andWhere('p.state = :state')
+                                ->setParameters(['state' => Post::STATE_PUBLISHED])
                                 ->orderBy('p.publishedAt', 'DESC')
                                 ->setMaxResults($limit)
                                 ->setFirstResult($offset)
@@ -60,7 +57,8 @@ class PostRepository implements PostRepositoryInterface
                                 ->from(Post::class, 'p')
                                 ->leftJoin('p.tags', 't')
                                 ->andWhere(':tag MEMBER OF p.tags')
-                                ->setParameters(['tag' => $tag])
+                                ->andWhere('p.state = :state')
+                                ->setParameters(['tag' => $tag, 'state' => Post::STATE_PUBLISHED])
                                 ->orderBy('p.publishedAt', 'DESC')
                                 ->setMaxResults($limit)
                                 ->setFirstResult($offset)
@@ -74,6 +72,8 @@ class PostRepository implements PostRepositoryInterface
         return (int) $this->createQueryBuilder()
                          ->select('COUNT(p)')
                          ->from(Post::class, 'p')
+                         ->andWhere('p.state = :state')
+                         ->setParameters(['state' => Post::STATE_PUBLISHED])
                          ->getQuery()->getSingleScalarResult();
     }
 
@@ -83,7 +83,8 @@ class PostRepository implements PostRepositoryInterface
                          ->select('COUNT(p)')
                          ->from(Post::class, 'p')
                          ->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag')
-                         ->setParameters(['tag' => $tag])
+                         ->andWhere('p.state = :state')
+                         ->setParameters(['tag' => $tag, 'state' => Post::STATE_PUBLISHED])
                          ->getQuery()->getSingleScalarResult();
     }
 

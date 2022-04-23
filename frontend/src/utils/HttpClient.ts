@@ -70,6 +70,14 @@ function post<T>(uri: string, data: object): Promise<T> {
   });
 }
 
+function patch<T>(uri: string, data: object): Promise<T> {
+  return adapter.request({
+    url: uri,
+    method: 'PATCH',
+    data,
+  });
+}
+
 function get<T>(uri: string): Promise<T> {
   return adapter.request({
     url: uri,
@@ -80,4 +88,5 @@ function get<T>(uri: string): Promise<T> {
 export const HttpClient = {
   post,
   get,
+  patch,
 };

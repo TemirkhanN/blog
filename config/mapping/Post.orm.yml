@@ -9,6 +9,11 @@ App\Entity\Post:
       options:
         unsigned: true
   fields:
+    state:
+      type: integer
+      options:
+        unsigned: true
+        default: 0
     slug:
       type: string
       length: 255
@@ -20,8 +25,16 @@ App\Entity\Post:
       type: text
     content:
       type: text
+    createdAt:
+      type: datetime_immutable
+      options:
+        default: CURRENT_TIMESTAMP
     publishedAt:
       type: datetime_immutable
+      nullable: true
+    updatedAt:
+      type: datetime_immutable
+      nullable: true
   manyToMany:
     tags:
       targetEntity: App\Entity\Tag

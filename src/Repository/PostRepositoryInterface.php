@@ -7,16 +7,13 @@ namespace App\Repository;
 use App\Entity\Collection;
 use App\Entity\Post;
 
-/**
- * @template T of Post
- */
 interface PostRepositoryInterface
 {
     /**
      * @param int $limit
      * @param int $offset
      *
-     * @return Collection<T>
+     * @return Collection<Post>
      */
     public function getPosts(int $limit, int $offset): Collection;
 
@@ -25,7 +22,7 @@ interface PostRepositoryInterface
      * @param int    $limit
      * @param int    $offset
      *
-     * @return Collection<T>
+     * @return Collection<Post>
      */
     public function findPostsByTag(string $tag, int $limit, int $offset): Collection;
 

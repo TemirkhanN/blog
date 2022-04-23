@@ -11,6 +11,12 @@ create_post:
   path: /api/posts
   methods: [ POST ]
   controller: App\Controller\Post\CreateController
+update_post:
+  path: /api/posts/{slug}
+  requirements:
+    slug: '[a-zA-Z0-9_-]{10,}'
+  methods: [ PATCH ]
+  controller: App\Controller\Post\EditController
 view_post:
   path: /api/posts/{slug}
   requirements:

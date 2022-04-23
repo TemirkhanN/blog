@@ -86,6 +86,7 @@ class CreateControllerTest extends FunctionalTestCase
         self::assertJson($content);
         $responseData = json_decode($content);
 
+        /** @var Post $post */
         $post = $this->getEntityManager()
                      ->getRepository(Post::class)
                      ->findOneBy(['slug' => $responseData->slug]);
@@ -103,7 +104,9 @@ class CreateControllerTest extends FunctionalTestCase
                     'Tag2',
                     'Tag1',
                 ],
-                'publishedAt' => $post->publishedAt()->format(DATE_ATOM),
+                'createdAt'   => $post->createdAt()->format(DATE_ATOM),
+                'updatedAt'   => null,
+                'publishedAt' => null,
             ]
         );
     }

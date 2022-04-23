@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Post;
 
-use App\Dto\CreatePost;
+use App\Dto\PostData;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 use DomainException;
@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 
 class CreatePostServiceTest extends TestCase
 {
-    /** @var PostRepositoryInterface<Post>&MockObject */
+    /** @var PostRepositoryInterface&MockObject */
     private PostRepositoryInterface $postRepository;
 
     private CreatePostService $service;
@@ -23,12 +23,16 @@ class CreatePostServiceTest extends TestCase
         parent::setUp();
 
         $this->postRepository = $this->createMock(PostRepositoryInterface::class);
-        $this->service        = new CreatePostService($this->postRepository, $this->createMock(TagService::class));
+        $this->service        = new CreatePostService(
+            $this->postRepository,
+            $this->createMock(TagService::class),
+            new SlugGenerator()
+        );
     }
 
     public function testDuplicatePostCreation(): void
     {
-        $postData = new CreatePost([
+        $postData = new PostData([
             'title'   => 'Some title',
             'preview' => 'Some preview',
             'content' => 'Some content',
@@ -50,7 +54,7 @@ class CreatePostServiceTest extends TestCase
 
     public function testPostCreation(): void
     {
-        $postData = new CreatePost([
+        $postData = new PostData([
             'title'   => 'Some title',
             'preview' => 'Some preview',
             'content' => 'Some content',
@@ -72,7 +76,9 @@ class CreatePostServiceTest extends TestCase
                 self::assertEquals($expectedSlug, $actualPost->slug());
                 self::assertEquals('Some content', $actualPost->content());
                 self::assertEquals('Some preview', $actualPost->preview());
-                self::assertEqualsWithDelta(time(), $actualPost->publishedAt()->getTimestamp(), 2);
+                self::assertEqualsWithDelta(time(), $actualPost->createdAt()->getTimestamp(), 2);
+                self::assertNull($actualPost->publishedAt());
+                self::assertNull($actualPost->updatedAt());
                 self::assertEquals('Some title', $actualPost->title());
                 self::assertEmpty($actualPost->tags());
                 $expectedPost = $actualPost;

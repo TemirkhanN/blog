@@ -10,7 +10,7 @@ use Vseinstrumentiru\DataObjectBundle\Object\AbstractObject;
 /**
  * Post creation data transfer object.
  */
-class CreatePost extends AbstractObject
+class PostData extends AbstractObject
 {
     /**
      * @Assert\NotBlank()

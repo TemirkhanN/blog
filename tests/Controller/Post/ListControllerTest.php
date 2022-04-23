@@ -400,8 +400,19 @@ class ListControllerTest extends FunctionalTestCase
                 $post->addTag($tag);
             }
 
+            $post->publish();
+
             $em->persist($post);
         }
+
+        $draftPost = new Post('23th-post-slug', 'Some title 23', 'Some preview of 23', 'Some content of 23');
+        $draftPost->setTags($tag1, $tag2, $tag3);
+        $archivedPost = new Post('24th-post-slug', 'Some title 24', 'Some preview of 24', 'Some content of 24');
+        $archivedPost->setTags($tag1, $tag2, $tag3);
+        $archivedPost->archive();
+
+        $em->persist($draftPost);
+        $em->persist($archivedPost);
 
         DateTimeFactory::alwaysReturn(null);
 
@@ -430,11 +441,14 @@ class ListControllerTest extends FunctionalTestCase
             $post = $repository->findOneBy(['slug' => $slug]);
 
             self::assertNotNull($post);
+            self::assertNotNull($post->publishedAt());
 
             $posts[] = [
                 'slug'        => $post->slug(),
                 'title'       => $post->title(),
                 'publishedAt' => $post->publishedAt()->format(\DateTimeInterface::W3C),
+                'createdAt'   => $post->createdAt()->format(\DateTimeInterface::W3C),
+                'updatedAt'   => null,
                 'preview'     => $post->preview(),
                 'tags'        => array_map(
                     static function (Tag $tag) {

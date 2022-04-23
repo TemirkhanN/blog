@@ -7,6 +7,7 @@ namespace App\Security;
 use App\Entity\Post;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class ViewPostVoter implements VoterInterface
 {
@@ -36,6 +37,24 @@ class ViewPostVoter implements VoterInterface
             return VoterInterface::ACCESS_DENIED;
         }
 
+        if (!$subject->publishedAt() && !$this->isAdmin($token)) {
+            return VoterInterface::ACCESS_DENIED;
+        }
+
         return VoterInterface::ACCESS_GRANTED;
+    }
+
+    private function isAdmin(TokenInterface $token): bool
+    {
+        $user = $token->getUser();
+        if (!$user instanceof UserInterface) {
+            return false;
+        }
+
+        if ($user->getUserIdentifier() !== 'admin') {
+            return false;
+        }
+
+        return true;
     }
 }

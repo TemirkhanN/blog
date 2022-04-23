@@ -6,6 +6,7 @@ namespace App\View;
 
 use App\Entity\Post;
 use App\Entity\Tag;
+use DateTimeInterface;
 use Temirkhan\View\ViewInterface;
 
 class PostView implements ViewInterface
@@ -25,7 +26,9 @@ class PostView implements ViewInterface
      *  title: string,
      *  preview: string,
      *  content?: string,
-     *  publishedAt: string,
+     *  createdAt: string,
+     *  updatedAt: ?string,
+     *  publishedAt: ?string,
      *  tags: string[]
      * }
      */
@@ -38,7 +41,9 @@ class PostView implements ViewInterface
         $view = [
             'slug'        => $context->slug(),
             'title'       => $context->title(),
-            'publishedAt' => $context->publishedAt()->format(\DateTimeInterface::ATOM),
+            'createdAt'   => (string) $this->createDateTimeView($context->createdAt()),
+            'updatedAt'   => $this->createDateTimeView($context->updatedAt()),
+            'publishedAt' => $this->createDateTimeView($context->publishedAt()),
             'preview'     => $context->preview(),
             'tags'        => array_map(
                 static function (Tag $tag) {
@@ -53,5 +58,14 @@ class PostView implements ViewInterface
         }
 
         return $view;
+    }
+
+    private function createDateTimeView(?DateTimeInterface $dateTime): ?string
+    {
+        if ($dateTime === null) {
+            return null;
+        }
+
+        return $dateTime->format(DateTimeInterface::ATOM);
     }
 }

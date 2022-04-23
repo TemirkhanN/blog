@@ -227,6 +227,7 @@ class PostRepositoryTest extends FunctionalTestCase
                 'Some content ' . $postWithSomeTag
             );
             $post->addTag($someTag);
+            $post->publish();
             $entityManager->persist($post);
         }
 
@@ -239,6 +240,7 @@ class PostRepositoryTest extends FunctionalTestCase
                 'Another content ' . $postWithAnotherTag
             );
             $post2->addTag($anotherTag);
+            $post2->publish();
             $entityManager->persist($post2);
         }
 
@@ -251,7 +253,17 @@ class PostRepositoryTest extends FunctionalTestCase
         );
         $postWithMultipleTags->addTag($someTag);
         $postWithMultipleTags->addTag($anotherTag);
+        $postWithMultipleTags->publish();
         $entityManager->persist($postWithMultipleTags);
+
+        $draftPost = new Post('23th-post-slug', 'Some title 23', 'Some preview of 23', 'Some content of 23');
+        $draftPost->setTags($someTag, $anotherTag);
+        $archivedPost = new Post('24th-post-slug', 'Some title 24', 'Some preview of 24', 'Some content of 24');
+        $archivedPost->setTags($someTag, $anotherTag);
+        $archivedPost->archive();
+
+        $entityManager->persist($draftPost);
+        $entityManager->persist($archivedPost);
 
         $entityManager->flush();
     }

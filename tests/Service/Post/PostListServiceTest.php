@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 
 class PostListServiceTest extends TestCase
 {
-    /** @var PostRepositoryInterface<Post>&MockObject */
+    /** @var PostRepositoryInterface&MockObject */
     private PostRepositoryInterface $postRepository;
 
     private PostListService $postListService;

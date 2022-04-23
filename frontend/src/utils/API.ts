@@ -3,6 +3,7 @@ import { HttpClient, Response } from './HttpClient';
 export interface PostModel {
     readonly slug: string,
     readonly title: string,
+    readonly preview: string,
     readonly content: string,
     readonly publishedAt: string,
     readonly tags: string[]
@@ -56,6 +57,23 @@ function createPost(
   });
 }
 
+function editPost(
+  slug: string,
+  newData: {
+    preview: string;
+    title: string;
+    content: string;
+    tags: string[],
+  },
+): Promise<Response<PostModel>> {
+  return HttpClient.patch(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${slug}`, {
+    title: newData.title,
+    preview: newData.preview,
+    content: newData.content,
+    tags: newData.tags,
+  });
+}
+
 function getPost(slug: string): Promise<Response<PostModel>> {
   return HttpClient.get(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${slug}`);
 }
@@ -99,6 +117,7 @@ function addComment(
 const API = {
   createToken,
   createPost,
+  editPost,
   getPost,
   getPosts,
   getCommentsTree,
