@@ -394,11 +394,13 @@ class ListControllerTest extends FunctionalTestCase
         foreach ($posts as $key => $postDetails) {
             DateTimeFactory::alwaysReturn(new \DateTimeImmutable(sprintf('-%d minute', $totalPosts--)));
             $slug = $postDetails['slug'];
-            $post = new Post($slug, 'Some title ' . $key, 'Some preview of ' . $slug, 'Some content of ' . $slug);
-
-            foreach ($postDetails['tags'] as $tag) {
-                $post->addTag($tag);
-            }
+            $post = new Post(
+                $slug,
+                'Some title ' . $key,
+                'Some preview of ' . $slug,
+                'Some content of ' . $slug,
+                $postDetails['tags']
+            );
 
             $post->publish();
 
@@ -442,13 +444,14 @@ class ListControllerTest extends FunctionalTestCase
 
             self::assertNotNull($post);
             self::assertNotNull($post->publishedAt());
+            self::assertNotNull($post->updatedAt());
 
             $posts[] = [
                 'slug'        => $post->slug(),
                 'title'       => $post->title(),
-                'publishedAt' => $post->publishedAt()->format(\DateTimeInterface::W3C),
-                'createdAt'   => $post->createdAt()->format(\DateTimeInterface::W3C),
-                'updatedAt'   => null,
+                'publishedAt' => $post->publishedAt()->format(DATE_W3C),
+                'createdAt'   => $post->createdAt()->format(DATE_W3C),
+                'updatedAt'   => $post->updatedAt()->format(DATE_W3C),
                 'preview'     => $post->preview(),
                 'tags'        => array_map(
                     static function (Tag $tag) {

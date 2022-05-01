@@ -6,29 +6,18 @@ namespace App\Repository;
 
 use App\Entity\Collection;
 use App\Entity\Post;
+use App\Service\Post\Dto\PostFilter;
 
 interface PostRepositoryInterface
 {
     /**
-     * @param int $limit
-     * @param int $offset
+     * @param PostFilter $filter
      *
      * @return Collection<Post>
      */
-    public function getPosts(int $limit, int $offset): Collection;
+    public function getPosts(PostFilter $filter): Collection;
 
-    /**
-     * @param string $tag
-     * @param int    $limit
-     * @param int    $offset
-     *
-     * @return Collection<Post>
-     */
-    public function findPostsByTag(string $tag, int $limit, int $offset): Collection;
-
-    public function countPosts(): int;
-
-    public function countPostsByTag(string $tag): int;
+    public function countPosts(PostFilter $filter): int;
 
     public function findOneBySlug(string $slug): ?Post;
 

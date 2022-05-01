@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Post;
 
-use App\Dto\PostData;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
+use App\Service\Post\Dto\PostData;
 use DomainException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

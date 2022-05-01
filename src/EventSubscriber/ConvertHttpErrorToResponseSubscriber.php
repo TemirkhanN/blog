@@ -16,10 +16,12 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
 {
     private ResponseFactoryInterface $responseFactory;
+    private string $logFile;
 
-    public function __construct(ResponseFactoryInterface $responseFactory)
+    public function __construct(ResponseFactoryInterface $responseFactory, string $logFile)
     {
         $this->responseFactory = $responseFactory;
+        $this->logFile         = $logFile;
     }
 
     /** @return array<class-string, string> */
@@ -52,10 +54,25 @@ class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
             case $error instanceof HttpException:
                 $response = $this->responseFactory->createResponse($error->getMessage(), $error->getStatusCode());
                 break;
+            case $error instanceof \Throwable:
+                $this->logError($error);
+                return;
             default:
                 return;
         }
 
         $event->setResponse($response);
+    }
+
+    private function logError(\Throwable $error): void
+    {
+        $msg = sprintf(
+            "%s: %s in %s at %d\n\n",
+            date('H:i:s d-m-Y '),
+            $error->getMessage(),
+            $error->getFile(),
+            $error->getLine()
+        );
+        file_put_contents($this->logFile, $msg, FILE_APPEND);
     }
 }

@@ -10,7 +10,7 @@ function PostPreview(props: { post: Preview }) {
 
   const content = markdownRenderer.render(post.preview);
 
-  const publishedAt = (new Date(post.publishedAt)).toLocaleDateString(
+  const publishedAt = (new Date(post.publishedAt ?? post.createdAt)).toLocaleDateString(
     'en-gb',
     {
       year: 'numeric',

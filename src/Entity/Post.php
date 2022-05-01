@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use UnexpectedValueException;
 
 class Post
 {
@@ -30,7 +31,14 @@ class Post
     /** @var Collection<int, Comment> */
     private Collection $comments;
 
-    public function __construct(string $slug, string $title, string $preview, string $content)
+    /**
+     * @param string        $slug
+     * @param string        $title
+     * @param string        $preview
+     * @param string        $content
+     * @param iterable<Tag> $tags
+     */
+    public function __construct(string $slug, string $title, string $preview, string $content, iterable $tags = [])
     {
         $this->state       = self::STATE_DRAFT;
         $this->title       = $title;
@@ -39,14 +47,15 @@ class Post
         $this->createdAt   = DateTimeFactory::now();
         $this->publishedAt = null;
         $this->updatedAt   = null;
-        $this->tags        = new ArrayCollection();
+        $this->tags        = new ArrayCollection([...$tags]);
         $this->comments    = new ArrayCollection();
         $this->slug        = $slug;
     }
 
     public function changeTitle(string $newTitle): void
     {
-        $this->title = $newTitle;
+        $this->title     = $newTitle;
+        $this->updatedAt = DateTimeFactory::now();
     }
 
     public function title(): string
@@ -56,7 +65,8 @@ class Post
 
     public function changeContent(string $newContent): void
     {
-        $this->content = $newContent;
+        $this->content   = $newContent;
+        $this->updatedAt = DateTimeFactory::now();
     }
 
     public function content(): string
@@ -66,7 +76,8 @@ class Post
 
     public function changePreview(string $newPreview): void
     {
-        $this->preview = $newPreview;
+        $this->preview   = $newPreview;
+        $this->updatedAt = DateTimeFactory::now();
     }
 
     public function preview(): string
@@ -81,7 +92,8 @@ class Post
 
     public function changeSlug(string $newSlug): void
     {
-        $this->slug = $newSlug;
+        $this->slug      = $newSlug;
+        $this->updatedAt = DateTimeFactory::now();
     }
 
     public function createdAt(): DateTimeInterface
@@ -103,6 +115,7 @@ class Post
     {
         if (!$this->tags->contains($tag)) {
             $this->tags->add($tag);
+            $this->updatedAt = DateTimeFactory::now();
         }
     }
 
@@ -112,6 +125,7 @@ class Post
         foreach ($tags as $tag) {
             $this->tags->add($tag);
         }
+        $this->updatedAt = DateTimeFactory::now();
     }
 
     /**
@@ -134,11 +148,15 @@ class Post
         }
 
         if ($this->state !== self::STATE_DRAFT) {
-            throw new Exception\ImpossibleTransitionException();
+            $fromState = $this->getStateName($this->state);
+            $toState   = $this->getStateName(self::STATE_PUBLISHED);
+
+            throw Exception\ImpossibleTransitionException::create($fromState, $toState);
         }
 
         $this->state       = self::STATE_PUBLISHED;
         $this->publishedAt = DateTimeFactory::now();
+        $this->updatedAt   = DateTimeFactory::now();
     }
 
     public function archive(): void
@@ -147,7 +165,23 @@ class Post
             return;
         }
 
-        $this->state     = self::STATE_ARCHIVED;
-        $this->updatedAt = DateTimeFactory::now();
+        $this->state       = self::STATE_ARCHIVED;
+        $this->updatedAt   = DateTimeFactory::now();
+        $this->publishedAt = null;
+    }
+
+    private function getStateName(int $state): string
+    {
+        static $statesMap = [
+            self::STATE_DRAFT     => 'draft',
+            self::STATE_PUBLISHED => 'published',
+            self::STATE_ARCHIVED  => 'archived',
+        ];
+
+        if (!isset($statesMap[$state])) {
+            throw new UnexpectedValueException(sprintf('%d is an unknown state', $state));
+        }
+
+        return $statesMap[$state];
     }
 }

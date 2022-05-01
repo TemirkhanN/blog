@@ -29,6 +29,12 @@ add_comment:
     slug: '[a-zA-Z0-9_-]{10,}'
   methods: [ POST ]
   controller: App\Controller\Comment\AddController
+publish_post:
+  path: /api/posts/{slug}/releases
+  controller: App\Controller\Post\PublishController
+  requirements:
+    slug: '[a-zA-Z0-9_-]{10,}'
+  methods: [ POST ]
 reply_comment:
   path: /api/posts/{slug}/comments/{replyTo}
   requirements:

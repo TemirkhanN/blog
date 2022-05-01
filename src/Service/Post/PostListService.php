@@ -7,6 +7,7 @@ namespace App\Service\Post;
 use App\Entity\Collection;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
+use App\Service\Post\Dto\PostFilter;
 
 class PostListService
 {
@@ -18,35 +19,18 @@ class PostListService
     }
 
     /**
-     * @param int $offset
-     * @param int $limit
+     * @param PostFilter $filter
      *
      * @return Collection<Post>
      */
-    public function getPosts(int $offset, int $limit): Collection
+    public function getPosts(PostFilter $filter): Collection
     {
-        return $this->postRepository->getPosts($limit, $offset);
+        return $this->postRepository->getPosts($filter);
     }
 
-    /**
-     * @param string $tag
-     * @param int    $offset
-     * @param int    $limit
-     *
-     * @return Collection<Post>
-     */
-    public function getPostsByTag(string $tag, int $offset, int $limit): Collection
+    public function countPosts(PostFilter $filter): int
     {
-        return $this->postRepository->findPostsByTag($tag, $limit, $offset);
-    }
-
-    public function countPosts(?string $withTag = null): int
-    {
-        if ($withTag === null) {
-            return $this->postRepository->countPosts();
-        }
-
-        return $this->postRepository->countPostsByTag($withTag);
+        return $this->postRepository->countPosts($filter);
     }
 
     public function getPostBySlug(string $slug): ?Post

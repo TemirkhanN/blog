@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Post;
 
-use App\Dto\PostData;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
+use App\Service\Post\Dto\PostData;
 
 class CreatePostService
 {
@@ -38,11 +38,8 @@ class CreatePostService
             throw new \DomainException('There already exists the post with similar title');
         }
 
-        $post = new Post($slug, $data->title, $data->preview, $data->content);
-
-        foreach ($this->tagService->createTags($data->tags) as $tag) {
-            $post->addTag($tag);
-        }
+        $tags = $this->tagService->createTags($data->tags);
+        $post = new Post($slug, $data->title, $data->preview, $data->content, $tags);
 
         $this->repository->save($post);
 

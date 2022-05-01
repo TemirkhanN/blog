@@ -8,6 +8,7 @@ use App\Entity\Post;
 use App\Entity\Tag;
 use App\FunctionalTestCase;
 use App\Service\DateTime\DateTimeFactory;
+use App\Service\Post\Dto\PostFilter;
 use DateTimeImmutable;
 
 class PostRepositoryTest extends FunctionalTestCase
@@ -32,13 +33,15 @@ class PostRepositoryTest extends FunctionalTestCase
 
     public function testCountPosts(): void
     {
-        self::assertEquals(10, $this->repository->countPosts());
-    }
+        $emptyFilter             = new PostFilter();
+        $filterBySomeTag         = new PostFilter();
+        $filterBySomeTag->tag    = 'SomeTag';
+        $filterByAnotherTag      = new PostFilter();
+        $filterByAnotherTag->tag = 'AnotherTag';
 
-    public function testCountPostsByTag(): void
-    {
-        self::assertEquals(6, $this->repository->countPostsByTag('SomeTag'));
-        self::assertEquals(5, $this->repository->countPostsByTag('AnotherTag'));
+        self::assertEquals(10, $this->repository->countPosts($emptyFilter));
+        self::assertEquals(6, $this->repository->countPosts($filterBySomeTag));
+        self::assertEquals(5, $this->repository->countPosts($filterByAnotherTag));
     }
 
     /**
@@ -83,16 +86,14 @@ class PostRepositoryTest extends FunctionalTestCase
     }
 
     /**
-     * @param string   $tag
-     * @param int      $limit
-     * @param int      $offset
-     * @param string[] $expectedTitles
+     * @param PostFilter $filter
+     * @param string[]   $expectedTitles
      *
      * @dataProvider taggedPostsProvider
      */
-    public function testFindPostsByTag(string $tag, int $limit, int $offset, array $expectedTitles): void
+    public function testFindPostsByTag(PostFilter $filter, array $expectedTitles): void
     {
-        $posts = $this->repository->findPostsByTag($tag, $limit, $offset);
+        $posts = $this->repository->getPosts($filter);
 
         $existingTitles = [];
         foreach ($posts as $post) {
@@ -102,24 +103,19 @@ class PostRepositoryTest extends FunctionalTestCase
         self::assertSame($expectedTitles, $existingTitles);
     }
 
-    /** @return iterable<array{string, int, int, string[]}> */
+    /** @return iterable<array{PostFilter, string[]}> */
     public function taggedPostsProvider(): iterable
     {
-        // Last 2
-        yield [
-            'SomeTag',
-            2,
-            0,
+        yield 'Latest 2 posts tagged with SomeTag' => [
+            PostFilter::create(2, 0, 'SomeTag'),
             [
                 'Multitagged post',
                 'Some title 5',
             ],
         ];
 
-        yield [
-            'SomeTag',
-            3,
-            2,
+        yield 'Latest 3rd, 4th and 5th posts tagged with SomeTag' => [
+            PostFilter::create(3, 2, 'SomeTag'),
             [
                 'Some title 4',
                 'Some title 3',
@@ -127,36 +123,40 @@ class PostRepositoryTest extends FunctionalTestCase
             ],
         ];
 
-        // Overflowing limit
-        yield [
-            'AnotherTag',
-            5,
-            3,
+        yield 'Latest 5 posts tagged with AnotherTag skipping 3 entries' => [
+            PostFilter::create(5, 3, 'AnotherTag'),
             [
                 'Another title 2',
                 'Another title 1',
             ],
         ];
 
-        // Overflowing offset
-        yield [
-            'AnotherTag',
-            1,
-            100,
+        yield 'Latest post tagged with AnotherTag skipping 100 entries' => [
+            PostFilter::create(1, 100, 'AnotherTag'),
             [],
+        ];
+
+        yield 'Latest 5 posts tagged with SomeTag including non-published' => [
+            PostFilter::create(5, 0, 'SomeTag', false),
+            [
+                'Archived title 24',
+                'Some draft title 23',
+                'Multitagged post',
+                'Some title 5',
+                'Some title 4',
+            ],
         ];
     }
 
     /**
-     * @param int      $limit
-     * @param int      $offset
-     * @param string[] $expectedTitles
+     * @param PostFilter $filter
+     * @param string[]   $expectedTitles
      *
      * @dataProvider postsProvider
      */
-    public function testGetPosts(int $limit, int $offset, array $expectedTitles): void
+    public function testGetPosts(PostFilter $filter, array $expectedTitles): void
     {
-        $posts = $this->repository->getPosts($limit, $offset);
+        $posts = $this->repository->getPosts($filter);
 
         $existingTitles = [];
         foreach ($posts as $post) {
@@ -166,21 +166,19 @@ class PostRepositoryTest extends FunctionalTestCase
         self::assertSame($expectedTitles, $existingTitles);
     }
 
-    /** @return iterable<array{int, int, string[]}> */
+    /** @return iterable<array{PostFilter, string[]}> */
     public function postsProvider(): iterable
     {
-        yield [
-            2,
-            0,
+        yield 'Latest 2 posts' => [
+            PostFilter::create(2, 0),
             [
                 'Multitagged post',
                 'Another title 4',
             ],
         ];
 
-        yield [
-            3,
-            2,
+        yield 'Latest 3 posts skipping 2 entries' => [
+            PostFilter::create(3, 2),
             [
                 'Another title 3',
                 'Another title 2',
@@ -188,10 +186,8 @@ class PostRepositoryTest extends FunctionalTestCase
             ],
         ];
 
-        // Limit overflow
-        yield [
-            5,
-            3,
+        yield 'Latest 5 posts skipping 3 entries' => [
+            PostFilter::create(5, 3),
             [
                 'Another title 2',
                 'Another title 1',
@@ -201,11 +197,20 @@ class PostRepositoryTest extends FunctionalTestCase
             ],
         ];
 
-        // Offset overflow
-        yield [
-            1,
-            100,
+        yield 'Latest post skipping 100 entries' => [
+            PostFilter::create(1, 100),
             [],
+        ];
+
+        yield 'Latest 5 posts including non-published' => [
+            PostFilter::create(5, 0, null, false),
+            [
+                'Some draft title 25',
+                'Archived title 24',
+                'Some draft title 23',
+                'Multitagged post',
+                'Another title 4',
+            ],
         ];
     }
 
@@ -217,9 +222,9 @@ class PostRepositoryTest extends FunctionalTestCase
         $anotherTag = new Tag('AnotherTag');
 
         // An artificial time gap between posts with step >=1second
-        $counter = -60;
+        $counter = 60;
         foreach (range(1, 5) as $postWithSomeTag) {
-            DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('%d seconds', ++$counter)));
+            DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
             $post = new Post(
                 'Some-slug-' . $postWithSomeTag,
                 'Some title ' . $postWithSomeTag,
@@ -256,14 +261,25 @@ class PostRepositoryTest extends FunctionalTestCase
         $postWithMultipleTags->publish();
         $entityManager->persist($postWithMultipleTags);
 
-        $draftPost = new Post('23th-post-slug', 'Some title 23', 'Some preview of 23', 'Some content of 23');
+        DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
+        $draftPost = new Post('23th-post-slug', 'Some draft title 23', 'Some preview of 23', 'Some content of 23');
         $draftPost->setTags($someTag, $anotherTag);
-        $archivedPost = new Post('24th-post-slug', 'Some title 24', 'Some preview of 24', 'Some content of 24');
+        DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
+        $archivedPost = new Post('24th-post-slug', 'Archived title 24', 'Some preview of 24', 'Some content of 24');
         $archivedPost->setTags($someTag, $anotherTag);
         $archivedPost->archive();
 
+        DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
+        $draftPostThatWasNeverUpdated = new Post(
+            '25th-post-slug',
+            'Some draft title 25',
+            'Some preview of 25',
+            'Some content of 25'
+        );
+
         $entityManager->persist($draftPost);
         $entityManager->persist($archivedPost);
+        $entityManager->persist($draftPostThatWasNeverUpdated);
 
         $entityManager->flush();
     }

@@ -41,3 +41,7 @@ services:
                 -
                   login: admin
                   password: '%env(MY_VERY_SECRET_TOKEN)%'
+
+    App\EventSubscriber\ConvertHttpErrorToResponseSubscriber:
+        arguments:
+            $logFile: '%kernel.project_dir%/var/log/custom_%kernel.environment%.txt'

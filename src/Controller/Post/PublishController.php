@@ -4,41 +4,37 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
-use App\Service\Post\Dto\PostData;
-use App\Service\Post\EditPost;
+use App\Entity\Exception\ImpossibleTransitionException;
 use App\Service\Post\PostListService;
+use App\Service\Post\PublishPost;
+use App\Service\Response\Dto\SystemMessage;
 use App\Service\Response\ResponseFactoryInterface;
-use DomainException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class EditController
+class PublishController
 {
-    private EditPost $postUpdater;
     private PostListService $postListService;
     private AuthorizationCheckerInterface $security;
-    private ValidatorInterface $validator;
+    private PublishPost $publisher;
     private ResponseFactoryInterface $responseFactory;
 
     public function __construct(
-        EditPost $postUpdater,
         PostListService $postListService,
         AuthorizationCheckerInterface $security,
-        ValidatorInterface $validator,
+        PublishPost $publisher,
         ResponseFactoryInterface $responseFactory
     ) {
-        $this->postUpdater     = $postUpdater;
         $this->postListService = $postListService;
         $this->security        = $security;
-        $this->validator       = $validator;
+        $this->publisher       = $publisher;
         $this->responseFactory = $responseFactory;
     }
 
-    public function __invoke(string $slug, PostData $postData): Response
+    public function __invoke(string $slug): Response
     {
         if (!$this->security->isGranted('create_post')) {
-            return $this->responseFactory->forbidden("You're not allowed to edit posts");
+            return $this->responseFactory->forbidden("You're not allowed to modify posts");
         }
 
         $post = $this->postListService->getPostBySlug($slug);
@@ -46,17 +42,16 @@ class EditController
             return $this->responseFactory->notFound("Publication doesn't exist");
         }
 
-        $violations = $this->validator->validate($postData);
-        if (count($violations)) {
-            return $this->responseFactory->view($violations, 'constraints.violation', Response::HTTP_BAD_REQUEST);
-        }
-
         try {
-            $this->postUpdater->execute($postData, $post);
-        } catch (DomainException $e) {
-            return $this->responseFactory->badRequest($e->getMessage());
+            $this->publisher->execute($post);
+        } catch (ImpossibleTransitionException $e) {
+            return $this->responseFactory->view(
+                new SystemMessage($e->getMessage(), $e->getCode()),
+                'response.system_message'
+            );
         }
 
-        return $this->responseFactory->view($post, 'post.view', Response::HTTP_CREATED);
+
+        return $this->responseFactory->createResponse('');
     }
 }

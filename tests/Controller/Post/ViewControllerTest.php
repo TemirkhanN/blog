@@ -71,6 +71,7 @@ class ViewControllerTest extends FunctionalTestCase
         $post = $postRepository->findOneBy(['slug' => $slug]);
         self::assertNotNull($post);
         self::assertNotNull($post->publishedAt());
+        self::assertNotNull($post->updatedAt());
         self::assertJsonEqualsToData(
             (string) $response->getContent(),
             [
@@ -85,7 +86,7 @@ class ViewControllerTest extends FunctionalTestCase
                     $post->tags()
                 ),
                 'createdAt'   => $post->createdAt()->format(DATE_ATOM),
-                'updatedAt'   => null,
+                'updatedAt'   => $post->updatedAt()->format(DATE_W3C),
                 'publishedAt' => $post->publishedAt()->format(DATE_ATOM),
             ]
         );

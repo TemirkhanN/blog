@@ -7,6 +7,7 @@ namespace App\Service\Post;
 use App\Entity\Post;
 use App\Entity\Collection;
 use App\Repository\PostRepositoryInterface;
+use App\Service\Post\Dto\PostFilter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -27,23 +28,15 @@ class PostListServiceTest extends TestCase
 
     public function testCountPosts(): void
     {
+        $filter = new PostFilter();
+
         $this->postRepository
             ->expects(self::once())
             ->method('countPosts')
+            ->with(self::identicalTo($filter))
             ->willReturn(123);
 
-        self::assertEquals(123, $this->postListService->countPosts());
-    }
-
-    public function testCountTaggedPosts(): void
-    {
-        $this->postRepository
-            ->expects(self::once())
-            ->method('countPostsByTag')
-            ->with(self::equalTo('SomeTag'))
-            ->willReturn(123);
-
-        self::assertEquals(123, $this->postListService->countPosts('SomeTag'));
+        self::assertEquals(123, $this->postListService->countPosts($filter));
     }
 
     public function testGetPostBySlug(): void
@@ -59,33 +52,17 @@ class PostListServiceTest extends TestCase
         self::assertSame($post, $result);
     }
 
-    public function testGetPostsByTag(): void
-    {
-        $tag    = 'SomeTag';
-        $offset = 1;
-        $limit  = 2;
-        $this->postRepository
-            ->expects(self::once())
-            ->method('findPostsByTag')
-            ->with(self::equalTo($tag), self::equalTo($limit), self::equalTo($offset))
-            ->willReturn($posts = $this->createMock(Collection::class));
-
-        $result = $this->postListService->getPostsByTag($tag, $offset, $limit);
-
-        self::assertSame($posts, $result);
-    }
-
     public function testGetPosts(): void
     {
-        $offset = 1;
-        $limit  = 2;
+        $filter = new PostFilter();
+
         $this->postRepository
             ->expects(self::once())
             ->method('getPosts')
-            ->with(self::equalTo($limit), self::equalTo($offset))
+            ->with(self::identicalTo($filter))
             ->willReturn($posts = $this->createMock(Collection::class));
 
-        $result = $this->postListService->getPosts($offset, $limit);
+        $result = $this->postListService->getPosts($filter);
 
         self::assertSame($posts, $result);
     }

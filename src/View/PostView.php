@@ -66,6 +66,6 @@ class PostView implements ViewInterface
             return null;
         }
 
-        return $dateTime->format(DateTimeInterface::ATOM);
+        return $dateTime->format(DATE_W3C);
     }
 }

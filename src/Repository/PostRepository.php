@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\Collection;
 use App\Entity\Post;
+use App\Service\Post\Dto\PostFilter;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -22,70 +23,63 @@ class PostRepository implements PostRepositoryInterface
         $this->registry = $registry;
     }
 
-    public function getPosts(int $limit, int $offset): Collection
+    /**
+     * @param PostFilter $filter
+     *
+     * @return Collection<Post>
+     */
+    public function getPosts(PostFilter $filter): Collection
     {
-        assert($limit > 0);
-        assert($offset >= 0);
+        $query = $this->createQueryBuilder()
+                      ->addSelect('p', 't')
+                      ->from(Post::class, 'p');
 
-        // TODO multi-queries shall be replaced with something better. At worst scenario - cache it
-        return new Collection(
-            (function (int $limit, int $offset) {
-                return new Paginator($this->createQueryBuilder()
-                                ->addSelect('p', 't')
-                                ->from(Post::class, 'p')
-                                ->leftJoin('p.tags', 't')
-                                ->andWhere('p.state = :state')
-                                ->setParameters(['state' => Post::STATE_PUBLISHED])
-                                ->orderBy('p.publishedAt', 'DESC')
-                                ->setMaxResults($limit)
-                                ->setFirstResult($offset)
-                                ->getQuery());
-            })($limit, $offset)
-        );
+        if ($filter->tag !== null) {
+            $query->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag');
+            $query->setParameter('tag', $filter->tag);
+        } else {
+            $query->leftJoin('p.tags', 't');
+        }
+
+        if ($filter->onlyPublished) {
+            $query->andWhere('p.state = :state');
+            $query->setParameter('state', Post::STATE_PUBLISHED);
+            $query->addOrderBy('p.publishedAt', 'DESC');
+        } else {
+            // HIDDEN keyword removes following field from the result
+            $query->addSelect('COALESCE(p.publishedAt, p.updatedAt, p.createdAt) as HIDDEN modifiedDate');
+            $query->addOrderBy('modifiedDate', 'DESC');
+        }
+
+        if ($filter->limit !== null) {
+            $query->setMaxResults($filter->limit);
+        }
+
+        if ($filter->offset !== 0) {
+            $query->setFirstResult($filter->offset);
+        }
+
+        return new Collection(new Paginator($query));
     }
 
-    public function findPostsByTag(string $tag, int $limit, int $offset): Collection
+    public function countPosts(PostFilter $filter): int
     {
-        assert($limit > 0);
-        assert($offset >= 0);
+        $query = $this->createQueryBuilder()
+                      ->addSelect('COUNT(p)')
+                      ->from(Post::class, 'p');
 
-        return new Collection(
-            (function (string $tag, int $limit, int $offset) {
-                return new Paginator($this->createQueryBuilder()
-                                ->select('p')
-                                ->addSelect('t')
-                                ->from(Post::class, 'p')
-                                ->leftJoin('p.tags', 't')
-                                ->andWhere(':tag MEMBER OF p.tags')
-                                ->andWhere('p.state = :state')
-                                ->setParameters(['tag' => $tag, 'state' => Post::STATE_PUBLISHED])
-                                ->orderBy('p.publishedAt', 'DESC')
-                                ->setMaxResults($limit)
-                                ->setFirstResult($offset)
-                                ->getQuery());
-            })($tag, $limit, $offset)
-        );
-    }
+        if ($filter->tag !== null) {
+            $query->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag');
+            $query->setParameter('tag', $filter->tag);
+        }
 
-    public function countPosts(): int
-    {
-        return (int) $this->createQueryBuilder()
-                         ->select('COUNT(p)')
-                         ->from(Post::class, 'p')
-                         ->andWhere('p.state = :state')
-                         ->setParameters(['state' => Post::STATE_PUBLISHED])
-                         ->getQuery()->getSingleScalarResult();
-    }
+        if ($filter->onlyPublished) {
+            $query->andWhere('p.state = :state');
+            $query->setParameter('state', Post::STATE_PUBLISHED);
+        }
 
-    public function countPostsByTag(string $tag): int
-    {
-        return (int) $this->createQueryBuilder()
-                         ->select('COUNT(p)')
-                         ->from(Post::class, 'p')
-                         ->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag')
-                         ->andWhere('p.state = :state')
-                         ->setParameters(['tag' => $tag, 'state' => Post::STATE_PUBLISHED])
-                         ->getQuery()->getSingleScalarResult();
+        return (int) $query->getQuery()
+                           ->getSingleScalarResult();
     }
 
     public function findOneBySlug(string $slug): ?Post

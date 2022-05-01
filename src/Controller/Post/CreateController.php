@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
-use App\Dto\PostData;
 use App\Service\Post\CreatePostService;
+use App\Service\Post\Dto\PostData;
 use App\Service\Response\ResponseFactoryInterface;
 use DomainException;
 use Symfony\Component\HttpFoundation\Response;

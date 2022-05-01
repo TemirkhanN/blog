@@ -1,20 +1,17 @@
 import { HttpClient, Response } from './HttpClient';
 
-export interface PostModel {
-    readonly slug: string,
-    readonly title: string,
-    readonly preview: string,
-    readonly content: string,
-    readonly publishedAt: string,
-    readonly tags: string[]
+export interface Preview {
+  readonly title: string,
+  readonly slug: string,
+  readonly preview: string,
+  readonly createdAt: string,
+  readonly updatedAt: string|null,
+  readonly publishedAt: string|null,
+  readonly tags: string[]
 }
 
-export interface Preview {
-    readonly title: string,
-    readonly slug: string,
-    readonly preview: string,
-    readonly publishedAt: string,
-    readonly tags: string[]
+export interface PostModel extends Preview {
+  readonly content: string,
 }
 
 export interface Comment {
@@ -23,17 +20,17 @@ export interface Comment {
   readonly comment: string
 }
 
-export interface CommentBranch extends Comment{
-    readonly replies: CommentBranch[]
+export interface CommentBranch extends Comment {
+  readonly replies: CommentBranch[];
 }
 
 export interface PaginatedCollection<T> {
-    readonly data: T[],
-    readonly pagination: {
-        readonly limit: number,
-        readonly offset: number,
-        readonly total: number
-    }
+  readonly data: T[],
+  readonly pagination: {
+    readonly limit: number,
+    readonly offset: number,
+    readonly total: number
+  }
 }
 
 function createToken(login: string, password: string): Promise<Response<{ token: string }>> {
@@ -72,6 +69,10 @@ function editPost(
     content: newData.content,
     tags: newData.tags,
   });
+}
+
+function publishPost(slug: string): Promise<Response<any>> {
+  return HttpClient.post(`${process.env.REACT_APP_BACKEND_URL}/api/posts/${slug}/releases`, []);
 }
 
 function getPost(slug: string): Promise<Response<PostModel>> {
@@ -118,6 +119,7 @@ const API = {
   createToken,
   createPost,
   editPost,
+  publishPost,
   getPost,
   getPosts,
   getCommentsTree,
