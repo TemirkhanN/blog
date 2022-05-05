@@ -10,7 +10,7 @@ use App\FunctionalTestCase;
 
 class ViewControllerTest extends FunctionalTestCase
 {
-    private const API_URL = '/api/posts/%s';
+    private const ENDPOINT = '/api/posts/%s';
 
     protected function setUp(): void
     {
@@ -34,7 +34,7 @@ class ViewControllerTest extends FunctionalTestCase
      */
     public function testNotFound(string $slug): void
     {
-        $response = $this->sendRequest('GET', sprintf(self::API_URL, $slug));
+        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT, $slug));
 
         self::assertEquals(404, $response->getStatusCode());
         self::assertEquals(
@@ -62,7 +62,7 @@ class ViewControllerTest extends FunctionalTestCase
      */
     public function testView(string $slug): void
     {
-        $response = $this->sendRequest('GET', sprintf(self::API_URL, $slug));
+        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT, $slug));
 
         self::assertEquals(200, $response->getStatusCode());
 
@@ -112,14 +112,5 @@ class ViewControllerTest extends FunctionalTestCase
         $this->saveState($post);
 
         return $post;
-    }
-
-    private function saveState(Post ...$posts): void
-    {
-        $em = $this->getEntityManager();
-        foreach ($posts as $post) {
-            $em->persist($post);
-        }
-        $em->flush();
     }
 }

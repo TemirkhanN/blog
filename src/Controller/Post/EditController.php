@@ -57,6 +57,6 @@ class EditController
             return $this->responseFactory->badRequest($e->getMessage());
         }
 
-        return $this->responseFactory->view($post, 'post.view', Response::HTTP_CREATED);
+        return $this->responseFactory->view($post, 'post.view');
     }
 }

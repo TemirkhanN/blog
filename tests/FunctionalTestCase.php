@@ -124,4 +124,18 @@ class FunctionalTestCase extends WebTestCase
             $data['pagination']
         );
     }
+
+    protected function saveState(object ...$entities): void
+    {
+        $em = $this->getEntityManager();
+        foreach ($entities as $entity) {
+            $em->persist($entity);
+        }
+        $em->flush();
+    }
+
+    protected function refreshState(object $entity): void
+    {
+        $this->getEntityManager()->refresh($entity);
+    }
 }

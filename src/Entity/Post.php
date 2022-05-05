@@ -141,6 +141,11 @@ class Post
         return $this->state === self::STATE_PUBLISHED;
     }
 
+    public function isArchived(): bool
+    {
+        return $this->state === self::STATE_ARCHIVED;
+    }
+
     public function publish(): void
     {
         if ($this->state === self::STATE_PUBLISHED) {
@@ -165,9 +170,8 @@ class Post
             return;
         }
 
-        $this->state       = self::STATE_ARCHIVED;
-        $this->updatedAt   = DateTimeFactory::now();
-        $this->publishedAt = null;
+        $this->state     = self::STATE_ARCHIVED;
+        $this->updatedAt = DateTimeFactory::now();
     }
 
     private function getStateName(int $state): string
