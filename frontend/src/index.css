@@ -107,3 +107,7 @@ blockquote {
   border-left: 3px solid #c0c0c0;
   padding: 0 0.5rem;
 }
+
+.post-preview.not-public {
+  background-color: #f7f4f4;
+}

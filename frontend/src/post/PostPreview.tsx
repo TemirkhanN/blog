@@ -19,9 +19,11 @@ function PostPreview(props: { post: Preview }) {
     },
   );
 
+  const isPublished = post.publishedAt !== null;
+
   /* eslint-disable react/no-danger */
   return (
-    <div className="post-preview">
+    <div className={isPublished ? 'post-preview' : 'post-preview not-public'}>
       <Link className="preview-link" to={`/blog/${post.slug}`}>{post.title}</Link>
       <div>
         <svg
