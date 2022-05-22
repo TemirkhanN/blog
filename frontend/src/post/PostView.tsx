@@ -1,4 +1,3 @@
-import { Remarkable } from 'remarkable';
 import { Helmet } from 'react-helmet-async';
 import { Alert, Spinner } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
@@ -8,6 +7,7 @@ import Disclaimer from '../Disclaimer';
 import CommentsTree from '../comment/CommentsTree';
 import API, { PostModel } from '../utils/API';
 import PostControl from '../admin/PostControl';
+import Markdown from '../utils/Markdown';
 
 export default function PostView(props: { match: { params: { slug: string } } }) {
   const [error, setError] = useState<HttpError | null>();
@@ -66,8 +66,7 @@ export default function PostView(props: { match: { params: { slug: string } } })
     );
   }
 
-  const md = new Remarkable();
-  const content = md.render(post.content);
+  const content = Markdown.renderExtended(post.content);
 
   const publishedAt = (new Date(post.publishedAt ?? post.createdAt))
     .toLocaleDateString(

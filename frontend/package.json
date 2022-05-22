@@ -6,6 +6,7 @@
     "axios": "^0.24.0",
     "bootstrap": "^4.6.0",
     "glob-parent": "^6.0.1",
+    "highlight.js": "^11.5.1",
     "js-cookie": "^3.0.1",
     "react": "^17.0.2",
     "react-bootstrap": "^1.6.0",
@@ -45,15 +46,28 @@
       "airbnb",
       "airbnb/hooks"
     ],
-      "rules": {
-        "import/no-unresolved": "off",
-        "import/extensions": "off",
-        "react/jsx-filename-extension": ["error", {"extensions": [".ts", ".tsx"]}],
-        "react/jsx-uses-react": "off",
-        "react/react-in-jsx-scope": "off",
-        "react/require-default-props": "off",
-        "no-unused-vars": ["error", { "args": "none" }]
-      }
+    "rules": {
+      "import/no-unresolved": "off",
+      "import/extensions": "off",
+      "react/jsx-filename-extension": [
+        "error",
+        {
+          "extensions": [
+            ".ts",
+            ".tsx"
+          ]
+        }
+      ],
+      "react/jsx-uses-react": "off",
+      "react/react-in-jsx-scope": "off",
+      "react/require-default-props": "off",
+      "no-unused-vars": [
+        "error",
+        {
+          "args": "none"
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [

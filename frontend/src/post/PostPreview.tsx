@@ -1,14 +1,12 @@
 import { Link } from 'react-router-dom';
-import { Remarkable } from 'remarkable';
 import TagList from './TagList';
 import { Preview } from '../utils/API';
-
-const markdownRenderer = new Remarkable();
+import Markdown from '../utils/Markdown';
 
 function PostPreview(props: { post: Preview }) {
   const { post } = props;
 
-  const content = markdownRenderer.render(post.preview);
+  const content = Markdown.render(post.preview);
 
   const publishedAt = (new Date(post.publishedAt ?? post.createdAt)).toLocaleDateString(
     'en-gb',
