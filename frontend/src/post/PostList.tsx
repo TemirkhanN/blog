@@ -119,7 +119,7 @@ function PostList() {
     return (
       <>
         <Helmet>
-          <title>Blog posts</title>
+          <title>{generateTitle()}</title>
         </Helmet>
         <Spinner animation="grow" variant="success" />
       </>
