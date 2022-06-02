@@ -65,6 +65,11 @@ class ListController
 
         $response = $this->responseFactory->view(['post.preview', $context], 'response.paginated_collection');
 
+        // If accessed by admin it shouldn't be cached
+        if (!$filter->onlyPublished) {
+            return $response;
+        }
+
         return $cacheGateway->cache($response, TTL::minutes(10));
     }
 }
