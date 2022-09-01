@@ -45,12 +45,11 @@ class CreateController
             return $this->responseFactory->view($violations, 'constraints.violation', Response::HTTP_BAD_REQUEST);
         }
 
-        try {
-            $post = $this->postCreator->execute($postData);
-        } catch (DomainException $e) {
-            return $this->responseFactory->badRequest($e->getMessage());
+        $result = $this->postCreator->execute($postData);
+        if (!$result->isSuccessful()) {
+            return $this->responseFactory->badRequest($result->getError());
         }
 
-        return $this->responseFactory->view($post, 'post.view', Response::HTTP_CREATED);
+        return $this->responseFactory->view($result->getData(), 'post.view', Response::HTTP_CREATED);
     }
 }

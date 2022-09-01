@@ -46,10 +46,9 @@ class CreatePostServiceTest extends TestCase
             ->with(self::equalTo($expectedSlug))
             ->willReturn($this->createMock(Post::class));
 
-        $this->expectException(DomainException::class);
-        $this->expectExceptionMessage('There already exists the post with similar title');
-
-        $this->service->execute($postData);
+        $result = $this->service->execute($postData);
+        self::assertFalse($result->isSuccessful());
+        self::assertEquals('There already exists the post with similar title', $result->getError());
     }
 
     public function testPostCreation(): void
@@ -86,8 +85,11 @@ class CreatePostServiceTest extends TestCase
                 return true;
             }));
 
-        $savedPost = $this->service->execute($postData);
+        $result = $this->service->execute($postData);
 
+        self::assertTrue($result->isSuccessful());
+
+        $savedPost = $result->getData();
         self::assertSame($expectedPost, $savedPost);
     }
 }

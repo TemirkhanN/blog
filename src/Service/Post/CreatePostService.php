@@ -7,6 +7,7 @@ namespace App\Service\Post;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 use App\Service\Post\Dto\PostData;
+use App\Service\Result;
 
 class CreatePostService
 {
@@ -27,15 +28,13 @@ class CreatePostService
     /**
      * @param PostData $data
      *
-     * @return Post
-     *
-     * @throws \DomainException
+     * @return Result<Post>
      */
-    public function execute(PostData $data): Post
+    public function execute(PostData $data): Result
     {
         $slug = $this->slugGenerator->generate($data->title);
         if ($this->repository->findOneBySlug($slug)) {
-            throw new \DomainException('There already exists the post with similar title');
+            return Result::error('There already exists the post with similar title');
         }
 
         $tags = $this->tagService->createTags($data->tags);
@@ -43,6 +42,6 @@ class CreatePostService
 
         $this->repository->save($post);
 
-        return $post;
+        return Result::success($post);
     }
 }
