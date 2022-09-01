@@ -51,10 +51,9 @@ class EditController
             return $this->responseFactory->view($violations, 'constraints.violation', Response::HTTP_BAD_REQUEST);
         }
 
-        try {
-            $this->postUpdater->execute($postData, $post);
-        } catch (DomainException $e) {
-            return $this->responseFactory->badRequest($e->getMessage());
+        $result = $this->postUpdater->execute($postData, $post);
+        if (!$result->isSuccessful()) {
+            return $this->responseFactory->badRequest($result->getError());
         }
 
         return $this->responseFactory->view($post, 'post.view');

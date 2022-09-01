@@ -42,15 +42,10 @@ class PublishController
             return $this->responseFactory->notFound("Publication doesn't exist");
         }
 
-        try {
-            $this->publisher->execute($post);
-        } catch (ImpossibleTransitionException $e) {
-            return $this->responseFactory->view(
-                new SystemMessage($e->getMessage(), $e->getCode()),
-                'response.system_message'
-            );
+        $result = $this->publisher->execute($post);
+        if (!$result->isSuccessful()) {
+            return $this->responseFactory->view(new SystemMessage($result->getError(), 0), 'response.system_message');
         }
-
 
         return $this->responseFactory->createResponse('');
     }

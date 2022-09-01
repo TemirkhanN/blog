@@ -7,6 +7,7 @@ namespace App\Service\Post;
 use App\Entity\Exception\ImpossibleTransitionException;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
+use App\Service\Result;
 
 class PublishPost
 {
@@ -20,13 +21,18 @@ class PublishPost
     /**
      * @param Post $post
      *
-     * @return void
-     *
-     * @throws ImpossibleTransitionException
+     * @return Result<null>
      */
-    public function execute(Post $post): void
+    public function execute(Post $post): Result
     {
-        $post->publish();
+        try {
+            $post->publish();
+        } catch (ImpossibleTransitionException $e) {
+            return Result::error($e->getMessage());
+        }
+
         $this->postRepository->save($post);
+
+        return Result::success(null);
     }
 }
