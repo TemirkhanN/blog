@@ -16,7 +16,9 @@ services:
     depends_on:
       - backend
   backend:
-    build: ./
+    build:
+      context: ./
+      target: dev_container
     env_file:
       - .env
     volumes:

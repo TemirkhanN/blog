@@ -93,7 +93,7 @@ class FunctionalTestCase extends WebTestCase
      * @param string $actualJson
      * @param mixed  $expectedData
      */
-    final protected static function assertJsonEqualsToData(string $actualJson, $expectedData): void
+    final protected static function assertJsonEqualsToData(string $actualJson, mixed $expectedData): void
     {
         self::assertJson($actualJson);
 

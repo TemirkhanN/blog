@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Post\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Vseinstrumentiru\DataObjectBundle\Object\AbstractObject;
+use ViTech\DataObjectBundle\Object\AbstractObject;
 
 /**
  * @uses Assert

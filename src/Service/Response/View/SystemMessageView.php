@@ -22,7 +22,7 @@ class SystemMessageView implements ViewInterface
      *  message: string
      * }
      */
-    public function getView($context)
+    public function getView(mixed $context)
     {
         if (!$context instanceof SystemMessage) {
             return null;

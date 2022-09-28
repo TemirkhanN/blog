@@ -20,7 +20,7 @@ interface ResponseFactoryInterface
      *
      * @return Response
      */
-    public function createResponse($content, int $statusCode = Response::HTTP_OK, array $headers = []): Response;
+    public function createResponse(mixed $content, int $statusCode = Response::HTTP_OK, array $headers = []): Response;
 
     /**
      * Creates response with data represented
@@ -31,7 +31,7 @@ interface ResponseFactoryInterface
      *
      * @return Response
      */
-    public function view($data, string $representationName, int $statusCode = Response::HTTP_OK): Response;
+    public function view(mixed $data, string $representationName, int $statusCode = Response::HTTP_OK): Response;
 
     /**
      * Creates forbidden access response

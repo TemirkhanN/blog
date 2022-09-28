@@ -33,7 +33,7 @@ class ResponseFactory implements ResponseFactoryInterface
      *
      * @return Response
      */
-    public function createResponse($content, int $statusCode = Response::HTTP_OK, array $headers = []): Response
+    public function createResponse(mixed $content, int $statusCode = Response::HTTP_OK, array $headers = []): Response
     {
         return $this->builder
             ->setContent($content)
@@ -51,7 +51,7 @@ class ResponseFactory implements ResponseFactoryInterface
      *
      * @return Response
      */
-    public function view($data, string $representationName, int $statusCode = Response::HTTP_OK): Response
+    public function view(mixed $data, string $representationName, int $statusCode = Response::HTTP_OK): Response
     {
         try {
             $content = $this->viewFactory->createView($representationName, $data);

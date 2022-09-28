@@ -50,7 +50,7 @@ class JsonResponseBuilder implements ResponseBuilderInterface
      *
      * @throws UnexpectedValueException
      */
-    public function setContent($data): ResponseBuilderInterface
+    public function setContent(mixed $data): ResponseBuilderInterface
     {
         // JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT = 15
         $this->content = json_encode($data, 15);

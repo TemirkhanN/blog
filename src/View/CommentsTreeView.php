@@ -20,7 +20,7 @@ class CommentsTreeView extends AbstractAggregateView
      *  replies: array
      * }[]
      */
-    public function getView($context)
+    public function getView(mixed $context)
     {
         assert($context instanceof Collection);
 

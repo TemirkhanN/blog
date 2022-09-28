@@ -18,7 +18,7 @@ class CommentView implements ViewInterface
      *  comment: string
      * }
      */
-    public function getView($context)
+    public function getView(mixed $context)
     {
         assert($context instanceof Comment);
 

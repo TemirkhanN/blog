@@ -1,4 +1,4 @@
-FROM php:7.4-fpm
+FROM php:8.1-fpm AS dev_container
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
@@ -34,8 +34,6 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/ \
     && ln -s /usr/local/bin/composer.phar /usr/local/bin/composer
 
-COPY ./ /app
-
 WORKDIR /app
 
 RUN usermod -u ${USER_ID} www-data
@@ -43,7 +41,11 @@ RUN chown -R www-data:www-data /app /var/www
 
 USER "${USER_ID}:${GROUP_ID}"
 
+CMD php-fpm -F
+
+FROM dev_container as prod_container
+
+COPY ./ /app
+
 RUN composer install --no-dev --prefer-dist --no-progress --optimize-autoloader
 RUN php bin/console cache:clear
-
-CMD php-fpm -F

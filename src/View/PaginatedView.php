@@ -21,7 +21,7 @@ class PaginatedView extends AbstractAggregateView
      *  }
      * }
      */
-    public function getView($context)
+    public function getView(mixed $context)
     {
         if (!$context[1] instanceof CollectionChunk) {
             return null;

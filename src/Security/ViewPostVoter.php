@@ -23,7 +23,7 @@ class ViewPostVoter implements VoterInterface
      *
      * @return int
      */
-    public function vote(TokenInterface $token, $subject, array $attributes)
+    public function vote(TokenInterface $token, mixed $subject, array $attributes)
     {
         if ($attributes !== [self::ACTION_VIEW_POST]) {
             return VoterInterface::ACCESS_ABSTAIN;
@@ -31,10 +31,6 @@ class ViewPostVoter implements VoterInterface
 
         if (!$subject instanceof Post) {
             return VoterInterface::ACCESS_ABSTAIN;
-        }
-
-        if (!$token->isAuthenticated()) {
-            return VoterInterface::ACCESS_DENIED;
         }
 
         if (!$subject->publishedAt() && !$this->isAdmin($token)) {
@@ -47,7 +43,7 @@ class ViewPostVoter implements VoterInterface
     private function isAdmin(TokenInterface $token): bool
     {
         $user = $token->getUser();
-        if (!$user instanceof UserInterface) {
+        if ($user === null) {
             return false;
         }
 

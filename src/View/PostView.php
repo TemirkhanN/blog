@@ -32,7 +32,7 @@ class PostView implements ViewInterface
      *  tags: string[]
      * }
      */
-    public function getView($context)
+    public function getView(mixed $context)
     {
         if (!$context instanceof Post) {
             return null;

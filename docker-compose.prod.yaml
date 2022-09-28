@@ -22,6 +22,7 @@ services:
   backend:
     build:
       context: ./
+      target: prod_container
       args:
         APP_ENV: ${APP_ENV}
     environment:

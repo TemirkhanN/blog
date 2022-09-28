@@ -25,18 +25,14 @@ class CreatePostVoter implements VoterInterface
      *
      * @return int
      */
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    public function vote(TokenInterface $token, mixed $subject, array $attributes): int
     {
         if ($attributes !== [self::ACTION_CREATE_POST]) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
-        if (!$token->isAuthenticated()) {
-            return VoterInterface::ACCESS_DENIED;
-        }
-
         $user = $token->getUser();
-        if (!$user instanceof UserInterface) {
+        if ($user === null) {
             return VoterInterface::ACCESS_DENIED;
         }
 

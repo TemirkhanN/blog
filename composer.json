@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "php": "~7.4",
+        "php": "~8.1",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "ext-json": "*",
@@ -21,18 +21,18 @@
         "ramsey/uuid": "^3.8",
         "spatie/data-transfer-object": "^1.13",
         "symfony-bundles/json-request-bundle": "^4.0",
-        "symfony/cache": "5.3.*",
-        "symfony/console": "5.3.*",
-        "symfony/dotenv": "5.3.*",
+        "symfony/cache": "6.0.*",
+        "symfony/console": "6.0.*",
+        "symfony/dotenv": "6.0.*",
         "symfony/flex": "^1.3.1",
-        "symfony/framework-bundle": "5.3.*",
-        "symfony/proxy-manager-bridge": "5.3.*",
-        "symfony/runtime": "5.3.*",
-        "symfony/security-bundle": "5.3.*",
-        "symfony/validator": "5.3.*",
-        "symfony/yaml": "5.3.*",
+        "symfony/framework-bundle": "6.0.*",
+        "symfony/proxy-manager-bridge": "6.0.*",
+        "symfony/runtime": "6.0.*",
+        "symfony/security-bundle": "6.0.*",
+        "symfony/validator": "6.0.*",
+        "symfony/yaml": "6.0.*",
         "temirkhan/view": "dev-master",
-        "vi-tech/dto-bundle": "^2.0"
+        "vi-tech/dto-bundle": "^3.0"
     },
     "require-dev": {
         "free2er/coding-standard": "^1.1",
@@ -40,7 +40,7 @@
         "phpstan/phpstan-phpunit": "^0.12.19",
         "phpunit/phpunit": "^9.5",
         "roave/security-advisories": "dev-latest",
-        "symfony/browser-kit": "5.3.*",
+        "symfony/browser-kit": "6.0.*",
         "symfony/phpunit-bridge": "^5.3"
     },
     "config": {
@@ -89,7 +89,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "5.3.*"
+            "require": "6.0.*"
         }
     }
 }

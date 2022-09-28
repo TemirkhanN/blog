@@ -18,7 +18,7 @@ interface ResponseBuilderInterface
      *
      * @return ResponseBuilderInterface
      */
-    public function setContent($data): ResponseBuilderInterface;
+    public function setContent(mixed $data): ResponseBuilderInterface;
 
     /**
      * Sets status code
