@@ -25,7 +25,7 @@ class Collection implements IteratorAggregate
     /**
      * @return Traversable<T>
      */
-    final public function getIterator()
+    final public function getIterator(): Traversable
     {
         yield from $this->items;
     }

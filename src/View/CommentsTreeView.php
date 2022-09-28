@@ -17,7 +17,7 @@ class CommentsTreeView extends AbstractAggregateView
      *  guid: string,
      *  createdAt: string,
      *  comment: string,
-     *  replies: array
+     *  replies: array<mixed>
      * }[]
      */
     public function getView(mixed $context)
@@ -53,7 +53,7 @@ class CommentsTreeView extends AbstractAggregateView
      *  guid: string,
      *  createdAt: string,
      *  comment: string,
-     *  replies: array
+     *  replies: array<mixed>
      * }
      */
     public function createCommentView(Comment $comment, array &$allReplies): array

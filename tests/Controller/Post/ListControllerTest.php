@@ -36,7 +36,10 @@ class ListControllerTest extends FunctionalTestCase
     }
 
     /**
-     * @return iterable<array>
+     * @return iterable<array{
+     *     query: array{limit?: int, offset?: int},
+     *     error: string
+     * }>
      */
     public function badRequestProvider(): iterable
     {
@@ -83,7 +86,11 @@ class ListControllerTest extends FunctionalTestCase
     }
 
     /**
-     * @return iterable<array>
+     * @return iterable<array{
+     *     query: array{limit?: int, offset?: int, tag?: string},
+     *     matchingPosts: string[],
+     *     pagination: array{limit: int, offset: int, total: int}
+     * }>
      */
     public function postFilterProvider(): iterable
     {

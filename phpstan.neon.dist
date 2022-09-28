@@ -9,6 +9,7 @@ parameters:
   parallel:
     processTimeout: 60.0
     maximumNumberOfProcesses: 4
-
+  ignoreErrors:
+    - '#Unsafe access to private property App\\FunctionalTestCase#'
 includes:
   - vendor/phpstan/phpstan-phpunit/extension.neon

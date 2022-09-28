@@ -17,6 +17,11 @@ class Post
     public const STATE_PUBLISHED = 5;
     public const STATE_ARCHIVED  = 10;
 
+    /**
+     * @var int
+     *
+     * @phpstan-ignore-next-line
+     */
     private int $id;
     private int $state;
     private string $title;
@@ -26,9 +31,15 @@ class Post
     private ?DateTimeImmutable $updatedAt;
     private string $preview;
     private string $content;
+
     /** @var Collection<int, Tag> */
     private Collection $tags;
-    /** @var Collection<int, Comment> */
+
+    /**
+     * @var Collection<int, Comment>
+     *
+     * @phpstan-ignore-next-line
+     */
     private Collection $comments;
 
     /**
@@ -40,16 +51,20 @@ class Post
      */
     public function __construct(string $slug, string $title, string $preview, string $content, iterable $tags = [])
     {
-        $this->state       = self::STATE_DRAFT;
-        $this->title       = $title;
-        $this->preview     = $preview;
-        $this->content     = $content;
+        $this->slug     = $slug;
+        $this->state    = self::STATE_DRAFT;
+        $this->title    = $title;
+        $this->preview  = $preview;
+        $this->content  = $content;
+        $this->comments = new ArrayCollection();
+        $this->tags     = new ArrayCollection();
+        foreach ($tags as $tag) {
+            $this->addTag($tag);
+        }
+
         $this->createdAt   = DateTimeFactory::now();
         $this->publishedAt = null;
         $this->updatedAt   = null;
-        $this->tags        = new ArrayCollection([...$tags]);
-        $this->comments    = new ArrayCollection();
-        $this->slug        = $slug;
     }
 
     public function changeTitle(string $newTitle): void
