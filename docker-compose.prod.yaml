@@ -37,6 +37,9 @@ services:
       - DB_NAME
       - DB_VERSION
       - DB_DRIVER
+      - TELEGRAM_BOT_TOKEN
+      - TELEGRAM_ADMIN_CHAT_ID
+      - ADMIN_NOTIFICATIONS_ENABLED
     networks:
       - appnet
       - infranet
