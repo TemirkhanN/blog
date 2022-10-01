@@ -45,3 +45,16 @@ services:
     App\EventSubscriber\ConvertHttpErrorToResponseSubscriber:
         arguments:
             $logFile: '%kernel.project_dir%/var/log/custom_%kernel.environment%.txt'
+
+    App\Service\UriResolver:
+      arguments:
+        - '%env(BLOG_DOMAIN_NAME)%'
+
+    App\EventSubscriber\NotifyAdminSubscriber:
+      arguments:
+        $areNotificationsEnabled: '%env(bool:ADMIN_NOTIFICATIONS_ENABLED)%'
+        $adminTelegramChatId: '%env(int:TELEGRAM_ADMIN_CHAT_ID)%'
+
+    App\Service\Notification\TelegramNotifier:
+      arguments:
+        $botToken: '%env(string:TELEGRAM_BOT_TOKEN)%'

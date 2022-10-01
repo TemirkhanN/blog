@@ -19,7 +19,7 @@ class Comment
 
     private Post $post;
 
-    private ?string $repliedToCommentGuid;
+    private ?string $repliedToCommentGuid = null;
 
     public static function replyTo(Comment $to, string $reply): self
     {

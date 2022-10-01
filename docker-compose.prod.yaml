@@ -28,6 +28,7 @@ services:
     environment:
       - APP_ENV
       - APP_SECRET
+      - BLOG_DOMAIN_NAME
       - MY_VERY_SECRET_TOKEN
       - DB_HOST
       - DB_PORT

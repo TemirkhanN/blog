@@ -21,6 +21,8 @@ services:
       target: dev_container
     env_file:
       - .env
+      - .env.dev
+      - .env.local
     volumes:
       - ./:/app
       - .composer/:/var/www/.composer/
