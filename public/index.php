@@ -7,6 +7,10 @@ use Symfony\Bundle\FrameworkBundle\HttpCache\HttpCache;
 require_once dirname(__DIR__) . '/vendor/autoload_runtime.php';
 
 return function (array $context) {
+    if ($context['APP_ENV'] === 'prod') {
+        error_reporting(0);
+    }
+
     if ($context['APP_ENV'] === 'dev') {
         Debug::enable();
     }
