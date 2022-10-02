@@ -20,10 +20,24 @@ class CommentService
     ) {
     }
 
-    public function save(Comment $comment): void
+    public function addComment(Post $post, string $text): Comment
     {
+        $comment = new Comment($post, $text);
+
         $this->commentRepository->save($comment);
         $this->eventDispatcher->dispatch(new PostCommentedEvent($comment));
+
+        return $comment;
+    }
+
+    public function replyToComment(Comment $replyTo, string $text): Comment
+    {
+        $comment = Comment::replyTo($replyTo, $text);
+
+        $this->commentRepository->save($comment);
+        $this->eventDispatcher->dispatch(new PostCommentedEvent($comment));
+
+        return $comment;
     }
 
     public function findCommentByGuid(string $guid): ?Comment

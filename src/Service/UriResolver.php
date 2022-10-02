@@ -10,13 +10,13 @@ class UriResolver
     {
     }
 
-    public function resolvePostUriBySlug(string $postSlug): string
+    public function resolvePostUri(string $postSlug): string
     {
         return sprintf('%s/blog/%s', $this->host, $postSlug);
     }
 
     public function resolveThreadUri(string $postSlug, string $commentGuid): string
     {
-        return sprintf('%s#comment-%s', $this->resolvePostUriBySlug($postSlug), $commentGuid);
+        return sprintf('%s#comment-%s', $this->resolvePostUri($postSlug), $commentGuid);
     }
 }

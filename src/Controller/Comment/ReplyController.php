@@ -61,8 +61,7 @@ class ReplyController
             return $this->responseFactory->view($violations, 'constraints.violation', Response::HTTP_BAD_REQUEST);
         }
 
-        $comment = Comment::replyTo($replyToComment, $commentData->text);
-        $this->commentService->save($comment);
+        $comment = $this->commentService->replyToComment($replyToComment, $commentData->text);
 
         return $this->responseFactory->view($comment, 'comment', Response::HTTP_CREATED);
     }

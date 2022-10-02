@@ -34,7 +34,7 @@ class NotifyAdminSubscriber implements EventSubscriberInterface
             $threadUri    = $this->uriResolver->resolveThreadUri($event->postSlug(), $event->repliedTo());
             $notification = sprintf('New reply to %s :' . PHP_EOL, $threadUri);
         } else {
-            $postUri      = $this->uriResolver->resolvePostUriBySlug($event->postSlug());
+            $postUri      = $this->uriResolver->resolvePostUri($event->postSlug());
             $notification = sprintf('New comment to %s :' . PHP_EOL, $postUri);
         }
 
