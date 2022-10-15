@@ -7,7 +7,6 @@ namespace App\Security;
 use App\Entity\Post;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class ViewPostVoter implements VoterInterface
 {

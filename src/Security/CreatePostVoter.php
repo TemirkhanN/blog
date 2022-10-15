@@ -6,7 +6,6 @@ namespace App\Security;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Voter that checks rights to create post

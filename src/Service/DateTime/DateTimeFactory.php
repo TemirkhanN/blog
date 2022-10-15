@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\DateTime;
 
 use DateTimeImmutable;
-use DateTimeInterface;
 
 final class DateTimeFactory
 {

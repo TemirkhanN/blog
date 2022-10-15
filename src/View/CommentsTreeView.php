@@ -6,12 +6,11 @@ namespace App\View;
 
 use App\Entity\Collection;
 use App\Entity\Comment;
-use Temirkhan\View\AbstractAggregateView;
 
-class CommentsTreeView extends AbstractAggregateView
+class CommentsTreeView
 {
     /**
-     * @param mixed $context
+     * @param Collection<Comment> $context
      *
      * @return array{
      *  guid: string,
@@ -20,15 +19,11 @@ class CommentsTreeView extends AbstractAggregateView
      *  replies: array<mixed>
      * }[]
      */
-    public function getView(mixed $context)
+    public static function create(Collection $context): array
     {
-        assert($context instanceof Collection);
-
         $rootComments = [];
         $replies      = [];
         foreach ($context as $item) {
-            assert($item instanceof Comment);
-
             $repliedTo = $item->repliedTo();
             if ($repliedTo !== null) {
                 $replies[$repliedTo][] = $item;
@@ -39,7 +34,7 @@ class CommentsTreeView extends AbstractAggregateView
 
         $view = [];
         foreach ($rootComments as $comment) {
-            $view[] = $this->createCommentView($comment, $replies);
+            $view[] = self::createCommentView($comment, $replies);
         }
 
         return $view;
@@ -56,9 +51,9 @@ class CommentsTreeView extends AbstractAggregateView
      *  replies: array<mixed>
      * }
      */
-    public function createCommentView(Comment $comment, array &$allReplies): array
+    private static function createCommentView(Comment $comment, array &$allReplies): array
     {
-        $view            = $this->createView('comment', $comment);
+        $view            = CommentView::create($comment);
         $view['replies'] = [];
 
         if (!isset($allReplies[$comment->guid()])) {
@@ -68,7 +63,7 @@ class CommentsTreeView extends AbstractAggregateView
         $replies = $allReplies[$comment->guid()];
         unset($allReplies[$comment->guid()]);
         foreach ($replies as $reply) {
-            $view['replies'][] = $this->createCommentView($reply, $allReplies);
+            $view['replies'][] = self::createCommentView($reply, $allReplies);
         }
 
         return $view;

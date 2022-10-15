@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Throwable;
 
 class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
 {
@@ -54,7 +55,7 @@ class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
             case $error instanceof HttpException:
                 $response = $this->responseFactory->createResponse($error->getMessage(), $error->getStatusCode());
                 break;
-            case $error instanceof \Throwable:
+            case $error instanceof Throwable:
                 $this->logError($error);
                 return;
             default:
@@ -64,7 +65,7 @@ class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
         $event->setResponse($response);
     }
 
-    private function logError(\Throwable $error): void
+    private function logError(Throwable $error): void
     {
         $msg = sprintf(
             "%s: %s in %s at %d\n\n",

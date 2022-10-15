@@ -4,50 +4,46 @@ declare(strict_types=1);
 
 namespace App\Service\Response\Dto;
 
-/**
- * System message
- */
-class SystemMessage
+class SystemMessage implements \JsonSerializable
 {
-    /**
-     * Message
-     *
-     * @var string
-     */
-    private $message;
+    public const CODE_UNSPECIFIED = 0;
 
-    /**
-     * Code
-     *
-     * @var int
-     */
-    private $code;
+    private string $message;
 
-    /**
-     * Constructor
-     *
-     * @param string $message
-     * @param int    $code
-     */
-    public function __construct(string $message, int $code)
+    private int $code;
+
+    public function __construct(string $message, int $code = self::CODE_UNSPECIFIED)
     {
         $this->message = $message;
         $this->code    = $code;
     }
 
-    /**
-     * @return string
-     */
     public function getMessage(): string
     {
         return $this->message;
     }
 
-    /**
-     * @return int
-     */
     public function getCode(): int
     {
         return $this->code;
+    }
+
+    /**
+     * @return array{message:string, code:int}
+     */
+    public function toArray(): array
+    {
+        return [
+            'code'    => $this->code,
+            'message' => $this->message,
+        ];
+    }
+
+    /**
+     * @return array{message:string, code:int}
+     */
+    public function jsonSerialize(): mixed
+    {
+        return $this->toArray();
     }
 }

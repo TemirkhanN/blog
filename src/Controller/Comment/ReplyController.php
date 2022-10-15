@@ -4,43 +4,32 @@ declare(strict_types=1);
 
 namespace App\Controller\Comment;
 
-use App\Entity\Comment;
 use App\Service\Post\CommentService;
 use App\Service\Post\Dto\NewComment;
 use App\Service\Response\Dto\SystemMessage;
 use App\Service\Response\ResponseFactoryInterface;
+use App\View\CommentView;
+use App\View\ViolationsView;
+use DateInterval;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ReplyController
 {
-    private CommentService $commentService;
-    private ValidatorInterface $validator;
-    private AuthorizationCheckerInterface $security;
-    private ResponseFactoryInterface $responseFactory;
-
     public function __construct(
-        CommentService $commentService,
-        AuthorizationCheckerInterface $security,
-        ValidatorInterface $validator,
-        ResponseFactoryInterface $responseFactory
+        private readonly CommentService $commentService,
+        private readonly AuthorizationCheckerInterface $security,
+        private readonly ValidatorInterface $validator,
+        private readonly ResponseFactoryInterface $responseFactory
     ) {
-        $this->commentService  = $commentService;
-        $this->validator       = $validator;
-        $this->security        = $security;
-        $this->responseFactory = $responseFactory;
     }
 
     public function __invoke(string $slug, string $replyTo, NewComment $commentData): Response
     {
-        $commentsInLastTenMinutes = $this->commentService->countCommentsInInterval(new \DateInterval('PT10M'));
+        $commentsInLastTenMinutes = $this->commentService->countCommentsInInterval(new DateInterval('PT10M'));
         if ($commentsInLastTenMinutes > 10) {
-            return $this->responseFactory->view(
-                new SystemMessage('Request limit match', 429),
-                'response.system_message',
-                429
-            );
+            return $this->responseFactory->createResponse(new SystemMessage('Request limit match'), 429);
         }
 
         $replyToComment = $this->commentService->findCommentByGuid($replyTo);
@@ -58,11 +47,14 @@ class ReplyController
 
         $violations = $this->validator->validate($commentData);
         if (count($violations)) {
-            return $this->responseFactory->view($violations, 'constraints.violation', Response::HTTP_BAD_REQUEST);
+            return $this->responseFactory->createResponse(
+                ViolationsView::create($violations),
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         $comment = $this->commentService->replyToComment($replyToComment, $commentData->text);
 
-        return $this->responseFactory->view($comment, 'comment', Response::HTTP_CREATED);
+        return $this->responseFactory->createResponse(CommentView::create($comment));
     }
 }

@@ -6,22 +6,17 @@ namespace App\Service\Response;
 
 use App\Service\Response\Dto\SystemMessage;
 use Symfony\Component\HttpFoundation\Response;
-use Temirkhan\View\Exception\UnknownViewException;
-use Temirkhan\View\ViewFactoryInterface;
 
 /**
  * Response factory
  */
 class ResponseFactory implements ResponseFactoryInterface
 {
-    private ViewFactoryInterface $viewFactory;
-
     private ResponseBuilderInterface $builder;
 
-    public function __construct(ResponseBuilderInterface $builder, ViewFactoryInterface $viewFactory)
+    public function __construct(ResponseBuilderInterface $builder)
     {
-        $this->builder     = $builder;
-        $this->viewFactory = $viewFactory;
+        $this->builder = $builder;
     }
 
     /**
@@ -43,26 +38,6 @@ class ResponseFactory implements ResponseFactoryInterface
     }
 
     /**
-     * Views response with data representation
-     *
-     * @param mixed  $data
-     * @param string $representationName
-     * @param int    $statusCode
-     *
-     * @return Response
-     */
-    public function view(mixed $data, string $representationName, int $statusCode = Response::HTTP_OK): Response
-    {
-        try {
-            $content = $this->viewFactory->createView($representationName, $data);
-        } catch (UnknownViewException $e) {
-            $content = null;
-        }
-
-        return $this->createResponse($content, $statusCode);
-    }
-
-    /**
      * Creates unauthorized access response
      *
      * @param string $details
@@ -71,9 +46,9 @@ class ResponseFactory implements ResponseFactoryInterface
      */
     public function forbidden(string $details): Response
     {
-        $message = new SystemMessage($details, Response::HTTP_FORBIDDEN);
+        $code = Response::HTTP_FORBIDDEN;
 
-        return $this->view($message, 'response.system_message', Response::HTTP_FORBIDDEN);
+        return $this->createResponse(new SystemMessage($details, $code), $code);
     }
 
     /**
@@ -85,9 +60,9 @@ class ResponseFactory implements ResponseFactoryInterface
      */
     public function notFound(string $details): Response
     {
-        $message = new SystemMessage($details, Response::HTTP_NOT_FOUND);
+        $code = Response::HTTP_NOT_FOUND;
 
-        return $this->view($message, 'response.system_message', Response::HTTP_NOT_FOUND);
+        return $this->createResponse(new SystemMessage($details, $code), $code);
     }
 
     /**
@@ -99,15 +74,15 @@ class ResponseFactory implements ResponseFactoryInterface
      */
     public function badRequest(string $details): Response
     {
-        $message = new SystemMessage($details, Response::HTTP_BAD_REQUEST);
+        $code = Response::HTTP_BAD_REQUEST;
 
-        return $this->view($message, 'response.system_message', Response::HTTP_BAD_REQUEST);
+        return $this->createResponse(new SystemMessage($details, $code), $code);
     }
 
     public function unauthorized(string $details): Response
     {
-        $message = new SystemMessage($details, Response::HTTP_UNAUTHORIZED);
+        $code = Response::HTTP_UNAUTHORIZED;
 
-        return $this->view($message, 'response.system_message', Response::HTTP_UNAUTHORIZED);
+        return $this->createResponse(new SystemMessage($details, $code), $code);
     }
 }

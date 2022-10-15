@@ -8,25 +8,17 @@ use App\Service\Post\PostListService;
 use App\Service\Response\Cache\CacheGatewayInterface;
 use App\Service\Response\Cache\TTL;
 use App\Service\Response\ResponseFactoryInterface;
+use App\View\PostView;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ViewController
 {
-    private PostListService $postListService;
-
-    private AuthorizationCheckerInterface $security;
-
-    private ResponseFactoryInterface $responseFactory;
-
     public function __construct(
-        PostListService $postListService,
-        AuthorizationCheckerInterface $security,
-        ResponseFactoryInterface $responseFactory
+        private readonly PostListService $postListService,
+        private readonly AuthorizationCheckerInterface $security,
+        private readonly ResponseFactoryInterface $responseFactory
     ) {
-        $this->postListService = $postListService;
-        $this->security        = $security;
-        $this->responseFactory = $responseFactory;
     }
 
     public function __invoke(string $slug, CacheGatewayInterface $cacheGateway): Response
@@ -36,7 +28,7 @@ class ViewController
             return $this->responseFactory->notFound("Publication doesn't exist");
         }
 
-        $response = $this->responseFactory->view($post, 'post.view');
+        $response = $this->responseFactory->createResponse(PostView::create($post));
 
         return $cacheGateway->cache($response, TTL::hours(1));
     }

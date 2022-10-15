@@ -82,7 +82,7 @@ class CreateControllerTest extends FunctionalTestCase
         $response = $this->sendRequest('POST', self::API_URI, $data);
         $content  = (string) $response->getContent();
 
-        self::assertEquals(201, $response->getStatusCode());
+        self::assertEquals(200, $response->getStatusCode());
         self::assertJson($content);
         $responseData = json_decode($content);
 

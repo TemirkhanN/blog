@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
-use App\Entity\Exception\ImpossibleTransitionException;
 use App\Service\Post\PostListService;
 use App\Service\Post\PublishPost;
 use App\Service\Response\Dto\SystemMessage;
@@ -14,21 +13,12 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class PublishController
 {
-    private PostListService $postListService;
-    private AuthorizationCheckerInterface $security;
-    private PublishPost $publisher;
-    private ResponseFactoryInterface $responseFactory;
-
     public function __construct(
-        PostListService $postListService,
-        AuthorizationCheckerInterface $security,
-        PublishPost $publisher,
-        ResponseFactoryInterface $responseFactory
+        private readonly PostListService $postListService,
+        private readonly AuthorizationCheckerInterface $security,
+        private readonly PublishPost $publisher,
+        private readonly ResponseFactoryInterface $responseFactory
     ) {
-        $this->postListService = $postListService;
-        $this->security        = $security;
-        $this->publisher       = $publisher;
-        $this->responseFactory = $responseFactory;
     }
 
     public function __invoke(string $slug): Response
@@ -44,7 +34,7 @@ class PublishController
 
         $result = $this->publisher->execute($post);
         if (!$result->isSuccessful()) {
-            return $this->responseFactory->view(new SystemMessage($result->getError(), 0), 'response.system_message');
+            return $this->responseFactory->createResponse(new SystemMessage($result->getError()));
         }
 
         return $this->responseFactory->createResponse('');

@@ -32,15 +32,6 @@ class CorsAllowingDecorator implements ResponseFactoryInterface
         return $response;
     }
 
-    public function view($data, string $representationName, int $statusCode = Response::HTTP_OK): Response
-    {
-        $response = $this->factory->view($data, $representationName, $statusCode);
-
-        $this->addOriginHeader($response);
-
-        return $response;
-    }
-
     public function forbidden(string $details): Response
     {
         $response = $this->factory->forbidden($details);

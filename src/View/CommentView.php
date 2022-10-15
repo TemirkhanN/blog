@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\View;
 
 use App\Entity\Comment;
-use Temirkhan\View\ViewInterface;
 
-class CommentView implements ViewInterface
+class CommentView
 {
     /**
-     * @param mixed $context
+     * @param Comment $comment
      *
      * @return array{
      *  guid: string,
@@ -18,14 +17,14 @@ class CommentView implements ViewInterface
      *  comment: string
      * }
      */
-    public function getView(mixed $context)
+    public static function create(Comment $comment): array
     {
-        assert($context instanceof Comment);
+        assert($comment instanceof Comment);
 
         return [
-            'guid'      => $context->guid(),
-            'createdAt' => $context->createdAt()->format(DATE_W3C),
-            'comment'   => $context->text(),
+            'guid'      => $comment->guid(),
+            'createdAt' => DateTimeView::create($comment->createdAt()),
+            'comment'   => $comment->text(),
         ];
     }
 }

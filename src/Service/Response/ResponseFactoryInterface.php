@@ -23,17 +23,6 @@ interface ResponseFactoryInterface
     public function createResponse(mixed $content, int $statusCode = Response::HTTP_OK, array $headers = []): Response;
 
     /**
-     * Creates response with data represented
-     *
-     * @param mixed  $data
-     * @param string $representationName
-     * @param int    $statusCode
-     *
-     * @return Response
-     */
-    public function view(mixed $data, string $representationName, int $statusCode = Response::HTTP_OK): Response;
-
-    /**
      * Creates forbidden access response
      *
      * @param string $details

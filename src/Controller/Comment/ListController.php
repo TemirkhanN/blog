@@ -9,22 +9,16 @@ use App\Service\Post\PostListService;
 use App\Service\Response\Cache\CacheGatewayInterface;
 use App\Service\Response\Cache\TTL;
 use App\Service\Response\ResponseFactoryInterface;
+use App\View\CommentsTreeView;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListController
 {
-    private CommentService $commentService;
-    private PostListService $postListService;
-    private ResponseFactoryInterface $responseFactory;
-
     public function __construct(
-        CommentService $commentService,
-        PostListService $postListService,
-        ResponseFactoryInterface $responseFactory
+        private readonly CommentService $commentService,
+        private readonly PostListService $postListService,
+        private readonly ResponseFactoryInterface $responseFactory
     ) {
-        $this->commentService  = $commentService;
-        $this->postListService = $postListService;
-        $this->responseFactory = $responseFactory;
     }
 
     public function __invoke(string $slug, CacheGatewayInterface $cacheGateway): Response
@@ -36,7 +30,7 @@ class ListController
 
         $comments = $this->commentService->getCommentsByPost($post);
 
-        $response = $this->responseFactory->view($comments, 'post.comments_tree');
+        $response = $this->responseFactory->createResponse(CommentsTreeView::create($comments));
 
         return $cacheGateway->cache($response, TTL::minutes(1));
     }

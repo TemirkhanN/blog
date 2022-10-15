@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c4b93ddc881897f110c6c9df1b784e1c",
+    "content-hash": "d070c83b4459cf74d63262a7b50fd99a",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -5515,36 +5515,6 @@
             "time": "2022-08-02T16:17:38+00:00"
         },
         {
-            "name": "temirkhan/view",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/TemirkhanN/view.git",
-                "reference": "a5b69b1c43d8056b284c8c5311ec931e02256de5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/TemirkhanN/view/zipball/a5b69b1c43d8056b284c8c5311ec931e02256de5",
-                "reference": "a5b69b1c43d8056b284c8c5311ec931e02256de5",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.3|^8.0"
-            },
-            "default-branch": true,
-            "type": "project",
-            "autoload": {
-                "psr-4": {
-                    "Temirkhan\\View\\": "src/"
-                }
-            },
-            "support": {
-                "source": "https://github.com/TemirkhanN/view/tree/master",
-                "issues": "https://github.com/TemirkhanN/view/issues"
-            },
-            "time": "2022-09-28T16:45:16+00:00"
-        },
-        {
             "name": "vi-tech/dto-bundle",
             "version": "3.0.1",
             "source": {
@@ -8512,7 +8482,6 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "temirkhan/view": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,

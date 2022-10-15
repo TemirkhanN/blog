@@ -6,22 +6,14 @@ namespace App\View;
 
 use App\Entity\Post;
 use App\Entity\Tag;
-use DateTimeInterface;
-use Temirkhan\View\ViewInterface;
 
-class PostView implements ViewInterface
+class PostView
 {
-    private bool $isFull;
-
-    public function __construct(bool $isFull = true)
-    {
-        $this->isFull = $isFull;
-    }
-
     /**
-     * @param mixed $context
+     * @param Post $post
+     * @param bool $extended
      *
-     * @return null|array{
+     * @return array{
      *  slug: string,
      *  title: string,
      *  preview: string,
@@ -32,40 +24,27 @@ class PostView implements ViewInterface
      *  tags: string[]
      * }
      */
-    public function getView(mixed $context)
+    public static function create(Post $post, bool $extended = true): array
     {
-        if (!$context instanceof Post) {
-            return null;
-        }
-
         $view = [
-            'slug'        => $context->slug(),
-            'title'       => $context->title(),
-            'createdAt'   => (string) $this->createDateTimeView($context->createdAt()),
-            'updatedAt'   => $this->createDateTimeView($context->updatedAt()),
-            'publishedAt' => $this->createDateTimeView($context->publishedAt()),
-            'preview'     => $context->preview(),
+            'slug'        => $post->slug(),
+            'title'       => $post->title(),
+            'createdAt'   => DateTimeView::create($post->createdAt()),
+            'updatedAt'   => $post->updatedAt() ? DateTimeView::create($post->updatedAt()) : null,
+            'publishedAt' => $post->publishedAt() ? DateTimeView::create($post->publishedAt()) : null,
+            'preview'     => $post->preview(),
             'tags'        => array_map(
                 static function (Tag $tag) {
                     return (string) $tag;
                 },
-                $context->tags()
+                $post->tags()
             ),
         ];
 
-        if ($this->isFull) {
-            $view['content'] = $context->content();
+        if ($extended) {
+            $view['content'] = $post->content();
         }
 
         return $view;
-    }
-
-    private function createDateTimeView(?DateTimeInterface $dateTime): ?string
-    {
-        if ($dateTime === null) {
-            return null;
-        }
-
-        return $dateTime->format(DATE_W3C);
     }
 }

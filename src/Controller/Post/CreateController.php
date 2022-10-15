@@ -7,31 +7,20 @@ namespace App\Controller\Post;
 use App\Service\Post\CreatePostService;
 use App\Service\Post\Dto\PostData;
 use App\Service\Response\ResponseFactoryInterface;
-use DomainException;
+use App\View\PostView;
+use App\View\ViolationsView;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreateController
 {
-    private CreatePostService $postCreator;
-
-    private AuthorizationCheckerInterface $security;
-
-    private ValidatorInterface $validator;
-
-    private ResponseFactoryInterface $responseFactory;
-
     public function __construct(
-        CreatePostService $postCreator,
-        AuthorizationCheckerInterface $securityChecker,
-        ValidatorInterface $validator,
-        ResponseFactoryInterface $responseFactory
+        private readonly CreatePostService $postCreator,
+        private readonly AuthorizationCheckerInterface $security,
+        private readonly ValidatorInterface $validator,
+        private readonly ResponseFactoryInterface $responseFactory
     ) {
-        $this->postCreator     = $postCreator;
-        $this->security        = $securityChecker;
-        $this->validator       = $validator;
-        $this->responseFactory = $responseFactory;
     }
 
     public function __invoke(PostData $postData): Response
@@ -42,7 +31,10 @@ class CreateController
 
         $violations = $this->validator->validate($postData);
         if (count($violations)) {
-            return $this->responseFactory->view($violations, 'constraints.violation', Response::HTTP_BAD_REQUEST);
+            return $this->responseFactory->createResponse(
+                ViolationsView::create($violations),
+                Response::HTTP_BAD_REQUEST
+            );
         }
 
         $result = $this->postCreator->execute($postData);
@@ -50,6 +42,6 @@ class CreateController
             return $this->responseFactory->badRequest($result->getError());
         }
 
-        return $this->responseFactory->view($result->getData(), 'post.view', Response::HTTP_CREATED);
+        return $this->responseFactory->createResponse(PostView::create($result->getData()));
     }
 }

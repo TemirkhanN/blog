@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
+use App\Entity\Post;
 use App\Service\Post\Dto\PostFilter;
 use App\Service\Post\PostListService;
 use App\Service\Response\Cache\CacheGatewayInterface;
 use App\Service\Response\Cache\TTL;
 use App\Service\Response\ResponseFactoryInterface;
 use App\Service\Response\Dto\CollectionChunk;
+use App\View\PaginatedView;
+use App\View\PostView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -18,18 +21,11 @@ class ListController
 {
     private const POSTS_PER_PAGE = 10;
 
-    private PostListService $postListService;
-    private ResponseFactoryInterface $responseFactory;
-    private AuthorizationCheckerInterface $security;
-
     public function __construct(
-        PostListService $postListService,
-        AuthorizationCheckerInterface $security,
-        ResponseFactoryInterface $responseFactory
+        private readonly PostListService $postListService,
+        private readonly AuthorizationCheckerInterface $security,
+        private readonly ResponseFactoryInterface $responseFactory
     ) {
-        $this->postListService = $postListService;
-        $this->security        = $security;
-        $this->responseFactory = $responseFactory;
     }
 
     public function __invoke(Request $request, CacheGatewayInterface $cacheGateway): Response
@@ -61,9 +57,8 @@ class ListController
         $posts        = $this->postListService->getPosts($filter);
         $ofTotalPosts = $this->postListService->countPosts($filter);
 
-        $context = new CollectionChunk($limit, $offset, $ofTotalPosts, $posts);
-
-        $response = $this->responseFactory->view(['post.preview', $context], 'response.paginated_collection');
+        $collection = new CollectionChunk($limit, $offset, $ofTotalPosts, $posts);
+        $response   = $this->responseFactory->createResponse($this->createView($collection));
 
         // If accessed by admin it shouldn't be cached
         if (!$filter->onlyPublished) {
@@ -71,5 +66,17 @@ class ListController
         }
 
         return $cacheGateway->cache($response, TTL::minutes(10));
+    }
+
+    /**
+     * @param CollectionChunk<Post> $collection
+     *
+     * @return array<mixed>
+     */
+    private function createView(CollectionChunk $collection): array
+    {
+        return PaginatedView::create($collection, static function (Post $post): array {
+            return PostView::create($post, false);
+        });
     }
 }
