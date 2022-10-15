@@ -118,9 +118,7 @@ function PostList() {
   if (isLoading) {
     return (
       <>
-        <Helmet>
-          <title>{generateTitle()}</title>
-        </Helmet>
+        {generateTitle()}
         <Spinner animation="grow" variant="success" />
       </>
     );

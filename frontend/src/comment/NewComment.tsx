@@ -49,37 +49,50 @@ export default function NewComment(
   };
 
   return (
-    <div className="comment-form">
-      {
-        replyToComment !== undefined
+    <div className="comment-form form-group">
+      <label htmlFor="comment-text">
+        {
+                replyToComment !== undefined
                 && (
-                <div>
-                  <p>replying to:</p>
-                  <p>{replyToComment.comment}</p>
-                </div>
+                  <>
+                    <p>replying to:</p>
+                    <p>
+                      <blockquote>{replyToComment.comment}</blockquote>
+                    </p>
+                  </>
                 )
-      }
-      <form onSubmit={(e) => addComment(e)}>
-        <textarea
-          value={comment}
-          onChange={(e) => {
-            setComment(e.target.value);
-            setError(null);
-          }}
-        />
-        <br />
-        <Button size="sm" disabled={isLoading && comment.length > 30} type="submit" className="btn btn-success">Add comment</Button>
-      </form>
+              }
+      </label>
+      <textarea
+        name="comment-text"
+        required
+        rows={4}
+        className="form-control"
+        value={comment}
+        onChange={(e) => {
+          setComment(e.target.value);
+          setError(null);
+        }}
+      />
+      <br />
+      <Button
+        onClick={addComment}
+        size="sm"
+        disabled={isLoading && comment.length > 30}
+        className="btn btn-success"
+      >
+        Add comment
+      </Button>
       {
-        error != null
-                && (
-                <div>
-                  <Alert variant="warning">
-                    {error}
-                  </Alert>
-                </div>
-                )
-      }
+            error != null
+            && (
+              <div>
+                <Alert variant="warning">
+                  {error}
+                </Alert>
+              </div>
+            )
+          }
     </div>
   );
 }
