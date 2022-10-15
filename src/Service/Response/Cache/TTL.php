@@ -8,14 +8,8 @@ use InvalidArgumentException;
 
 class TTL
 {
-    /**
-     * Amount of seconds
-     */
-    private int $value;
-
-    private function __construct(int $seconds)
+    private function __construct(private readonly int $seconds)
     {
-        $this->value = $seconds;
     }
 
     public static function seconds(int $seconds): self
@@ -56,6 +50,6 @@ class TTL
 
     public function toSeconds(): int
     {
-        return $this->value;
+        return $this->seconds;
     }
 }

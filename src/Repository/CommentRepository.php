@@ -18,11 +18,8 @@ use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class CommentRepository implements CommentRepositoryInterface
 {
-    private ManagerRegistry $registry;
-
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private readonly ManagerRegistry $registry)
     {
-        $this->registry = $registry;
     }
 
     public function save(Comment $comment): void

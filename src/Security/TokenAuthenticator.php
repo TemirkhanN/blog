@@ -19,14 +19,10 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class TokenAuthenticator extends AbstractAuthenticator
 {
-    private string $ownerPassword;
-
-    private ResponseFactoryInterface $responseFactory;
-
-    public function __construct(string $ownerPassword, ResponseFactoryInterface $responseFactory)
-    {
-        $this->ownerPassword   = $ownerPassword;
-        $this->responseFactory = $responseFactory;
+    public function __construct(
+        private readonly string $ownerPassword,
+        private readonly ResponseFactoryInterface $responseFactory
+    ) {
     }
 
     public function authenticate(Request $request): Passport

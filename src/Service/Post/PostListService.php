@@ -11,11 +11,8 @@ use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class PostListService
 {
-    private PostRepositoryInterface $postRepository;
-
-    public function __construct(PostRepositoryInterface $postRepository)
+    public function __construct(private readonly PostRepositoryInterface $postRepository)
     {
-        $this->postRepository = $postRepository;
     }
 
     /**

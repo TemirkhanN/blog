@@ -16,13 +16,10 @@ use Throwable;
 
 class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
 {
-    private ResponseFactoryInterface $responseFactory;
-    private string $logFile;
-
-    public function __construct(ResponseFactoryInterface $responseFactory, string $logFile)
-    {
-        $this->responseFactory = $responseFactory;
-        $this->logFile         = $logFile;
+    public function __construct(
+        private readonly ResponseFactoryInterface $responseFactory,
+        private readonly string $logFile
+    ) {
     }
 
     /** @return array<class-string, string> */

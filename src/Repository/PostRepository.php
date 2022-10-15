@@ -17,11 +17,8 @@ use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class PostRepository implements PostRepositoryInterface
 {
-    private ManagerRegistry $registry;
-
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(private readonly ManagerRegistry $registry)
     {
-        $this->registry = $registry;
     }
 
     /**

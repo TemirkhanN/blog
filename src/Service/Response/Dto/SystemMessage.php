@@ -8,14 +8,10 @@ class SystemMessage implements \JsonSerializable
 {
     public const CODE_UNSPECIFIED = 0;
 
-    private string $message;
-
-    private int $code;
-
-    public function __construct(string $message, int $code = self::CODE_UNSPECIFIED)
-    {
-        $this->message = $message;
-        $this->code    = $code;
+    public function __construct(
+        private readonly string $message,
+        private readonly int $code = self::CODE_UNSPECIFIED
+    ) {
     }
 
     public function getMessage(): string

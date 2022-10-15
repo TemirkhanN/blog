@@ -4,22 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-/**
- * @phpstan-type UserCredentials array{login: string, password: string}
- */
 class TokenIssuer
 {
     /**
-     * @var array<UserCredentials>
+     * @param array<array{login: string, password: string}> $users
      */
-    private array $users;
-
-    /**
-     * @param array<UserCredentials> $users
-     */
-    public function __construct(array $users)
+    public function __construct(private readonly array $users)
     {
-        $this->users = $users;
     }
 
     public function createToken(string $login, string $password): ?string

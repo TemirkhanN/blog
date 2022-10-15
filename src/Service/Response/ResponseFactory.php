@@ -12,11 +12,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ResponseFactory implements ResponseFactoryInterface
 {
-    private ResponseBuilderInterface $builder;
-
-    public function __construct(ResponseBuilderInterface $builder)
+    public function __construct(private readonly ResponseBuilderInterface $builder)
     {
-        $this->builder = $builder;
     }
 
     /**

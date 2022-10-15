@@ -11,13 +11,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class IssueTokenController
 {
-    private TokenIssuer $tokenIssuer;
-    private ResponseFactoryInterface $responseFactory;
-
-    public function __construct(TokenIssuer $tokenIssuer, ResponseFactoryInterface $responseFactory)
-    {
-        $this->tokenIssuer     = $tokenIssuer;
-        $this->responseFactory = $responseFactory;
+    public function __construct(
+        private readonly TokenIssuer $tokenIssuer,
+        private readonly ResponseFactoryInterface $responseFactory
+    ) {
     }
 
     public function __invoke(Request $request): Response

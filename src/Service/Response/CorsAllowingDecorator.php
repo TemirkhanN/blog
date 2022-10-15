@@ -8,20 +8,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class CorsAllowingDecorator implements ResponseFactoryInterface
 {
-    private ?string $allowedOrigin;
-
-    private ResponseFactoryInterface $factory;
-
-    /**
-     * CorsAllowingDecorator constructor.
-     *
-     * @param string|null              $allowedOrigin
-     * @param ResponseFactoryInterface $factory
-     */
-    public function __construct(?string $allowedOrigin, ResponseFactoryInterface $factory)
-    {
-        $this->allowedOrigin = $allowedOrigin;
-        $this->factory       = $factory;
+    public function __construct(
+        private readonly ?string $allowedOrigin,
+        private readonly ResponseFactoryInterface $factory
+    ) {
     }
 
     public function createResponse($content, int $statusCode = Response::HTTP_OK, array $headers = []): Response
