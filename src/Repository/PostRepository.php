@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Collection;
 use App\Entity\Post;
 use App\Service\Post\Dto\PostFilter;
 use Doctrine\ORM\EntityManager;
@@ -13,6 +12,8 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use RuntimeException;
+use TemirkhanN\Generic\Collection\Collection;
+use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class PostRepository implements PostRepositoryInterface
 {
@@ -26,9 +27,9 @@ class PostRepository implements PostRepositoryInterface
     /**
      * @param PostFilter $filter
      *
-     * @return Collection<Post>
+     * @return CollectionInterface<Post>
      */
-    public function getPosts(PostFilter $filter): Collection
+    public function getPosts(PostFilter $filter): CollectionInterface
     {
         $query = $this->createQueryBuilder()
                       ->addSelect('p', 't')

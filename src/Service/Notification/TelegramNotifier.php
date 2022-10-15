@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Notification;
 
-use App\Service\Result;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use TemirkhanN\Generic\Result;
+use TemirkhanN\Generic\ResultInterface;
 
 class TelegramNotifier
 {
@@ -19,9 +20,9 @@ class TelegramNotifier
      * @param int    $chatId
      * @param string $message
      *
-     * @return Result<null>
+     * @return ResultInterface<void>
      */
-    public function sendNotification(int $chatId, string $message): Result
+    public function sendNotification(int $chatId, string $message): ResultInterface
     {
         $uri = sprintf('https://api.telegram.org/bot%s/%s', $this->botToken, self::METHOD_NAME);
 
@@ -38,6 +39,6 @@ class TelegramNotifier
             return Result::error($response->getContent());
         }
 
-        return Result::success([]);
+        return Result::success();
     }
 }

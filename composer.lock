@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d070c83b4459cf74d63262a7b50fd99a",
+    "content-hash": "b44f2052c033ce3b569c5bf8f69aa48b",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -5513,6 +5513,50 @@
                 }
             ],
             "time": "2022-08-02T16:17:38+00:00"
+        },
+        {
+            "name": "temirkhann/generic",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/TemirkhanN/generic.git",
+                "reference": "0798429aec1c039fb9b5ee35ba348313dbc5b8b0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/TemirkhanN/generic/zipball/0798429aec1c039fb9b5ee35ba348313dbc5b8b0",
+                "reference": "0798429aec1c039fb9b5ee35ba348313dbc5b8b0",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.8.9",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "TemirkhanN\\Generic\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Temirkhan",
+                    "homepage": "https://temirkhan.nasukhov.me"
+                }
+            ],
+            "description": "Basic generic tools",
+            "support": {
+                "issues": "https://github.com/TemirkhanN/generic/issues",
+                "source": "https://github.com/TemirkhanN/generic/tree/0.1.0"
+            },
+            "time": "2022-10-13T19:23:03+00:00"
         },
         {
             "name": "vi-tech/dto-bundle",

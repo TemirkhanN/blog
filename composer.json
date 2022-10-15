@@ -26,6 +26,7 @@
         "symfony/security-bundle": "6.1.*",
         "symfony/validator": "6.1.*",
         "symfony/yaml": "6.1.*",
+        "temirkhann/generic": "^0.1.0",
         "vi-tech/dto-bundle": "^3.0"
     },
     "require-dev": {

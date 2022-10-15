@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\View;
 
-use App\Entity\Collection;
 use App\Entity\Comment;
+use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class CommentsTreeView
 {
     /**
-     * @param Collection<Comment> $context
+     * @param CollectionInterface<Comment> $comments
      *
      * @return array{
      *  guid: string,
@@ -19,11 +19,11 @@ class CommentsTreeView
      *  replies: array<mixed>
      * }[]
      */
-    public static function create(Collection $context): array
+    public static function create(CollectionInterface $comments): array
     {
         $rootComments = [];
         $replies      = [];
-        foreach ($context as $item) {
+        foreach ($comments as $item) {
             $repliedTo = $item->repliedTo();
             if ($repliedTo !== null) {
                 $replies[$repliedTo][] = $item;

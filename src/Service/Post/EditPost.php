@@ -7,31 +7,25 @@ namespace App\Service\Post;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 use App\Service\Post\Dto\PostData;
-use App\Service\Result;
+use TemirkhanN\Generic\Result;
+use TemirkhanN\Generic\ResultInterface;
 
 class EditPost
 {
-    private PostRepositoryInterface $repository;
-    private TagService $tagService;
-    private SlugGenerator $slugGenerator;
-
     public function __construct(
-        PostRepositoryInterface $repository,
-        TagService $tagService,
-        SlugGenerator $slugGenerator
+        private readonly PostRepositoryInterface $repository,
+        private readonly TagService $tagService,
+        private readonly SlugGenerator $slugGenerator
     ) {
-        $this->repository    = $repository;
-        $this->tagService    = $tagService;
-        $this->slugGenerator = $slugGenerator;
     }
 
     /**
      * @param PostData $newData
      * @param Post     $post
      *
-     * @return Result<null>
+     * @return ResultInterface<void>
      */
-    public function execute(PostData $newData, Post $post): Result
+    public function execute(PostData $newData, Post $post): ResultInterface
     {
         $newSlug = $this->slugGenerator->regenerate($post->slug(), $newData->title);
 
@@ -49,6 +43,6 @@ class EditPost
 
         $this->repository->save($post);
 
-        return Result::success(null);
+        return Result::success();
     }
 }

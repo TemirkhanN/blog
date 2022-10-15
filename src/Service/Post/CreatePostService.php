@@ -7,30 +7,24 @@ namespace App\Service\Post;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 use App\Service\Post\Dto\PostData;
-use App\Service\Result;
+use TemirkhanN\Generic\Result;
+use TemirkhanN\Generic\ResultInterface;
 
 class CreatePostService
 {
-    private PostRepositoryInterface $repository;
-    private TagService $tagService;
-    private SlugGenerator $slugGenerator;
-
     public function __construct(
-        PostRepositoryInterface $repository,
-        TagService $tagService,
-        SlugGenerator $slugGenerator
+        private readonly PostRepositoryInterface $repository,
+        private readonly TagService $tagService,
+        private readonly SlugGenerator $slugGenerator
     ) {
-        $this->repository    = $repository;
-        $this->tagService    = $tagService;
-        $this->slugGenerator = $slugGenerator;
     }
 
     /**
      * @param PostData $data
      *
-     * @return Result<Post>
+     * @return ResultInterface<Post>
      */
-    public function execute(PostData $data): Result
+    public function execute(PostData $data): ResultInterface
     {
         $slug = $this->slugGenerator->generate($data->title);
         if ($this->repository->findOneBySlug($slug)) {

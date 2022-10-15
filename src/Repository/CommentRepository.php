@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Collection;
 use App\Entity\Comment;
 use App\Entity\Post;
 use DateInterval;
@@ -14,6 +13,8 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use RuntimeException;
+use TemirkhanN\Generic\Collection\Collection;
+use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class CommentRepository implements CommentRepositoryInterface
 {
@@ -47,7 +48,12 @@ class CommentRepository implements CommentRepositoryInterface
             ->getQuery()->getSingleScalarResult();
     }
 
-    public function findCommentsByPost(Post $post): Collection
+    /**
+     * @param Post $post
+     *
+     * @return CollectionInterface<Comment>
+     */
+    public function findCommentsByPost(Post $post): CollectionInterface
     {
         return new Collection(
             (function (Post $post) {

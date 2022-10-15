@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Collection;
 use App\Entity\Comment;
 use App\Entity\Post;
 use DateInterval;
+use TemirkhanN\Generic\Collection\CollectionInterface;
 
 interface CommentRepositoryInterface
 {
@@ -18,9 +18,9 @@ interface CommentRepositoryInterface
     /**
      * @param Post $post
      *
-     * @return Collection<Comment>
+     * @return CollectionInterface<Comment>
      */
-    public function findCommentsByPost(Post $post): Collection;
+    public function findCommentsByPost(Post $post): CollectionInterface;
 
     public function countCommentsInLastInterval(DateInterval $interval): int;
 }

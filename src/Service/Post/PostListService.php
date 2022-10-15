@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service\Post;
 
-use App\Entity\Collection;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 use App\Service\Post\Dto\PostFilter;
+use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class PostListService
 {
@@ -21,9 +21,9 @@ class PostListService
     /**
      * @param PostFilter $filter
      *
-     * @return Collection<Post>
+     * @return CollectionInterface<Post>
      */
-    public function getPosts(PostFilter $filter): Collection
+    public function getPosts(PostFilter $filter): CollectionInterface
     {
         return $this->postRepository->getPosts($filter);
     }

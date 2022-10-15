@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Service\Post;
 
 use App\Entity\Post;
-use App\Entity\Collection;
 use App\Repository\PostRepositoryInterface;
 use App\Service\Post\Dto\PostFilter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class PostListServiceTest extends TestCase
 {
@@ -60,7 +60,7 @@ class PostListServiceTest extends TestCase
             ->expects(self::once())
             ->method('getPosts')
             ->with(self::identicalTo($filter))
-            ->willReturn($posts = $this->createMock(Collection::class));
+            ->willReturn($posts = $this->createMock(CollectionInterface::class));
 
         $result = $this->postListService->getPosts($filter);
 

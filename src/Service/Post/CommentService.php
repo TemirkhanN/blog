@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service\Post;
 
-use App\Entity\Collection;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\Event\PostCommentedEvent;
 use App\Repository\CommentRepositoryInterface;
 use DateInterval;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class CommentService
 {
@@ -48,9 +48,9 @@ class CommentService
     /**
      * @param Post $post
      *
-     * @return Collection<Comment>
+     * @return CollectionInterface<Comment>
      */
-    public function getCommentsByPost(Post $post): Collection
+    public function getCommentsByPost(Post $post): CollectionInterface
     {
         return $this->commentRepository->findCommentsByPost($post);
     }
