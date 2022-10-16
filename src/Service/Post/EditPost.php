@@ -6,7 +6,10 @@ namespace App\Service\Post;
 
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
+use App\Service\InvalidData;
 use App\Service\Post\Dto\PostData;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use TemirkhanN\Generic\Error;
 use TemirkhanN\Generic\Result;
 use TemirkhanN\Generic\ResultInterface;
 
@@ -15,7 +18,8 @@ class EditPost
     public function __construct(
         private readonly PostRepositoryInterface $repository,
         private readonly TagService $tagService,
-        private readonly SlugGenerator $slugGenerator
+        private readonly SlugGenerator $slugGenerator,
+        private readonly ValidatorInterface $validator
     ) {
     }
 
@@ -23,14 +27,19 @@ class EditPost
      * @param PostData $newData
      * @param Post     $post
      *
-     * @return ResultInterface<void>
+     * @return ResultInterface<null, Error>
      */
     public function execute(PostData $newData, Post $post): ResultInterface
     {
+        $violations = $this->validator->validate($newData);
+        if ($violations->count() !== 0) {
+            return Result::error(InvalidData::fromConstraintsViolation($violations));
+        }
+
         $newSlug = $this->slugGenerator->regenerate($post->slug(), $newData->title);
 
         if ($post->slug() !== $newSlug && $this->repository->findOneBySlug($newSlug)) {
-            return Result::error('There already exists the post with similar title');
+            return Result::error(new Error('There already exists the post with similar title'));
         }
 
         $post->changeSlug($newSlug);

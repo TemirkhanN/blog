@@ -9,18 +9,16 @@ use App\Service\Post\Dto\NewComment;
 use App\Service\Response\Dto\SystemMessage;
 use App\Service\Response\ResponseFactoryInterface;
 use App\View\CommentView;
-use App\View\ViolationsView;
+use App\View\ErrorView;
 use DateInterval;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ReplyController
 {
     public function __construct(
         private readonly CommentService $commentService,
         private readonly AuthorizationCheckerInterface $security,
-        private readonly ValidatorInterface $validator,
         private readonly ResponseFactoryInterface $responseFactory
     ) {
     }
@@ -45,16 +43,12 @@ class ReplyController
             return $this->responseFactory->forbidden("You're not allowed to comment this publication");
         }
 
-        $violations = $this->validator->validate($commentData);
-        if (count($violations)) {
-            return $this->responseFactory->createResponse(
-                ViolationsView::create($violations),
-                Response::HTTP_BAD_REQUEST
-            );
+        $result = $this->commentService->replyToComment($replyToComment, $commentData);
+
+        if (!$result->isSuccessful()) {
+            return $this->responseFactory->createResponse(ErrorView::create($result->getError()), 400);
         }
 
-        $comment = $this->commentService->replyToComment($replyToComment, $commentData->text);
-
-        return $this->responseFactory->createResponse(CommentView::create($comment));
+        return $this->responseFactory->createResponse(CommentView::create($result->getData()));
     }
 }

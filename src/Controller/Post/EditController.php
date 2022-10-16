@@ -8,11 +8,10 @@ use App\Service\Post\Dto\PostData;
 use App\Service\Post\EditPost;
 use App\Service\Post\PostListService;
 use App\Service\Response\ResponseFactoryInterface;
+use App\View\ErrorView;
 use App\View\PostView;
-use App\View\ViolationsView;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class EditController
 {
@@ -20,7 +19,6 @@ class EditController
         private readonly EditPost $postUpdater,
         private readonly PostListService $postListService,
         private readonly AuthorizationCheckerInterface $security,
-        private readonly ValidatorInterface $validator,
         private readonly ResponseFactoryInterface $responseFactory
     ) {
     }
@@ -36,17 +34,9 @@ class EditController
             return $this->responseFactory->notFound("Publication doesn't exist");
         }
 
-        $violations = $this->validator->validate($postData);
-        if (count($violations)) {
-            return $this->responseFactory->createResponse(
-                ViolationsView::create($violations),
-                Response::HTTP_BAD_REQUEST
-            );
-        }
-
         $result = $this->postUpdater->execute($postData, $post);
         if (!$result->isSuccessful()) {
-            return $this->responseFactory->badRequest($result->getError());
+            return $this->responseFactory->createResponse(ErrorView::create($result->getError()), 400);
         }
 
         return $this->responseFactory->createResponse(PostView::create($post));

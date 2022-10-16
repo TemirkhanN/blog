@@ -7,14 +7,18 @@ namespace App\Service\Post;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 use App\Service\Post\Dto\PostData;
-use DomainException;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreatePostServiceTest extends TestCase
 {
     /** @var PostRepositoryInterface&MockObject */
     private PostRepositoryInterface $postRepository;
+
+    /** @var ValidatorInterface&MockObject */
+    private ValidatorInterface $validator;
 
     private CreatePostService $service;
 
@@ -23,10 +27,12 @@ class CreatePostServiceTest extends TestCase
         parent::setUp();
 
         $this->postRepository = $this->createMock(PostRepositoryInterface::class);
+        $this->validator      = $this->createMock(ValidatorInterface::class);
         $this->service        = new CreatePostService(
             $this->postRepository,
             $this->createMock(TagService::class),
-            new SlugGenerator()
+            new SlugGenerator(),
+            $this->validator
         );
     }
 
@@ -39,6 +45,12 @@ class CreatePostServiceTest extends TestCase
             'tags'    => [],
         ]);
 
+        $this->validator
+            ->expects(self::once())
+            ->method('validate')
+            ->with(self::identicalTo($postData))
+            ->willReturn(new ConstraintViolationList());
+
         $expectedSlug = date('Y-m-d') . '_Some-title';
         $this->postRepository
             ->expects(self::once())
@@ -48,7 +60,7 @@ class CreatePostServiceTest extends TestCase
 
         $result = $this->service->execute($postData);
         self::assertFalse($result->isSuccessful());
-        self::assertEquals('There already exists the post with similar title', $result->getError());
+        self::assertEquals('There already exists a post with a similar title', $result->getError()->getMessage());
     }
 
     public function testPostCreation(): void
@@ -59,6 +71,12 @@ class CreatePostServiceTest extends TestCase
             'content' => 'Some content',
             'tags'    => [],
         ]);
+
+        $this->validator
+            ->expects(self::once())
+            ->method('validate')
+            ->with(self::identicalTo($postData))
+            ->willReturn(new ConstraintViolationList());
 
         $expectedSlug = date('Y-m-d') . '_Some-title';
         $this->postRepository

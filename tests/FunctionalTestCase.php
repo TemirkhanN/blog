@@ -138,4 +138,25 @@ class FunctionalTestCase extends WebTestCase
     {
         $this->getEntityManager()->refresh($entity);
     }
+
+    /**
+     * @param string       $message
+     * @param array<mixed> $details
+     * @param int          $code
+     *
+     * @return void
+     */
+    protected function assertResponseContainsError(string $message, array $details = [], int $code = 0): void
+    {
+        $response = $this->browser->getResponse();
+
+        self::assertJsonEqualsToData(
+            (string) $response->getContent(),
+            [
+                'message' => $message,
+                'code'    => $code,
+                'details' => $details,
+            ]
+        );
+    }
 }

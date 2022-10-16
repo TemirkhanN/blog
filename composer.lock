@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b44f2052c033ce3b569c5bf8f69aa48b",
+    "content-hash": "ffe3724ccd58ed966bd0b8f558a98373",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -5516,16 +5516,16 @@
         },
         {
             "name": "temirkhann/generic",
-            "version": "0.1.0",
+            "version": "0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TemirkhanN/generic.git",
-                "reference": "0798429aec1c039fb9b5ee35ba348313dbc5b8b0"
+                "reference": "bb2702726c26793b730903abb048e9112878eddf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TemirkhanN/generic/zipball/0798429aec1c039fb9b5ee35ba348313dbc5b8b0",
-                "reference": "0798429aec1c039fb9b5ee35ba348313dbc5b8b0",
+                "url": "https://api.github.com/repos/TemirkhanN/generic/zipball/bb2702726c26793b730903abb048e9112878eddf",
+                "reference": "bb2702726c26793b730903abb048e9112878eddf",
                 "shasum": ""
             },
             "require": {
@@ -5554,9 +5554,9 @@
             "description": "Basic generic tools",
             "support": {
                 "issues": "https://github.com/TemirkhanN/generic/issues",
-                "source": "https://github.com/TemirkhanN/generic/tree/0.1.0"
+                "source": "https://github.com/TemirkhanN/generic/tree/0.2.0"
             },
-            "time": "2022-10-13T19:23:03+00:00"
+            "time": "2022-10-15T22:30:15+00:00"
         },
         {
             "name": "vi-tech/dto-bundle",
@@ -6169,16 +6169,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.8.6",
+            "version": "1.8.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "c386ab2741e64cc9e21729f891b28b2b10fe6618"
+                "reference": "3a72d9d9f2528fbd50c2d8fcf155fd9f74ade3f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/c386ab2741e64cc9e21729f891b28b2b10fe6618",
-                "reference": "c386ab2741e64cc9e21729f891b28b2b10fe6618",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/3a72d9d9f2528fbd50c2d8fcf155fd9f74ade3f2",
+                "reference": "3a72d9d9f2528fbd50c2d8fcf155fd9f74ade3f2",
                 "shasum": ""
             },
             "require": {
@@ -6208,7 +6208,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/1.8.6"
+                "source": "https://github.com/phpstan/phpstan/tree/1.8.9"
             },
             "funding": [
                 {
@@ -6224,7 +6224,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-09-23T09:54:39+00:00"
+            "time": "2022-10-13T13:40:18+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",

@@ -8,36 +8,65 @@ use App\Entity\Comment;
 use App\Entity\Post;
 use App\Event\PostCommentedEvent;
 use App\Repository\CommentRepositoryInterface;
+use App\Service\InvalidData;
+use App\Service\Post\Dto\NewComment;
 use DateInterval;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use TemirkhanN\Generic\Collection\CollectionInterface;
+use TemirkhanN\Generic\Error;
+use TemirkhanN\Generic\Result;
+use TemirkhanN\Generic\ResultInterface;
 
 class CommentService
 {
     public function __construct(
         private readonly CommentRepositoryInterface $commentRepository,
-        private readonly EventDispatcherInterface $eventDispatcher
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ValidatorInterface $validator
     ) {
     }
 
-    public function addComment(Post $post, string $text): Comment
+    /**
+     * @param Post       $post
+     * @param NewComment $commentData
+     *
+     * @return ResultInterface<Comment, Error>
+     */
+    public function addComment(Post $post, NewComment $commentData): ResultInterface
     {
-        $comment = new Comment($post, $text);
+        $violations = $this->validator->validate($commentData);
+        if ($violations->count() !== 0) {
+            return Result::error(InvalidData::fromConstraintsViolation($violations));
+        }
+
+        $comment = new Comment($post, $commentData->text);
 
         $this->commentRepository->save($comment);
         $this->eventDispatcher->dispatch(new PostCommentedEvent($comment));
 
-        return $comment;
+        return Result::success($comment);
     }
 
-    public function replyToComment(Comment $replyTo, string $text): Comment
+    /**
+     * @param Comment    $replyTo
+     * @param NewComment $commentData
+     *
+     * @return ResultInterface<Comment, Error>
+     */
+    public function replyToComment(Comment $replyTo, NewComment $commentData): ResultInterface
     {
-        $comment = Comment::replyTo($replyTo, $text);
+        $violations = $this->validator->validate($commentData);
+        if ($violations->count() !== 0) {
+            return Result::error(InvalidData::fromConstraintsViolation($violations));
+        }
+
+        $comment = Comment::replyTo($replyTo, $commentData->text);
 
         $this->commentRepository->save($comment);
         $this->eventDispatcher->dispatch(new PostCommentedEvent($comment));
 
-        return $comment;
+        return Result::success($comment);
     }
 
     public function findCommentByGuid(string $guid): ?Comment

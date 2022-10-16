@@ -98,15 +98,12 @@ class EditControllerTest extends FunctionalTestCase
         $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug), $newData);
 
         self::assertEquals(400, $response->getStatusCode());
-        self::assertJsonEqualsToData(
-            (string) $response->getContent(),
-            [
-                'title'   => 'This value should not be blank.',
-                'preview' => 'This value should not be blank.',
-                'content' => 'This value should not be blank.',
-                'tags[0]' => 'This value should be of type alnum.',
-            ]
-        );
+        $this->assertResponseContainsError('Invalid data', [
+            'title'   => 'This value should not be blank.',
+            'preview' => 'This value should not be blank.',
+            'content' => 'This value should not be blank.',
+            'tags[0]' => 'This value should be of type alnum.',
+        ]);
     }
 
     public function testSuccess(): void

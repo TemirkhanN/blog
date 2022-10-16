@@ -10,11 +10,10 @@ use App\Service\Post\PostListService;
 use App\Service\Response\Dto\SystemMessage;
 use App\Service\Response\ResponseFactoryInterface;
 use App\View\CommentView;
-use App\View\ViolationsView;
+use App\View\ErrorView;
 use DateInterval;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AddController
 {
@@ -22,7 +21,6 @@ class AddController
         private readonly PostListService $postListService,
         private readonly CommentService $commentService,
         private readonly AuthorizationCheckerInterface $security,
-        private readonly ValidatorInterface $validator,
         private readonly ResponseFactoryInterface $responseFactory
     ) {
     }
@@ -43,16 +41,11 @@ class AddController
             return $this->responseFactory->forbidden('You are not allowed to comment this post');
         }
 
-        $violations = $this->validator->validate($commentData);
-        if (count($violations)) {
-            return $this->responseFactory->createResponse(
-                ViolationsView::create($violations),
-                Response::HTTP_BAD_REQUEST
-            );
+        $result = $this->commentService->addComment($post, $commentData);
+        if (!$result->isSuccessful()) {
+            return $this->responseFactory->createResponse(ErrorView::create($result->getError()), 400);
         }
 
-        $comment = $this->commentService->addComment($post, $commentData->text);
-
-        return $this->responseFactory->createResponse(CommentView::create($comment));
+        return $this->responseFactory->createResponse(CommentView::create($result->getData()));
     }
 }

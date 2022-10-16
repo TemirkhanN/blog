@@ -7,6 +7,7 @@ namespace App\Service\Post;
 use App\Entity\Exception\ImpossibleTransitionException;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
+use TemirkhanN\Generic\Error;
 use TemirkhanN\Generic\Result;
 use TemirkhanN\Generic\ResultInterface;
 
@@ -19,7 +20,7 @@ class PublishPost
     /**
      * @param Post $post
      *
-     * @return ResultInterface<void>
+     * @return ResultInterface<null, string>
      */
     public function execute(Post $post): ResultInterface
     {

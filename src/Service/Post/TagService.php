@@ -55,22 +55,6 @@ class TagService
         yield from $newTags;
     }
 
-    public function createTag(string $name): Tag
-    {
-        $repository  = $this->getRepository();
-        $existingTag = $repository->find($name);
-        if ($existingTag !== null) {
-            return $existingTag;
-        }
-
-        $newTag = new Tag($name);
-        $em     = $this->getEntityManager();
-        $em->persist($newTag);
-        $em->flush();
-
-        return $newTag;
-    }
-
     /**
      * @return ObjectRepository<Tag>
      */

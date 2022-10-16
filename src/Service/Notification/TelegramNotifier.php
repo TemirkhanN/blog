@@ -20,7 +20,7 @@ class TelegramNotifier
      * @param int    $chatId
      * @param string $message
      *
-     * @return ResultInterface<void>
+     * @return ResultInterface<null, string>
      */
     public function sendNotification(int $chatId, string $message): ResultInterface
     {
