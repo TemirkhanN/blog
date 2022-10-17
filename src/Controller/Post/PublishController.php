@@ -34,7 +34,7 @@ class PublishController
 
         $result = $this->publisher->execute($post);
         if (!$result->isSuccessful()) {
-            return $this->responseFactory->createResponse(new SystemMessage($result->getError()));
+            return $this->responseFactory->createResponse(new SystemMessage($result->getError()->getMessage()));
         }
 
         return $this->responseFactory->createResponse('');

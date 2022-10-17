@@ -27,7 +27,7 @@ class EditPost
      * @param PostData $newData
      * @param Post     $post
      *
-     * @return ResultInterface<null, Error>
+     * @return ResultInterface<null>
      */
     public function execute(PostData $newData, Post $post): ResultInterface
     {
@@ -39,7 +39,7 @@ class EditPost
         $newSlug = $this->slugGenerator->regenerate($post->slug(), $newData->title);
 
         if ($post->slug() !== $newSlug && $this->repository->findOneBySlug($newSlug)) {
-            return Result::error(new Error('There already exists the post with similar title'));
+            return Result::error(Error::create('There already exists the post with similar title'));
         }
 
         $post->changeSlug($newSlug);

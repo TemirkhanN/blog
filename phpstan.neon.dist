@@ -1,5 +1,5 @@
 parameters:
-  level: 8
+  level: 9
   tmpDir: '%currentWorkingDirectory%/.phpstan'
   paths:
     - src
@@ -13,3 +13,4 @@ parameters:
     - '#Unsafe access to private property App\\FunctionalTestCase#'
 includes:
   - vendor/phpstan/phpstan-phpunit/extension.neon
+  - vendor/temirkhann/generic/extension.neon

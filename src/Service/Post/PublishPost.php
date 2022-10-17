@@ -20,14 +20,14 @@ class PublishPost
     /**
      * @param Post $post
      *
-     * @return ResultInterface<null, string>
+     * @return ResultInterface<null>
      */
     public function execute(Post $post): ResultInterface
     {
         try {
             $post->publish();
         } catch (ImpossibleTransitionException $e) {
-            return Result::error($e->getMessage());
+            return Result::error(Error::create($e->getMessage()));
         }
 
         $this->postRepository->save($post);

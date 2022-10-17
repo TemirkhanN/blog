@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\View;
 
-use TemirkhanN\Generic\Error;
+use TemirkhanN\Generic\ErrorInterface;
 
 class ErrorView
 {
     /**
-     * @param Error $error
+     * @param ErrorInterface $error
      *
      * @return array{
      *     message: string,
@@ -17,7 +17,7 @@ class ErrorView
      *     details: array<mixed>
      * }
      */
-    public static function create(Error $error): array
+    public static function create(ErrorInterface $error): array
     {
         return [
             'message' => $error->getMessage(),

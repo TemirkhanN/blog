@@ -82,7 +82,9 @@ class CreateControllerTest extends FunctionalTestCase
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertJson($content);
-        $responseData = json_decode($content);
+        $responseData = (object) json_decode($content);
+
+        self::assertObjectHasAttribute('slug', $responseData);
 
         /** @var Post $post */
         $post = $this->getEntityManager()

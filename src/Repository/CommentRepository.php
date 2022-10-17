@@ -37,6 +37,7 @@ class CommentRepository implements CommentRepositoryInterface
 
     public function countCommentsInLastInterval(DateInterval $interval): int
     {
+        // @phpstan-ignore-next-line
         return (int) $this->createQueryBuilder()
             ->select('COUNT(c)')
             ->from(Comment::class, 'c')
@@ -52,18 +53,17 @@ class CommentRepository implements CommentRepositoryInterface
      */
     public function findCommentsByPost(Post $post): CollectionInterface
     {
-        return new Collection(
-            (function (Post $post) {
-                yield from $this->createQueryBuilder()
-                    ->select('c')
-                    ->from(Comment::class, 'c')
-                    ->where('c.post = :post')
-                    ->setParameters(['post' => $post])
-                    ->orderBy('c.createdAt', 'DESC')
-                    ->getQuery()
-                    ->getResult();
-            })($post)
-        );
+        /** @var iterable<Comment> $comments */
+        $comments = $this->createQueryBuilder()
+                         ->select('c')
+                         ->from(Comment::class, 'c')
+                         ->where('c.post = :post')
+                         ->setParameters(['post' => $post])
+                         ->orderBy('c.createdAt', 'DESC')
+                         ->getQuery()
+                         ->toIterable();
+
+        return new Collection($comments);
     }
 
     private function getEntityManager(): ObjectManager

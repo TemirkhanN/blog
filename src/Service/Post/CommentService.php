@@ -31,7 +31,7 @@ class CommentService
      * @param Post       $post
      * @param NewComment $commentData
      *
-     * @return ResultInterface<Comment, Error>
+     * @return ResultInterface<Comment>
      */
     public function addComment(Post $post, NewComment $commentData): ResultInterface
     {
@@ -52,7 +52,7 @@ class CommentService
      * @param Comment    $replyTo
      * @param NewComment $commentData
      *
-     * @return ResultInterface<Comment, Error>
+     * @return ResultInterface<Comment>
      */
     public function replyToComment(Comment $replyTo, NewComment $commentData): ResultInterface
     {

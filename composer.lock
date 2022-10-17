@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ffe3724ccd58ed966bd0b8f558a98373",
+    "content-hash": "68d3e33a84b687ba47d91e55930db4b9",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -5516,16 +5516,16 @@
         },
         {
             "name": "temirkhann/generic",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/TemirkhanN/generic.git",
-                "reference": "bb2702726c26793b730903abb048e9112878eddf"
+                "reference": "b32557351168147e7a506a3e41a8b2fbe82803dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/TemirkhanN/generic/zipball/bb2702726c26793b730903abb048e9112878eddf",
-                "reference": "bb2702726c26793b730903abb048e9112878eddf",
+                "url": "https://api.github.com/repos/TemirkhanN/generic/zipball/b32557351168147e7a506a3e41a8b2fbe82803dd",
+                "reference": "b32557351168147e7a506a3e41a8b2fbe82803dd",
                 "shasum": ""
             },
             "require": {
@@ -5554,9 +5554,9 @@
             "description": "Basic generic tools",
             "support": {
                 "issues": "https://github.com/TemirkhanN/generic/issues",
-                "source": "https://github.com/TemirkhanN/generic/tree/0.2.0"
+                "source": "https://github.com/TemirkhanN/generic/tree/0.3.0"
             },
-            "time": "2022-10-15T22:30:15+00:00"
+            "time": "2022-10-17T17:09:47+00:00"
         },
         {
             "name": "vi-tech/dto-bundle",

@@ -436,7 +436,7 @@ class ListControllerTest extends FunctionalTestCase
     {
         $content = (string) $response->getContent();
         self::assertJson($content);
-        $responseData = json_decode($content, true);
+        $responseData = (array) json_decode($content, true);
 
         self::assertArrayHasKey('data', $responseData);
 

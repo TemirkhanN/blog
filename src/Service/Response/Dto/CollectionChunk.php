@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Response\Dto;
 
 /**
- * @template T
+ * @template-covariant T
  */
 class CollectionChunk
 {

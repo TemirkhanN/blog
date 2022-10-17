@@ -26,7 +26,7 @@ class CreatePostService
     /**
      * @param PostData $data
      *
-     * @return ResultInterface<Post, Error>
+     * @return ResultInterface<Post>
      */
     public function execute(PostData $data): ResultInterface
     {
@@ -37,7 +37,7 @@ class CreatePostService
 
         $slug = $this->slugGenerator->generate($data->title);
         if ($this->repository->findOneBySlug($slug)) {
-            return Result::error(new Error('There already exists a post with a similar title'));
+            return Result::error(Error::create('There already exists a post with a similar title'));
         }
 
         $tags = $this->tagService->createTags($data->tags);

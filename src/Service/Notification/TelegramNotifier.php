@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Notification;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use TemirkhanN\Generic\Error;
 use TemirkhanN\Generic\Result;
 use TemirkhanN\Generic\ResultInterface;
 
@@ -20,7 +21,7 @@ class TelegramNotifier
      * @param int    $chatId
      * @param string $message
      *
-     * @return ResultInterface<null, string>
+     * @return ResultInterface<null>
      */
     public function sendNotification(int $chatId, string $message): ResultInterface
     {
@@ -36,7 +37,7 @@ class TelegramNotifier
         $response = $this->httpClient->request('POST', $uri, $payload);
 
         if ($response->getStatusCode() > 400) {
-            return Result::error($response->getContent());
+            return Result::error(Error::create($response->getContent()));
         }
 
         return Result::success();

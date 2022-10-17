@@ -12,12 +12,7 @@ use UnexpectedValueException;
  */
 class JsonResponseBuilder implements ResponseBuilderInterface
 {
-    /**
-     * Response data
-     *
-     * @var mixed
-     */
-    private $content;
+    private ?string $content;
 
     /**
      * Response code
@@ -53,7 +48,7 @@ class JsonResponseBuilder implements ResponseBuilderInterface
     public function setContent(mixed $data): ResponseBuilderInterface
     {
         // JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT = 15
-        $this->content = json_encode($data, 15);
+        $this->content = (string) json_encode($data, 15);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new UnexpectedValueException(json_last_error_msg());
         }

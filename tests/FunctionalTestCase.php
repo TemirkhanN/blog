@@ -112,7 +112,7 @@ class FunctionalTestCase extends WebTestCase
 
         self::assertJson($content);
 
-        $data = json_decode($content, true);
+        $data = (array) json_decode($content, true);
 
         self::assertArrayHasKey('pagination', $data);
         self::assertEquals(

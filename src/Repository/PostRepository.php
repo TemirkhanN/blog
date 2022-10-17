@@ -76,8 +76,8 @@ class PostRepository implements PostRepositoryInterface
             $query->setParameter('state', Post::STATE_PUBLISHED);
         }
 
-        return (int) $query->getQuery()
-                           ->getSingleScalarResult();
+        // @phpstan-ignore-next-line
+        return (int) $query->getQuery()->getSingleScalarResult();
     }
 
     public function findOneBySlug(string $slug): ?Post
