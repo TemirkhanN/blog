@@ -3,7 +3,7 @@ create_token:
   methods: [ POST ]
   controller: App\Controller\IssueTokenController
 
-index:
+posts_list:
   path: /api/posts
   methods: [ GET ]
   controller: App\Controller\Post\ListController
