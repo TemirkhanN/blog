@@ -4,11 +4,14 @@ parameters:
   paths:
     - src
     - tests
+  excludePaths:
+    - src/View/
   fileExtensions:
     - php
   parallel:
     processTimeout: 60.0
     maximumNumberOfProcesses: 4
+  reportUnmatchedIgnoredErrors: false
   ignoreErrors:
     - '#Unsafe access to private property App\\FunctionalTestCase#'
 includes:

@@ -16,6 +16,9 @@ use App\View\PostView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use TemirkhanN\Generic\Error;
+use TemirkhanN\Generic\Result;
+use TemirkhanN\Generic\ResultInterface;
 
 class ListController
 {
@@ -30,34 +33,16 @@ class ListController
 
     public function __invoke(Request $request, CacheGatewayInterface $cacheGateway): Response
     {
-        $offset = $request->query->getInt('offset', 0);
-        $limit  = $request->query->getInt('limit', self::POSTS_PER_PAGE);
-
-        if ($offset < 0) {
-            return $this->responseFactory->badRequest('Offset can not be less than 0');
+        $parseFilter = $this->buildFilter($request);
+        if (!$parseFilter->isSuccessful()) {
+            return $this->responseFactory->badRequest($parseFilter->getError()->getMessage());
         }
-
-        if ($limit < 1 || $limit > self::POSTS_PER_PAGE * 2) {
-            return $this->responseFactory->badRequest('Limit can not be less than 1 or too high');
-        }
-
-        $filter         = new PostFilter();
-        $filter->limit  = $limit;
-        $filter->offset = $offset;
-
-        $tag = $request->query->getAlnum('tag');
-        if ($tag !== '') {
-            $filter->tag = $tag;
-        }
-
-        if ($this->security->isGranted('create_post')) {
-            $filter->onlyPublished = false;
-        }
+        $filter = $parseFilter->getData();
 
         $posts        = $this->postListService->getPosts($filter);
         $ofTotalPosts = $this->postListService->countPosts($filter);
 
-        $collection = new CollectionChunk($limit, $offset, $ofTotalPosts, $posts);
+        $collection = new CollectionChunk((int) $filter->limit, $filter->offset, $ofTotalPosts, $posts);
         $response   = $this->responseFactory->createResponse($this->createView($collection));
 
         // If accessed by admin it shouldn't be cached
@@ -78,5 +63,39 @@ class ListController
         return PaginatedView::create($collection, static function (Post $post): array {
             return PostView::create($post, false);
         });
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return ResultInterface<PostFilter>
+     */
+    private function buildFilter(Request $request): ResultInterface
+    {
+        $offset = $request->query->getInt('offset', 0);
+        $limit  = $request->query->getInt('limit', self::POSTS_PER_PAGE);
+
+        if ($offset < 0) {
+            return Result::error(Error::create('Offset can not be less than 0'));
+        }
+
+        if ($limit < 1 || $limit > self::POSTS_PER_PAGE * 2) {
+            return Result::error(Error::create('Limit can not be less than 1 or too high'));
+        }
+
+        $filter         = new PostFilter();
+        $filter->limit  = $limit;
+        $filter->offset = $offset;
+
+        $tag = $request->query->getAlnum('tag');
+        if ($tag !== '') {
+            $filter->tag = $tag;
+        }
+
+        if ($this->security->isGranted('create_post')) {
+            $filter->onlyPublished = false;
+        }
+
+        return Result::success($filter);
     }
 }
