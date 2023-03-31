@@ -25,6 +25,7 @@ class CommentView
             'guid'      => $comment->guid(),
             'createdAt' => DateTimeView::create($comment->createdAt()),
             'comment'   => $comment->text(),
+            'repliedTo' => $comment->repliedTo(),
         ];
     }
 }
