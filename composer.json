@@ -27,6 +27,7 @@
         "symfony/validator": "6.1.*",
         "symfony/yaml": "6.1.*",
         "temirkhann/generic": "^0.3.0",
+        "twig/twig": "^3.5",
         "vi-tech/dto-bundle": "^3.0"
     },
     "require-dev": {
@@ -50,7 +51,8 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "Frontend\\": "frontend/"
         }
     },
     "autoload-dev": {

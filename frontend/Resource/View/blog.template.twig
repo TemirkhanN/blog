@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+        <meta charset="utf-8"/>
+        <link rel="icon" href="/favicon.ico"/>
+        <link rel="stylesheet" href="style.css"/>
+        <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon.png">
+        <link rel="manifest" href="/manifest.json">
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"
+              integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0"
+              crossorigin="anonymous">
+        <!-- JavaScript Bundle with Popper -->
+        <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8"
+                crossorigin="anonymous"></script>
+
+        <title>{% block title %}Blog{% endblock %}</title>
+    {% endblock %}
+</head>
+<body>
+<div class="h-100 d-flex flex-column">{% block content %}{% endblock %}</div>
+{% block footer %}
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            &copy;<a class="text-muted" href="/cv">Temirkhan Nasukhov</a>
+        </div>
+    </footer>
+{% endblock %}
+</body>
+</html>

@@ -1,14 +1,11 @@
 version: '3.4'
 services:
   frontend:
-    build:
-      context: ./frontend
-      target: dev
-    env_file:
-      - ./frontend/.env
+    hostname: blog_server
+    image: nginx:1.21
     volumes:
-      - ./frontend/docker/nginx.conf:/etc/nginx/templates/default.conf.template:ro
-      - ./frontend:/frontend
+      - ./.docker/nginx.conf:/etc/nginx/templates/default.conf.template:ro
+      - ./public:/app/public:ro
     ports:
       - "80:80"
     networks:
