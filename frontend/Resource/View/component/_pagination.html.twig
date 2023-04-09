@@ -1,13 +1,15 @@
-<nav class="pagination" aria-label="pagination">
-    <ul class="pagination justify-content-center">
+<nav class="pagination">
+    <ul>
         {% if pagination.page > 1 %}
-        <li class="page-item">
-            <a href="/{{ pagination.page - 1 }}" class="page-link">&laquo; Newer</a>
+        <li>
+            <a href="/{{ pagination.page - 1 }}" title="Previous page" class="page-link left">&laquo; Newer</a>
         </li>
         {% endif %}
         {% if pagination.nextPage %}
-            <li class="page-item">
-                <a href="/{{ pagination.nextPage }}" class="page-link">Older &raquo;</a>
+            <li>
+                <a href="/{{ pagination.nextPage }}" title="Next page" class="page-link right">
+                    Older &raquo;
+                </a>
             </li>
         {% endif %}
     </ul>

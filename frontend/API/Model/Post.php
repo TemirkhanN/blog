@@ -15,6 +15,7 @@ class Post
         public readonly string $preview,
         public readonly string $content,
         public readonly array $tags,
+        public readonly array $comments,
         public readonly DateTimeImmutable $createdAt,
         public readonly ?DateTimeImmutable $updatedAt,
         public readonly ?DateTimeImmutable $publishedAt,
@@ -30,6 +31,7 @@ class Post
             $from['preview'],
             $from['content'] ?? '',
             $from['tags'],
+            $from['comments'] ?? [],
             DatetimeTransformer::transformToDateTime($from['createdAt']),
             DatetimeTransformer::transformToDateTime($from['updatedAt'] ?? null),
             DatetimeTransformer::transformToDateTime($from['publishedAt'] ?? null)

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Frontend\Controller\Post;
 
 use Frontend\Controller\AbstractBlogController;
-use Frontend\Resource\View\Template;
+use Frontend\Resource\View\Page;
 use Symfony\Component\HttpFoundation\Response;
 
 class ViewController extends AbstractBlogController
@@ -15,9 +15,9 @@ class ViewController extends AbstractBlogController
         $post = $this->blogApi->getPost($slug);
 
         if ($post === null) {
-            return $this->renderer->render(Template::ERROR_NOT_FOUND);
+            return $this->renderer->render(Page::ERROR_NOT_FOUND);
         }
 
-        return $this->renderer->render(Template::POST, ['post' => $post]);
+        return $this->renderer->render(Page::POST, ['post' => $post]);
     }
 }

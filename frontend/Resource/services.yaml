@@ -7,15 +7,10 @@ services:
     resource: '../{API,Service}'
     exclude: '../Resource/'
 
-
   Frontend\Controller\:
     resource: '../Controller'
     tags: ['controller.service_arguments']
 
-  Twig\Loader\FilesystemLoader:
+  Frontend\Service\Renderer:
     arguments:
-      - ['%kernel.project_dir%/frontend/Resource/View/']
-  # TODO cache, strict and etc
-  Twig\Environment:
-    arguments:
-      - '@Twig\Loader\FilesystemLoader'
+      - '%kernel.project_dir%/frontend/Resource/View/'

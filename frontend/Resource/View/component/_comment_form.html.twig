@@ -1,0 +1,50 @@
+<script>
+    function writeComment() {
+        const commentForm = document.getElementById("comment-form");
+
+        const submitButton = commentForm.getElementsByTagName("button")[0];
+        submitButton.disabled = true;
+
+        const inputs = commentForm.getElementsByTagName("input");
+
+        const comment = commentForm.getElementsByTagName("textarea").comment.value;
+        if (comment.length < 30) {
+            alert("Meaningful comment should contains at least 5-6 words.");
+            submitButton.disabled = false;
+
+            return;
+        }
+
+        const postSlug = inputs.post.value;
+
+        const req = new XMLHttpRequest();
+
+        const replyTo = inputs.replyTo.value ?? "";
+
+        let apiUrl = "/api/posts/" + postSlug + "/comments";
+        if (replyTo !== "") {
+            apiUrl += "/" + replyTo;
+        }
+
+        req.addEventListener('load', (e) => {
+            if (e.target.status === 200) {
+                window.location.reload()
+            } else {
+                console.log(e.target.response);
+            }
+        });
+        req.addEventListener('error', () => submitButton.disabled = false);
+
+        req.open('POST', apiUrl)
+        req.setRequestHeader("Content-Type", "application/json");
+        req.send(JSON.stringify({text: comment}));
+    }
+</script>
+<div id="comment-form">
+    <label>
+        <input type="hidden" name="replyTo" value="">
+        <input type="hidden" name="post" value="{{ postSlug }}">
+        <textarea name="comment" placeholder="Leave a comment"></textarea>
+    </label>
+    <button onclick="writeComment()">Submit</button>
+</div>

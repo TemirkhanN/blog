@@ -4,17 +4,23 @@ declare(strict_types=1);
 
 namespace Frontend\API;
 
+use Frontend\API\Model\Comment;
 use Frontend\API\Model\Post;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class Client
 {
+    private string $apiHost;
+
     private string $userToken = '';
 
     public function __construct(private readonly HttpClientInterface $httpClient)
     {
+        $apiHost = 'http://192.168.2.38:8081'; // TODO
+       // $apiHost = 'https://temirkhan.nasukhov.me'; // TODO
 
+        $this->apiHost = rtrim($apiHost, '/') . '/';
     }
 
     public function setUserToken(string $userToken): void
@@ -34,9 +40,12 @@ class Client
 
     public function getPost(string $slug): ?Post
     {
-        $response = $this->sendRequest('GET', 'http://blog_server/api/posts/' . $slug);
+        $response = $this->sendRequest('GET', 'api/posts/' . $slug);
+        $commentsRaw = $this->sendRequest('GET', 'api/posts/' . $slug .'/comments');
 
-        return Post::unmarshall($response->toArray());
+        $comments = array_map([Comment::class, 'unmarshall'], $commentsRaw->toArray());
+
+        return Post::unmarshall($response->toArray() + ['comments' => $comments]);
     }
 
     public function publishPost(string $slug): void
@@ -54,14 +63,10 @@ class Client
             $query['tag'] = $tag;
         }
 
-        $response = $this->sendRequest('GET', 'http://blog_server/api/posts?' . http_build_query($query));
+        $response = $this->sendRequest('GET', 'api/posts?' . http_build_query($query));
 
         $postsRaw = $response->toArray();
-
-        $posts = [];
-        foreach ($postsRaw['data'] as $postRaw) {
-            $posts[] = Post::unmarshall($postRaw);
-        }
+        $posts = array_map([Post::class, 'unmarshall'], $postsRaw['data']);
 
         $metadataRaw = $postsRaw['pagination'];
         $metadata = new Metadata($metadataRaw['limit'], $metadataRaw['offset'], $metadataRaw['total']);
@@ -82,6 +87,6 @@ class Client
             ];
         }
 
-        return $this->httpClient->request($method, $uri, $options);
+        return $this->httpClient->request($method, $this->apiHost . $uri, $options);
     }
 }

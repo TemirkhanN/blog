@@ -1,0 +1,14 @@
+{% extends "blog.template.twig" %}
+
+{% block content %}
+    {% for post in posts %}
+        <div class="post-preview">
+            <a class="preview-link" href="/blog/{{ post.slug }}">{{post.title}}</a>
+            <div>
+                <span class="pub-date">{{ post.publishedAt|date('j F Y') }}</span>
+            </div>
+            <div class="preview">{{ post.preview }}</div>
+        </div>
+    {% endfor %}
+    {% include 'component/_pagination.html.twig' with {pagination: posts.metadata} %}
+{% endblock %}
