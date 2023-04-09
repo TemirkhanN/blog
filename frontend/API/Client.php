@@ -8,9 +8,17 @@ use Frontend\API\Model\Comment;
 use Frontend\API\Model\Post;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
+use TemirkhanN\Generic\Error;
+use TemirkhanN\Generic\Result;
+use TemirkhanN\Generic\ResultInterface;
 
 class Client
 {
+    private const ENDPOINT_LOGIN = 'api/auth/tokens';
+    private const ENDPOINT_POSTS = 'api/posts';
+    private const ENDPOINT_POST = 'api/posts/%s';
+    private const ENDPOINT_COMMENTS = 'api/posts/%s/comments';
+
     private string $apiHost;
 
     private string $userToken = '';
@@ -21,6 +29,22 @@ class Client
        // $apiHost = 'https://temirkhan.nasukhov.me'; // TODO
 
         $this->apiHost = rtrim($apiHost, '/') . '/';
+    }
+
+    /**
+     * @return ResultInterface<string>
+     */
+    public function createUserToken(string $login, string $password): ResultInterface
+    {
+        $result = $this->sendRequest('POST', self::ENDPOINT_LOGIN, compact('login', 'password'));
+
+        $data = $result->toArray(false);
+
+        if (!isset($data['token'])) {
+            return Result::error(Error::create($data['message'], $data['code'], $data));
+        }
+
+        return Result::success($data['token']);
     }
 
     public function setUserToken(string $userToken): void
@@ -40,8 +64,8 @@ class Client
 
     public function getPost(string $slug): ?Post
     {
-        $response = $this->sendRequest('GET', 'api/posts/' . $slug);
-        $commentsRaw = $this->sendRequest('GET', 'api/posts/' . $slug .'/comments');
+        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_POST, $slug));
+        $commentsRaw = $this->sendRequest('GET', sprintf(self::ENDPOINT_COMMENTS, $slug));
 
         $comments = array_map([Comment::class, 'unmarshall'], $commentsRaw->toArray());
 
@@ -63,7 +87,7 @@ class Client
             $query['tag'] = $tag;
         }
 
-        $response = $this->sendRequest('GET', 'api/posts?' . http_build_query($query));
+        $response = $this->sendRequest('GET', self::ENDPOINT_POSTS . '?' . http_build_query($query));
 
         $postsRaw = $response->toArray();
         $posts = array_map([Post::class, 'unmarshall'], $postsRaw['data']);
@@ -78,7 +102,7 @@ class Client
     {
         $options = [];
         if ($payload !== []) {
-            $options['json'] = json_encode($payload);
+            $options['json'] = $payload;
         }
 
         if ($this->userToken !== '') {

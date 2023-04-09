@@ -1,0 +1,18 @@
+{% extends "admin.template.twig" %}
+
+{% block content %}
+    <div class="system-notifications">
+        {% if error is not empty %}
+            {{ error }}
+        {% endif %}
+    </div>
+<form method="POST">
+    <label>
+        <input type="text" name="login" placeholder="login" value="{{ login }}">
+    </label>
+    <label>
+        <input type="password" name="password" placeholder="password">
+    </label>
+    <button>Log in</button>
+</form>
+{% endblock %}

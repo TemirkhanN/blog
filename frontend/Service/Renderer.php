@@ -18,9 +18,9 @@ class Renderer
     {
     }
 
-    public function render(Page $template, array $context = []): Response
+    public function render(Page $page, array $context = []): Response
     {
-        return new Response($this->twig()->render($template->value, $context));
+        return new Response($this->twig()->render($page->value, $context));
     }
 
     private function twig(): Environment
