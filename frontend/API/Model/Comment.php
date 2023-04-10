@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Frontend\API\Model;
@@ -14,7 +15,8 @@ class Comment
         public readonly string $text,
         public readonly array $replies,
         public readonly string $repliedTo
-    ) {}
+    ) {
+    }
 
     public static function unmarshall(array $from): self
     {

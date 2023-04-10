@@ -18,8 +18,9 @@ services:
       target: dev_container
     env_file:
       - .env
-      - .env.dev
       - .env.local
+    environment:
+      - BLOG_HOST=http://blog_server
     volumes:
       - ./:/app
       - .composer/:/var/www/.composer/

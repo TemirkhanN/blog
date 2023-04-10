@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Frontend\Controller\Admin;
@@ -27,17 +28,17 @@ class PostEditorController extends AbstractBlogController
 
     private function handleCreation(Request $request): Response
     {
-        $title = '';
+        $title   = '';
         $preview = '';
         $content = '';
-        $tags = '';
+        $tags    = '';
 
         $error = '';
         if ($request->isMethod('POST')) {
-            $title = (string)$request->request->get('title', '');
-            $preview = (string)$request->request->get('preview', '');
-            $content = (string)$request->request->get('content', '');
-            $tags = (string)$request->request->get('tags', '');
+            $title   = (string) $request->request->get('title', '');
+            $preview = (string) $request->request->get('preview', '');
+            $content = (string) $request->request->get('content', '');
+            $tags    = (string) $request->request->get('tags', '');
 
             $postCreation = $this->blogApi->createPost($title, $preview, $content, $this->unserializeTags($tags));
             if ($postCreation->isSuccessful()) {
@@ -62,19 +63,21 @@ class PostEditorController extends AbstractBlogController
             return $this->renderer->render(Page::ERROR_NOT_FOUND);
         }
 
-        $title = $post->title;
+        $title   = $post->title;
         $preview = $post->preview;
         $content = $post->content;
-        $tags = $this->serializeTags($post->tags);
+        $tags    = $this->serializeTags($post->tags);
 
         $error = '';
         if ($request->isMethod('POST')) {
-            $title = (string)$request->request->get('title', '');
-            $preview = (string)$request->request->get('preview', '');
-            $content = (string)$request->request->get('content', '');
-            $tags = (string)$request->request->get('tags', '');
+            $title   = (string) $request->request->get('title', '');
+            $preview = (string) $request->request->get('preview', '');
+            $content = (string) $request->request->get('content', '');
+            $tags    = (string) $request->request->get('tags', '');
 
-            $postUpdate = $this->blogApi->editPost($postSlug, $title, $preview, $content, $this->unserializeTags($tags));
+            $postUpdate = $this->blogApi
+                ->editPost($postSlug, $title, $preview, $content, $this->unserializeTags($tags));
+
             if ($postUpdate->isSuccessful()) {
                 return new RedirectResponse('/blog/' . $postUpdate->getData()->slug);
             }

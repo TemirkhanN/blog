@@ -10,7 +10,9 @@ class Access
 {
     private const AUTHENTICATION_COOKIE_NAME = '_authToken';
 
-    public function __construct(private readonly RequestStack $requestStack) {}
+    public function __construct(private readonly RequestStack $requestStack)
+    {
+    }
 
     public function isAdmin(): bool
     {

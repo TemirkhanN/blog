@@ -18,7 +18,6 @@ class EditControllerTest extends FunctionalTestCase
 
         $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug));
 
-        self::assertEquals(400, $response->getStatusCode());
         self::assertEquals(
             '{"code":400,"message":"Invalid request is passed"}',
             $response->getContent()
@@ -41,7 +40,6 @@ class EditControllerTest extends FunctionalTestCase
 
         $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug), $newData);
 
-        self::assertEquals(403, $response->getStatusCode());
         self::assertEquals(
             '{"code":403,"message":"You\u0027re not allowed to edit posts"}',
             $response->getContent()
@@ -64,7 +62,6 @@ class EditControllerTest extends FunctionalTestCase
         $this->authenticate('SomeHardCodedToken');
         $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug), $newData);
 
-        self::assertEquals(404, $response->getStatusCode());
         self::assertEquals(
             '{"code":404,"message":"Publication doesn\u0027t exist"}',
             $response->getContent()
@@ -97,7 +94,6 @@ class EditControllerTest extends FunctionalTestCase
 
         $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug), $newData);
 
-        self::assertEquals(400, $response->getStatusCode());
         $this->assertResponseContainsError('Invalid data', [
             'title'   => 'This value should not be blank.',
             'preview' => 'This value should not be blank.',

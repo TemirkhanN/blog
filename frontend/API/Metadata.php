@@ -14,9 +14,9 @@ class Metadata
     {
         $page = 1;
         if ($this->offset > 0) {
-            $page = floor($this->offset/$this->limit) + 1;
+            $page = floor($this->offset / $this->limit) + 1;
         }
-        $this->page = (int)$page;
+        $this->page = (int) $page;
 
         $nextPage = null;
         if ($this->ofTotal > $this->offset + $this->limit) {
@@ -25,6 +25,3 @@ class Metadata
         $this->nextPage = $nextPage;
     }
 }
-
-
-

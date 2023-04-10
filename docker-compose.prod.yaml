@@ -36,6 +36,7 @@ services:
       - TELEGRAM_BOT_TOKEN
       - TELEGRAM_ADMIN_CHAT_ID
       - ADMIN_NOTIFICATIONS_ENABLED
+      - BLOG_HOST=https://blog_server
     networks:
       - appnet
       - infranet

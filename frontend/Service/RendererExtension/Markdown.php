@@ -54,9 +54,7 @@ class Markdown extends AbstractExtension
         if ($this->converter === null) {
             $env = new Environment([
                 'default_attributes' => [
-                    Link::class => [
-                        'target' => '_blank',
-                    ],
+                    Link::class => ['target' => '_blank'],
                 ],
             ]);
             $env->addExtension(new CommonMarkCoreExtension());

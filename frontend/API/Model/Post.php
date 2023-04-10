@@ -20,7 +20,6 @@ class Post
         public readonly ?DateTimeImmutable $updatedAt,
         public readonly ?DateTimeImmutable $publishedAt,
     ) {
-
     }
 
     public static function unmarshall(array $from): self

@@ -47,6 +47,7 @@
     </rule>
 
     <file>public/</file>
+    <file>frontend/</file>
     <file>src/</file>
     <file>tests/</file>
 

@@ -13,11 +13,16 @@ class AuthenticateUserSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            RequestEvent::class => ['onRequest', 10],
+            RequestEvent::class => [
+        'onRequest',
+        10,
+            ],
         ];
     }
 
-    public function __construct(private readonly Client $blogApi) {}
+    public function __construct(private readonly Client $blogApi)
+    {
+    }
 
     public function onRequest(RequestEvent $event): void
     {
@@ -27,7 +32,7 @@ class AuthenticateUserSubscriber implements EventSubscriberInterface
 
         $request = $event->getRequest();
 
-        $authToken = (string)$request->cookies->get('_authToken', '');
+        $authToken = (string) $request->cookies->get('_authToken', '');
         if ($authToken !== '') {
             $this->blogApi->setUserToken($authToken);
         }

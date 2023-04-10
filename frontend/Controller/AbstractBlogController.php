@@ -12,5 +12,6 @@ abstract class AbstractBlogController
     public function __construct(
         protected readonly Client $blogApi,
         protected readonly Renderer $renderer
-    ) {}
+    ) {
+    }
 }

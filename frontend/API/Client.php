@@ -14,17 +14,22 @@ use TemirkhanN\Generic\ResultInterface;
 
 class Client
 {
-    private const ENDPOINT_LOGIN = '/api/auth/tokens';
-    private const ENDPOINT_POSTS = '/api/posts';
-    private const ENDPOINT_POST = '/api/posts/%s';
+    private const ENDPOINT_LOGIN         = '/api/auth/tokens';
+    private const ENDPOINT_POSTS         = '/api/posts';
+    private const ENDPOINT_POST          = '/api/posts/%s';
     private const ENDPOINT_POST_RELEASES = '/api/posts/%s/releases';
-    private const ENDPOINT_COMMENTS = '/api/posts/%s/comments';
+    private const ENDPOINT_COMMENTS      = '/api/posts/%s/comments';
 
     private string $userToken = '';
 
-    public function __construct(private readonly HttpClientInterface $httpClient) {}
+    public function __construct(private readonly HttpClientInterface $httpClient)
+    {
+    }
 
     /**
+     * @param string $login
+     * @param string $password
+     *
      * @return ResultInterface<string>
      */
     public function createUserToken(string $login, string $password): ResultInterface
@@ -46,9 +51,9 @@ class Client
     }
 
     /**
-     * @param string $title
-     * @param string $preview
-     * @param string $content
+     * @param string   $title
+     * @param string   $preview
+     * @param string   $content
      * @param string[] $tags
      *
      * @return ResultInterface<Post>
@@ -67,20 +72,25 @@ class Client
     }
 
     /**
-     * @param string $slug
-     * @param string $title
-     * @param string $preview
-     * @param string $content
+     * @param string   $slug
+     * @param string   $title
+     * @param string   $preview
+     * @param string   $content
      * @param string[] $tags
      *
      * @return ResultInterface<Post>
      */
-    public function editPost(string $slug, string $title, string $preview, string $content, array $tags): ResultInterface
-    {
+    public function editPost(
+        string $slug,
+        string $title,
+        string $preview,
+        string $content,
+        array $tags
+    ): ResultInterface {
         $payload = compact('title', 'preview', 'content', 'tags');
 
         $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT_POST, $slug), $payload);
-        $error = $this->getErrorMessage($response);
+        $error    = $this->getErrorMessage($response);
 
         if ($error !== '') {
             return Result::error(Error::create($error));
@@ -125,7 +135,7 @@ class Client
     public function getPosts(int $page, int $limit, ?string $tag = null): PostsCollection
     {
         $query = [
-            'limit' => $limit,
+            'limit'  => $limit,
             'offset' => ($page - 1) * $limit,
         ];
 
@@ -136,10 +146,10 @@ class Client
         $response = $this->sendRequest('GET', self::ENDPOINT_POSTS . '?' . http_build_query($query));
 
         $postsRaw = $response->toArray(false);
-        $posts = array_map([Post::class, 'unmarshall'], $postsRaw['data']);
+        $posts    = array_map([Post::class, 'unmarshall'], $postsRaw['data']);
 
         $metadataRaw = $postsRaw['pagination'];
-        $metadata = new Metadata($metadataRaw['limit'], $metadataRaw['offset'], $metadataRaw['total']);
+        $metadata    = new Metadata($metadataRaw['limit'], $metadataRaw['offset'], $metadataRaw['total']);
 
         return new PostsCollection($posts, $metadata);
     }

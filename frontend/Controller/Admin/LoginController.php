@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Frontend\Controller\Admin;
@@ -16,17 +17,17 @@ class LoginController extends AbstractBlogController
 {
     public function __invoke(Request $request): Response
     {
-        $login = '';
+        $login    = '';
         $password = '';
-        $error = '';
+        $error    = '';
         if ($request->isMethod('POST')) {
-            $login = $request->request->getAlnum('login');
-            $password = (string)$request->request->get('password');
+            $login    = $request->request->getAlnum('login');
+            $password = (string) $request->request->get('password');
 
             $result = $this->blogApi->createUserToken($login, $password);
 
             if ($result->isSuccessful()) {
-                $redirect = new RedirectResponse('/');
+                $redirect   = new RedirectResponse('/');
                 $expiryTime = new DateTime();
                 $expiryTime->add(new DateInterval('P1M'));
                 $redirect->headers->setCookie(Cookie::create('_authToken', $result->getData(), $expiryTime));

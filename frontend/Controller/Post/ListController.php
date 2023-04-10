@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Frontend\Controller\Post;
@@ -16,8 +17,6 @@ class ListController extends AbstractBlogController
     {
         $posts = $this->blogApi->getPosts($page, self::POSTS_PER_PAGE, $tag);
 
-        return $this->renderer->render(Page::POSTS, [
-            'posts' => $posts,
-        ]);
+        return $this->renderer->render(Page::POSTS, ['posts' => $posts]);
     }
 }
