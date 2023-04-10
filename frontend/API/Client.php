@@ -73,9 +73,27 @@ class Client
         return Result::success(Post::unmarshall($response->toArray(false)));
     }
 
-    public function editPost(string $slug, string $title, string $preview, string $content, array $tags): Post
+    /**
+     * @param string $slug
+     * @param string $title
+     * @param string $preview
+     * @param string $content
+     * @param string[] $tags
+     *
+     * @return ResultInterface<Post>
+     */
+    public function editPost(string $slug, string $title, string $preview, string $content, array $tags): ResultInterface
     {
+        $payload = compact('title', 'preview', 'content', 'tags');
 
+        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT_POST, $slug), $payload);
+        $error = $this->getErrorMessage($response);
+
+        if ($error !== '') {
+            return Result::error(Error::create($error));
+        }
+
+        return Result::success(Post::unmarshall($response->toArray(false)));
     }
 
     public function getPost(string $slug): ?Post

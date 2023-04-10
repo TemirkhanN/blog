@@ -13,10 +13,22 @@ class PostEditorController extends AbstractBlogController
 {
     public function __invoke(Request $request): Response
     {
+        $editingPost = (string) $request->query->get('slug','');
+
+        if ($editingPost !== '') {
+            return $this->handleUpdate($editingPost, $request);
+        }
+
+        return $this->handleCreation($request);
+    }
+
+    private function handleCreation(Request $request): Response
+    {
         $title = '';
         $preview = '';
         $content = '';
         $tags = '';
+
         $error = '';
         if ($request->isMethod('POST')) {
             $title = (string)$request->request->get('title', '');
@@ -24,7 +36,7 @@ class PostEditorController extends AbstractBlogController
             $content = (string)$request->request->get('content', '');
             $tags = (string)$request->request->get('tags', '');
 
-            $postCreation = $this->blogApi->createPost($title, $preview, $content, $this->parseTags($tags));
+            $postCreation = $this->blogApi->createPost($title, $preview, $content, $this->unserializeTags($tags));
             if ($postCreation->isSuccessful()) {
                 $post = $postCreation->getData();
 
@@ -40,13 +52,56 @@ class PostEditorController extends AbstractBlogController
         );
     }
 
+    private function handleUpdate(string $postSlug, Request $request): Response
+    {
+        $post = $this->blogApi->getPost($postSlug);
+        if ($post === null) {
+            return $this->renderer->render(Page::ERROR_NOT_FOUND);
+        }
+
+        $title = $post->title;
+        $preview = $post->preview;
+        $content = $post->content;
+        $tags = $this->serializeTags($post->tags);
+
+        $error = '';
+        if ($request->isMethod('POST')) {
+            $title = (string)$request->request->get('title', '');
+            $preview = (string)$request->request->get('preview', '');
+            $content = (string)$request->request->get('content', '');
+            $tags = (string)$request->request->get('tags', '');
+
+            $postUpdate = $this->blogApi->editPost($postSlug, $title, $preview, $content, $this->unserializeTags($tags));
+            if ($postUpdate->isSuccessful()) {
+                return new RedirectResponse('/blog/' . $postUpdate->getData()->slug);
+            }
+
+            $error = $postUpdate->getError()->getMessage();
+        }
+
+        return $this->renderer->render(
+            Page::POST_EDIT,
+            compact('title', 'preview', 'content', 'tags', 'error')
+        );
+    }
+
     /**
      * @param string $raw
      *
      * @return string[]
      */
-    private function parseTags(string $raw): array
+    private function unserializeTags(string $raw): array
     {
         return explode(',', $raw);
+    }
+
+    /**
+     * @param string[] $tags
+     *
+     * @return string
+     */
+    private function serializeTags(array $tags): string
+    {
+        return implode(',', $tags);
     }
 }
