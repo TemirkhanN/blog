@@ -8,6 +8,7 @@ services:
     volumes:
       - ./.docker/nginx.conf:/etc/nginx/templates/default.conf.template:ro
       - ./public:/app/public:ro
+      - ./.docker/certbot-nginx.sh:/app/certbot.sh:ro
     ports:
       - "80:80"
       - "443:443"
@@ -36,7 +37,6 @@ services:
       - TELEGRAM_BOT_TOKEN
       - TELEGRAM_ADMIN_CHAT_ID
       - ADMIN_NOTIFICATIONS_ENABLED
-      - BLOG_HOST=https://blog_server
       - BLOG_DOMAIN_NAME
     networks:
       - appnet
