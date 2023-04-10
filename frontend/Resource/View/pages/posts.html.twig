@@ -10,5 +10,5 @@
             <div class="preview">{{ post.preview }}</div>
         </div>
     {% endfor %}
-    {% include 'component/_pagination.html.twig' with {pagination: posts.metadata} %}
+    {% include 'component/_pagination.html.twig' with {pagination: posts.metadata, route: 'blog'} %}
 {% endblock %}

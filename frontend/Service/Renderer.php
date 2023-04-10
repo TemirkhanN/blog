@@ -12,24 +12,12 @@ use Twig\Loader\FilesystemLoader;
 
 class Renderer
 {
-    private ?Environment $environment = null;
-
-    public function __construct(private readonly string $templateDir)
+    public function __construct(private readonly Environment $twig)
     {
     }
 
     public function render(Page $page, array $context = []): Response
     {
-        return new Response($this->twig()->render($page->value, $context));
-    }
-
-    private function twig(): Environment
-    {
-        if ($this->environment === null) {
-            $this->environment = new Environment(new FilesystemLoader($this->templateDir));
-            $this->environment->addExtension(new Markdown());
-        }
-
-        return $this->environment;
+        return new Response($this->twig->render($page->value, $context));
     }
 }

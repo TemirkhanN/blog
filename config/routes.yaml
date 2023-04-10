@@ -4,5 +4,4 @@ api_routes:
   resource: 'routes/api.yaml'
 
 frontend_routes:
-  name_prefix: 'frontend_'
   resource: '../frontend/Resource/routes.yaml'

@@ -37,6 +37,6 @@ class PublishController
             return $this->responseFactory->createResponse(new SystemMessage($result->getError()->getMessage()));
         }
 
-        return $this->responseFactory->createResponse('');
+        return $this->responseFactory->createResponse([]);
     }
 }

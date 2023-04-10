@@ -5,18 +5,21 @@ namespace Frontend\Controller\Admin;
 
 use Frontend\Controller\AbstractBlogController;
 use Frontend\Resource\View\Page;
+use Frontend\Service\Access;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class PostEditorController extends AbstractBlogController
 {
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request, string $slug, Access $access): Response
     {
-        $editingPost = (string) $request->query->get('slug','');
+        if (!$access->isAdmin()) {
+            return $this->renderer->render(Page::ERROR_FORBIDDEN);
+        }
 
-        if ($editingPost !== '') {
-            return $this->handleUpdate($editingPost, $request);
+        if ($slug !== '') {
+            return $this->handleUpdate($slug, $request);
         }
 
         return $this->handleCreation($request);
@@ -47,7 +50,7 @@ class PostEditorController extends AbstractBlogController
         }
 
         return $this->renderer->render(
-            Page::POST_EDIT,
+            Page::ADMIN_POST_EDIT,
             compact('title', 'preview', 'content', 'tags', 'error')
         );
     }
@@ -80,7 +83,7 @@ class PostEditorController extends AbstractBlogController
         }
 
         return $this->renderer->render(
-            Page::POST_EDIT,
+            Page::ADMIN_POST_EDIT,
             compact('title', 'preview', 'content', 'tags', 'error')
         );
     }

@@ -46,7 +46,7 @@ services:
 
     App\Service\UriResolver:
       arguments:
-        - '%env(BLOG_DOMAIN_NAME)%'
+        - '%env(BLOG_HOST)%'
 
     App\EventSubscriber\NotifyAdminSubscriber:
       arguments:

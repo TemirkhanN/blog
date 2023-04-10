@@ -12,7 +12,7 @@ class ListController extends AbstractBlogController
 {
     private const POSTS_PER_PAGE = 5;
 
-    public function __invoke(Request $request, int $page, ?string $tag = null): Response
+    public function __invoke(Request $request, int $page = 1, ?string $tag = null): Response
     {
         $posts = $this->blogApi->getPosts($page, self::POSTS_PER_PAGE, $tag);
 

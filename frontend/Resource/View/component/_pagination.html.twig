@@ -2,12 +2,12 @@
     <ul>
         {% if pagination.page > 1 %}
         <li>
-            <a href="/{{ pagination.page - 1 }}" title="Previous page" class="page-link left">&laquo; Newer</a>
+            <a href="{{ path(route, {page: pagination.page - 1}) }}" title="Previous page" class="page-link left">&laquo; Newer</a>
         </li>
         {% endif %}
         {% if pagination.nextPage %}
             <li>
-                <a href="/{{ pagination.nextPage }}" title="Next page" class="page-link right">
+                <a href="{{ path(route, {page: pagination.nextPage}) }}" title="Next page" class="page-link right">
                     Older &raquo;
                 </a>
             </li>

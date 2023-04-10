@@ -11,6 +11,6 @@ services:
     resource: '../Controller'
     tags: ['controller.service_arguments']
 
-  Frontend\Service\Renderer:
+  Frontend\API\Client:
     arguments:
-      - '%kernel.project_dir%/frontend/Resource/View/'
+      - '@blog_api_transport'

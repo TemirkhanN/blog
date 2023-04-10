@@ -1,9 +1,5 @@
 index:
-  path: /{page}
-  requirements:
-    page: '[1-9][0-9]*'
-  defaults:
-    page: 1
+  path: /
   methods: [ GET ]
   controller: Frontend\Controller\Post\ListController
 
@@ -24,11 +20,24 @@ blog_post:
   controller: Frontend\Controller\Post\ViewController
 
 login:
-  path: /login
+  path: /admin/login
   methods: [GET, POST]
   controller: Frontend\Controller\Admin\LoginController
 
-edit_post:
-  path: /admin/post
+admin_edit_post:
+  path: /admin/post/{slug}
+  requirements:
+    slug: '[a-zA-Z0-9_-]{10,}'
+  defaults:
+    slug: ''
   methods: [GET, POST]
   controller: Frontend\Controller\Admin\PostEditorController
+
+admin_list_posts:
+  path: /admin/posts/{page}
+  methods: [GET, POST]
+  requirements:
+    page: '[1-9][0-9]*'
+  defaults:
+    page: 1
+  controller: Frontend\Controller\Admin\PostListController

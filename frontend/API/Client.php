@@ -14,22 +14,15 @@ use TemirkhanN\Generic\ResultInterface;
 
 class Client
 {
-    private const ENDPOINT_LOGIN = 'api/auth/tokens';
-    private const ENDPOINT_POSTS = 'api/posts';
-    private const ENDPOINT_POST = 'api/posts/%s';
-    private const ENDPOINT_COMMENTS = 'api/posts/%s/comments';
-
-    private string $apiHost;
+    private const ENDPOINT_LOGIN = '/api/auth/tokens';
+    private const ENDPOINT_POSTS = '/api/posts';
+    private const ENDPOINT_POST = '/api/posts/%s';
+    private const ENDPOINT_POST_RELEASES = '/api/posts/%s/releases';
+    private const ENDPOINT_COMMENTS = '/api/posts/%s/comments';
 
     private string $userToken = '';
 
-    public function __construct(private readonly HttpClientInterface $httpClient)
-    {
-        $apiHost = 'http://192.168.2.38:8081'; // TODO
-        //$apiHost = 'https://temirkhan.nasukhov.me'; // TODO
-
-        $this->apiHost = rtrim($apiHost, '/') . '/';
-    }
+    public function __construct(private readonly HttpClientInterface $httpClient) {}
 
     /**
      * @return ResultInterface<string>
@@ -111,8 +104,22 @@ class Client
         return Post::unmarshall($response->toArray(false) + ['comments' => $comments]);
     }
 
-    public function publishPost(string $slug): void
+    /**
+     * @param string $slug
+     *
+     * @return ResultInterface<void>
+     */
+    public function publishPost(string $slug): ResultInterface
     {
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT_POST_RELEASES, $slug));
+
+        $error = $this->getErrorMessage($response);
+
+        if ($error !== '') {
+            return Result::error(Error::create($error));
+        }
+
+        return Result::success();
     }
 
     public function getPosts(int $page, int $limit, ?string $tag = null): PostsCollection
@@ -150,7 +157,7 @@ class Client
             ];
         }
 
-        return $this->httpClient->request($method, $this->apiHost . $uri, $options);
+        return $this->httpClient->request($method, $uri, $options);
     }
 
     private function getErrorMessage(ResponseInterface $response): string
