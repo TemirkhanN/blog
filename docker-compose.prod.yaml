@@ -37,6 +37,7 @@ services:
       - TELEGRAM_ADMIN_CHAT_ID
       - ADMIN_NOTIFICATIONS_ENABLED
       - BLOG_HOST=https://blog_server
+      - BLOG_DOMAIN_NAME
     networks:
       - appnet
       - infranet
