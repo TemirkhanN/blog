@@ -13,4 +13,5 @@ enum Page: string
     case POST            = 'pages/post.html.twig';
     case ERROR_NOT_FOUND = 'pages/system/404.html.twig';
     case ERROR_FORBIDDEN = 'pages/system/403.html.twig';
+    case MARKDOWN_PAGE   = 'pages/generic.html.twig';
 }

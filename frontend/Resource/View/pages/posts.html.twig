@@ -3,7 +3,7 @@
 {% block content %}
     {% for post in posts %}
         <div class="post-preview">
-            <a class="preview-link" href="/blog/{{ post.slug }}">{{post.title}}</a>
+            <a class="preview-link" href="{{ path('blog_post', {slug: post.slug}) }}">{{post.title}}</a>
             <div>
                 <span class="pub-date">{{ post.publishedAt|date('j F Y') }}</span>
             </div>

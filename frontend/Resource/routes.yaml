@@ -41,3 +41,11 @@ admin_list_posts:
   defaults:
     page: 1
   controller: Frontend\Controller\Admin\PostListController
+
+static_pages:
+  path: /{name}
+  stateless: true
+  methods: [GET]
+  controller: Frontend\Controller\MarkdownPageController
+  requirements:
+    name: about
