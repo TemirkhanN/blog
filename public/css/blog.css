@@ -182,3 +182,17 @@ footer {
     border-radius: 5px;
     padding: 0.5em;
 }
+
+form label {
+    width: 100%;
+    padding: 0.5em 0;
+    display: block;
+}
+
+form input {
+    width: 100%;
+}
+
+form textarea {
+    width: 100%;
+}

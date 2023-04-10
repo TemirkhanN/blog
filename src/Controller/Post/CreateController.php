@@ -29,7 +29,7 @@ class CreateController
 
         $result = $this->postCreator->execute($postData);
         if (!$result->isSuccessful()) {
-            return $this->responseFactory->createResponse(ErrorView::create($result->getError()), 400);
+            return $this->responseFactory->createResponse(ErrorView::create($result->getError()));
         }
 
         return $this->responseFactory->createResponse(PostView::create($result->getData()));

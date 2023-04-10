@@ -27,3 +27,8 @@ login:
   path: /login
   methods: [GET, POST]
   controller: Frontend\Controller\Admin\LoginController
+
+edit_post:
+  path: /admin/post
+  methods: [GET, POST]
+  controller: Frontend\Controller\Admin\PostEditorController

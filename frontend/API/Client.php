@@ -26,7 +26,7 @@ class Client
     public function __construct(private readonly HttpClientInterface $httpClient)
     {
         $apiHost = 'http://192.168.2.38:8081'; // TODO
-       // $apiHost = 'https://temirkhan.nasukhov.me'; // TODO
+        //$apiHost = 'https://temirkhan.nasukhov.me'; // TODO
 
         $this->apiHost = rtrim($apiHost, '/') . '/';
     }
@@ -52,9 +52,25 @@ class Client
         $this->userToken = $userToken;
     }
 
-    public function createPost(string $title, string $preview, string $content, array $tags): Post
+    /**
+     * @param string $title
+     * @param string $preview
+     * @param string $content
+     * @param string[] $tags
+     *
+     * @return ResultInterface<Post>
+     */
+    public function createPost(string $title, string $preview, string $content, array $tags): ResultInterface
     {
+        $response = $this->sendRequest('POST', self::ENDPOINT_POSTS, compact('title', 'preview', 'content', 'tags'));
 
+        $error = $this->getErrorMessage($response);
+
+        if ($error !== '') {
+            return Result::error(Error::create($error));
+        }
+
+        return Result::success(Post::unmarshall($response->toArray(false)));
     }
 
     public function editPost(string $slug, string $title, string $preview, string $content, array $tags): Post
@@ -65,11 +81,16 @@ class Client
     public function getPost(string $slug): ?Post
     {
         $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_POST, $slug));
+
+        if ($this->getErrorMessage($response) !== '') {
+            return null;
+        }
+
         $commentsRaw = $this->sendRequest('GET', sprintf(self::ENDPOINT_COMMENTS, $slug));
 
-        $comments = array_map([Comment::class, 'unmarshall'], $commentsRaw->toArray());
+        $comments = array_map([Comment::class, 'unmarshall'], $commentsRaw->toArray(false));
 
-        return Post::unmarshall($response->toArray() + ['comments' => $comments]);
+        return Post::unmarshall($response->toArray(false) + ['comments' => $comments]);
     }
 
     public function publishPost(string $slug): void
@@ -80,7 +101,7 @@ class Client
     {
         $query = [
             'limit' => $limit,
-            'offset' => ($page-1) * $limit,
+            'offset' => ($page - 1) * $limit,
         ];
 
         if ($tag !== null) {
@@ -89,7 +110,7 @@ class Client
 
         $response = $this->sendRequest('GET', self::ENDPOINT_POSTS . '?' . http_build_query($query));
 
-        $postsRaw = $response->toArray();
+        $postsRaw = $response->toArray(false);
         $posts = array_map([Post::class, 'unmarshall'], $postsRaw['data']);
 
         $metadataRaw = $postsRaw['pagination'];
@@ -112,5 +133,16 @@ class Client
         }
 
         return $this->httpClient->request($method, $this->apiHost . $uri, $options);
+    }
+
+    private function getErrorMessage(ResponseInterface $response): string
+    {
+        $data = $response->toArray(false);
+
+        if (!isset($data['message'])) {
+            return '';
+        }
+
+        return $data['message'];
     }
 }
