@@ -1,22 +1,20 @@
 version: '3.4'
 services:
   frontend:
-    build:
-      context: ./frontend
-      args:
-        BACKEND_URL: ${REACT_APP_BACKEND_URL}
-        BLOG_AUTHOR: ${REACT_APP_AUTHOR_NAME}
-        AUTHOR_GITHUB: ${REACT_APP_GITHUB_LINK}
-        AUTHOR_LINKEDIN: ${REACT_APP_LINKEDIN_LINK}
-        AUTHOR_CV: ${REACT_APP_CV_MARKDOWN_LINK}
-      target: prod
+    image: nginx:1.21
     environment:
       - BLOG_DOMAIN_NAME
+    volumes:
+      - ./.docker/nginx.conf:/etc/nginx/templates/default.conf.template:ro
+      - ./public:/app/public:ro
+      - ./.docker/certbot-nginx.sh:/app/certbot.sh:ro
     ports:
       - "80:80"
       - "443:443"
     networks:
-      - appnet
+      appnet:
+        aliases:
+          - blog.internal
     depends_on:
       - backend
   backend:
@@ -28,7 +26,6 @@ services:
     environment:
       - APP_ENV
       - APP_SECRET
-      - BLOG_DOMAIN_NAME
       - MY_VERY_SECRET_TOKEN
       - DB_HOST
       - DB_PORT
@@ -40,6 +37,8 @@ services:
       - TELEGRAM_BOT_TOKEN
       - TELEGRAM_ADMIN_CHAT_ID
       - ADMIN_NOTIFICATIONS_ENABLED
+      - BLOG_HOST=http://blog.internal
+      - BLOG_DOMAIN_NAME
     networks:
       - appnet
       - infranet

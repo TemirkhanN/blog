@@ -45,7 +45,7 @@ class ResponseFactory implements ResponseFactoryInterface
     {
         $code = Response::HTTP_FORBIDDEN;
 
-        return $this->createResponse(new SystemMessage($details, $code), $code);
+        return $this->createResponse(new SystemMessage($details, $code));
     }
 
     /**
@@ -59,7 +59,7 @@ class ResponseFactory implements ResponseFactoryInterface
     {
         $code = Response::HTTP_NOT_FOUND;
 
-        return $this->createResponse(new SystemMessage($details, $code), $code);
+        return $this->createResponse(new SystemMessage($details, $code));
     }
 
     /**
@@ -73,13 +73,13 @@ class ResponseFactory implements ResponseFactoryInterface
     {
         $code = Response::HTTP_BAD_REQUEST;
 
-        return $this->createResponse(new SystemMessage($details, $code), $code);
+        return $this->createResponse(new SystemMessage($details, $code));
     }
 
     public function unauthorized(string $details): Response
     {
         $code = Response::HTTP_UNAUTHORIZED;
 
-        return $this->createResponse(new SystemMessage($details, $code), $code);
+        return $this->createResponse(new SystemMessage($details, $code));
     }
 }

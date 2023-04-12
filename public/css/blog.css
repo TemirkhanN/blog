@@ -1,0 +1,198 @@
+html {
+    height: 100%;
+    font-size: 18px;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-size: 0.9em;
+}
+
+/* Header */
+header {
+    padding-top: 1em;
+}
+
+.social-link {
+    color: black;
+    text-decoration: none;
+    float: right;
+    margin-right: 1em;
+}
+
+.social-link:first-child {
+    margin: 0;
+}
+
+/* Main */
+main {
+    max-width: 850px;
+    margin: auto;
+    padding: 0 1em;
+}
+
+.clear {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+}
+
+.content {
+    padding-top: 2em;
+}
+
+blockquote {
+    color: #505050;
+    margin-left: 1em;
+    border-left: 3px solid #c0c0c0;
+    padding: 0 0.5em;
+}
+
+/* Pagination */
+
+.pagination ul {
+    list-style-type: none;
+    padding: 0 1em;
+}
+
+.pagination .page-link, .pagination .page-link:visited {
+    color: black;
+    text-decoration: none;
+}
+
+.right {
+    float: right;
+}
+
+.left {
+    float: left;
+}
+
+.pagination ul:after {
+    content: " ";
+    display: block;
+    height: 0;
+    clear: both;
+}
+
+/* Footer */
+footer {
+    max-width: 850px;
+    margin: auto;
+    padding: 1em 0;
+    background-color: #faf9f9;
+    border-radius: 0 0 0.5em 0.5em;
+    text-align: center;
+}
+
+@media screen and (max-width: 850px) {
+    footer {
+        border-radius: 0;
+    }
+}
+
+.copyright a {
+    font-size: 0.9em;
+    color: #898888;
+    text-decoration: none;
+}
+
+/* Posts */
+.post {
+    font-family: 'Inconsolata', serif;
+    font-size: 1.2em;
+}
+
+.post-preview {
+    font-family: 'Inconsolata', serif;
+    font-size: 1.1em;
+    border-bottom: 1px solid #eee;
+    padding: 1em 0;
+}
+
+.post-preview {
+    padding-top: 0;
+}
+
+.preview p {
+    margin: 0;
+}
+
+.preview-link {
+    color: black;
+    font-size: 1.2em;
+    text-decoration: none;
+}
+
+.pub-date {
+    color: gray;
+    margin: 0 0 0 2px;
+    font-size: 0.8em;
+}
+
+.tags a {
+    display: inline;
+    color: gray;
+    text-decoration: none;
+    font-size: 0.6em;
+}
+
+#disclaimer {
+    border-top: 1px solid lightgrey;
+    color: #555;
+    font-style: italic;
+    padding: 1em 0;
+}
+
+#disclaimer p {
+    margin: 0;
+    text-align: center;
+}
+
+#disclaimer a:visited {
+    text-decoration: none;
+    color: blue;
+}
+
+#comments {
+    border-top: 1px solid black;
+    padding: 1em 0;
+}
+
+#comments textarea {
+    width: 100%;
+    height: 4em;
+    border-color: #aaa;
+    border-radius: 5px;
+}
+
+.comment .comment:not(:first-child) {
+    padding: 0 1em;
+}
+
+.comment-text {
+    background-color: #fbfbfb;
+    border-radius: 5px;
+    padding: 0.5em;
+}
+
+form label {
+    width: 100%;
+    padding: 0.5em 0;
+    display: block;
+}
+
+form input {
+    width: 100%;
+}
+
+form textarea {
+    width: 100%;
+}

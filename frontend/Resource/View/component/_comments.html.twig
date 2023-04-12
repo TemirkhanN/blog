@@ -1,0 +1,10 @@
+<div id="comments">
+    <div>
+        {% include 'component/_comment_form.html.twig' with { postSlug: post.slug } %}
+    </div>
+    <div id="comment-list">
+        {% for comment in post.comments %}
+            {% include 'component/_comment.html.twig' with { comment: comment} %}
+        {% endfor %}
+    </div>
+</div>

@@ -17,7 +17,6 @@ class PublishControllerTest extends FunctionalTestCase
 
         $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $postSlug));
 
-        self::assertEquals(403, $response->getStatusCode());
         self::assertEquals(
             '{"code":403,"message":"You\u0027re not allowed to modify posts"}',
             $response->getContent()
@@ -31,7 +30,6 @@ class PublishControllerTest extends FunctionalTestCase
         $this->authenticate('SomeHardCodedToken');
         $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $postSlug));
 
-        self::assertEquals(404, $response->getStatusCode());
         self::assertEquals(
             '{"code":404,"message":"Publication doesn\u0027t exist"}',
             $response->getContent()
@@ -46,7 +44,7 @@ class PublishControllerTest extends FunctionalTestCase
         $this->authenticate('SomeHardCodedToken');
         $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $postSlug));
 
-        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('[]', $response->getContent());
         $this->assertPostIsPublished($post);
     }
 
@@ -60,7 +58,7 @@ class PublishControllerTest extends FunctionalTestCase
         $this->authenticate('SomeHardCodedToken');
         $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $postSlug));
 
-        self::assertEquals(200, $response->getStatusCode());
+        self::assertEquals('[]', $response->getContent());
         $this->assertPostIsPublished($post);
     }
 

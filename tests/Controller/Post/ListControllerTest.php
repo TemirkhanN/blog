@@ -31,7 +31,6 @@ class ListControllerTest extends FunctionalTestCase
     {
         $response = $this->sendRequest('GET', self::API_URL . '?' . http_build_query($query));
 
-        self::assertEquals(400, $response->getStatusCode());
         self::assertEquals($error, $response->getContent());
     }
 
@@ -43,20 +42,17 @@ class ListControllerTest extends FunctionalTestCase
      */
     public function badRequestProvider(): iterable
     {
-        // 1 Invalid offset
-        yield [
+        yield 'Invalid offset' => [
             'query' => ['offset' => -1],
             'error' => '{"code":400,"message":"Offset can not be less than 0"}',
         ];
 
-        // 2 Invalid limit
-        yield [
+        yield 'Invalid limit' => [
             'query' => ['limit' => 0],
             'error' => '{"code":400,"message":"Limit can not be less than 1 or too high"}',
         ];
 
-        // 3 Too high limit
-        yield [
+        yield 'Too high limit' => [
             'query' => ['limit' => 21],
             'error' => '{"code":400,"message":"Limit can not be less than 1 or too high"}',
         ];
@@ -94,8 +90,7 @@ class ListControllerTest extends FunctionalTestCase
      */
     public function postFilterProvider(): iterable
     {
-        // 0 Last 10 posts
-        yield [
+        yield 'Last 10 posts' => [
             'query'         => [],
             'matchingPosts' => [
                 '22th-post-slug',
@@ -116,8 +111,7 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        // 1 Last 5 posts
-        yield [
+        yield 'Last 5 posts' => [
             'query'         => ['limit' => 5],
             'matchingPosts' => [
                 '22th-post-slug',
@@ -133,8 +127,7 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        // 2 Last 5 posts from 4th position
-        yield [
+        yield 'Last 5 posts from 4th position' => [
             'query'         => [
                 'limit'  => 5,
                 'offset' => 4,
@@ -153,8 +146,7 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        // 3 Maximum allowed limit
-        yield [
+        yield 'Maximum allowed limit' => [
             'query'         => ['limit' => 20],
             'matchingPosts' => [
                 '22th-post-slug',
@@ -185,8 +177,7 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        // 4 Offset and limit over total amount
-        yield [
+        yield 'Offset and limit over total amount' => [
             'query'         => [
                 'limit'  => 5,
                 'offset' => 20,
@@ -202,8 +193,7 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        // 5 Posts tagged with "SomeTag"
-        yield [
+        yield 'Posts tagged with "SomeTag"' => [
             'query'         => ['tag' => 'SomeTag'],
             'matchingPosts' => [
                 '14th-post-slug',
@@ -220,8 +210,7 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        // 6 Posts tagged with "AnotherTag"
-        yield [
+        yield 'Posts tagged with "AnotherTag"' => [
             'query'         => ['tag' => 'AnotherTag'],
             'matchingPosts' => [
                 '13th-post-slug',
@@ -237,8 +226,7 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        // 7 Posts tagged with "OneMoreTag"
-        yield [
+        yield 'Posts tagged with "OneMoreTag"' => [
             'query'         => ['tag' => 'OneMoreTag'],
             'matchingPosts' => [
                 '22th-post-slug',
@@ -257,8 +245,7 @@ class ListControllerTest extends FunctionalTestCase
             ],
         ];
 
-        // 7 Posts tagged with "OneMoreTag" with limit and offset
-        yield [
+        yield 'Posts tagged with "OneMoreTag" with limit and offset' => [
             'query'         => [
                 'tag'    => 'OneMoreTag',
                 'limit'  => 4,

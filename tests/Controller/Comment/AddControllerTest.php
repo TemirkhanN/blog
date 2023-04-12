@@ -53,7 +53,7 @@ class AddControllerTest extends FunctionalTestCase
         $payload  = ['text' => 'Some comment text'];
         $response = $this->sendRequest('POST', $uri, $payload);
 
-        self::assertEquals(404, $response->getStatusCode());
+        self::assertEquals('{"code":404,"message":"Target post does not exist"}', $response->getContent());
     }
 
     public function testAddCommentToHiddenPost(): void
@@ -62,7 +62,10 @@ class AddControllerTest extends FunctionalTestCase
         $payload  = ['text' => 'Some comment text that is longer than 6 words.'];
         $response = $this->sendRequest('POST', $uri, $payload);
 
-        self::assertEquals(403, $response->getStatusCode());
+        self::assertEquals(
+            '{"code":403,"message":"You are not allowed to comment this post"}',
+            $response->getContent()
+        );
     }
 
     public function testAddComment(): void

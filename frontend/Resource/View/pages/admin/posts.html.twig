@@ -1,0 +1,53 @@
+{% extends "admin.template.twig" %}
+{% block head %}
+    <style>
+        td {
+            padding:0 0.5em;
+        }
+
+        td a, td a:visited {
+            text-decoration: none;
+            color: blue;
+        }
+
+        p.error {
+            color: red;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div>
+        {% for error in errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+    </div>
+    <table>
+    <tbody>
+    <tr>
+        <td>Created at</td>
+        <td>Published at</td>
+        <td>Title</td>
+        <td>Actions</td>
+    </tr>
+    {% for post in posts %}
+        <tr>
+            <td>
+                <span class="pub-date">{{ post.createdAt|date('j F Y') }}</span>
+            </td>
+            <td>
+                <span class="pub-date">{{ post.publishedAt is empty ? "Draft" : post.publishedAt|date('j F Y') }}</span>
+            </td>
+            <td>
+                <a title="Edit post" href="{{ path('admin_edit_post', {slug: post.slug}) }}">{{post.title}}</a>
+            </td>
+            <td>
+                {% if post.publishedAt is empty %}
+                    <a href="{{ app.request.pathinfo }}?publish={{ post.slug }}">publish</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    {% include 'component/_pagination.html.twig' with {pagination: posts.metadata, route: 'admin_list_posts'} %}
+{% endblock %}

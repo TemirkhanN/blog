@@ -15,7 +15,6 @@ class CreateControllerTest extends FunctionalTestCase
     {
         $response = $this->sendRequest('POST', self::API_URI);
 
-        self::assertEquals(400, $response->getStatusCode());
         self::assertEquals(
             '{"code":400,"message":"Invalid request is passed"}',
             $response->getContent()
@@ -33,7 +32,6 @@ class CreateControllerTest extends FunctionalTestCase
 
         $response = $this->sendRequest('POST', self::API_URI, $data);
 
-        self::assertEquals(403, $response->getStatusCode());
         self::assertEquals(
             '{"code":403,"message":"You\u0027re not allowed to create posts"}',
             $response->getContent()
@@ -51,9 +49,7 @@ class CreateControllerTest extends FunctionalTestCase
 
         $this->authenticate('SomeHardCodedToken');
 
-        $response = $this->sendRequest('POST', self::API_URI, $data);
-
-        self::assertEquals(400, $response->getStatusCode());
+        $this->sendRequest('POST', self::API_URI, $data);
 
         $this->assertResponseContainsError('Invalid data', [
             'title'   => 'This value should not be blank.',

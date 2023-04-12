@@ -36,7 +36,6 @@ class ViewControllerTest extends FunctionalTestCase
     {
         $response = $this->sendRequest('GET', sprintf(self::ENDPOINT, $slug));
 
-        self::assertEquals(404, $response->getStatusCode());
         self::assertEquals(
             '{"code":404,"message":"Publication doesn\u0027t exist"}',
             $response->getContent()

@@ -1,0 +1,7 @@
+{% extends "blog.template.twig" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    {{ content|markdown_to_html }}
+{% endblock %}

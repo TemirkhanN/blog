@@ -1,0 +1,29 @@
+{% extends "admin.template.twig" %}
+
+{% block content %}
+    <div class="system-notifications">
+        {% if error is not empty %}
+            {{ error }}
+        {% endif %}
+    </div>
+
+    <form method="POST">
+        <label>
+            Title
+            <input type="text" name="title" value="{{ title }}">
+        </label>
+        <label>
+            Preview
+            <textarea name="preview" rows="4">{{ preview }}</textarea>
+        </label>
+        <label>
+            Content
+            <textarea name="content" rows="20">{{ content }}</textarea>
+        </label>
+        <label>
+            Tags
+            <input type="text" name="tags" value="{{ tags }}">
+        </label>
+        <button>Submit</button>
+    </form>
+{% endblock %}
