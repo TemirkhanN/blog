@@ -29,15 +29,15 @@ class PostRepository implements PostRepositoryInterface
     public function getPosts(PostFilter $filter): CollectionInterface
     {
         $query = $this->createQueryBuilder()
-                      ->addSelect('p', 't')
+                      ->addSelect('p', 'pt')
                       ->from(Post::class, 'p');
 
         if ($filter->tag !== null) {
             $query->innerJoin('p.tags', 't', Join::WITH, 't.name=:tag');
             $query->setParameter('tag', $filter->tag);
-        } else {
-            $query->leftJoin('p.tags', 't');
         }
+
+        $query->leftJoin('p.tags', 'pt');
 
         if ($filter->onlyPublished) {
             $query->andWhere('p.state = :state');
