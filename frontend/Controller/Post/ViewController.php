@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Frontend\Controller\Post;
 
+use App\Service\Response\Cache\TTL;
 use Frontend\Controller\AbstractBlogController;
 use Frontend\Resource\View\Page;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,6 @@ class ViewController extends AbstractBlogController
             return $this->renderer->render(Page::ERROR_NOT_FOUND);
         }
 
-        return $this->renderer->render(Page::POST, ['post' => $post]);
+        return $this->cacheGateway->cache($this->renderer->render(Page::POST, ['post' => $post]), TTL::hours(1));
     }
 }

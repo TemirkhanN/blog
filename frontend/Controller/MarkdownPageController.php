@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Frontend\Controller;
 
-use App\Service\Response\Cache\CacheGatewayInterface;
 use App\Service\Response\Cache\TTL;
 use Frontend\Resource\View\Page;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,7 +20,7 @@ class MarkdownPageController extends AbstractBlogController
         ],
     ];
 
-    public function __invoke(string $name, CacheGatewayInterface $cacheGateway): Response
+    public function __invoke(string $name): Response
     {
         if (!isset(self::$pages[$name])) {
             return $this->renderer->render(Page::ERROR_NOT_FOUND);
@@ -34,6 +33,6 @@ class MarkdownPageController extends AbstractBlogController
             'title'   => $page['title'],
         ]);
 
-        return $cacheGateway->cache($response, TTL::hours(24));
+        return $this->cacheGateway->cache($response, TTL::hours(24));
     }
 }

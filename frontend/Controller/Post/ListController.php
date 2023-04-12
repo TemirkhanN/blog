@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Frontend\Controller\Post;
 
+use App\Service\Response\Cache\TTL;
 use Frontend\Controller\AbstractBlogController;
 use Frontend\Resource\View\Page;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +18,6 @@ class ListController extends AbstractBlogController
     {
         $posts = $this->blogApi->getPosts($page, self::POSTS_PER_PAGE, $tag);
 
-        return $this->renderer->render(Page::POSTS, ['posts' => $posts]);
+        return $this->cacheGateway->cache($this->renderer->render(Page::POSTS, ['posts' => $posts]), TTL::hours(1));
     }
 }
