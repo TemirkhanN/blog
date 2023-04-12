@@ -1,7 +1,6 @@
 version: '3.4'
 services:
   frontend:
-    hostname: blog_server
     image: nginx:1.21
     environment:
       - BLOG_DOMAIN_NAME
@@ -13,7 +12,9 @@ services:
       - "80:80"
       - "443:443"
     networks:
-      - appnet
+      appnet:
+        aliases:
+          - blog.internal
     depends_on:
       - backend
   backend:
@@ -25,7 +26,6 @@ services:
     environment:
       - APP_ENV
       - APP_SECRET
-      - BLOG_HOST
       - MY_VERY_SECRET_TOKEN
       - DB_HOST
       - DB_PORT
@@ -37,6 +37,7 @@ services:
       - TELEGRAM_BOT_TOKEN
       - TELEGRAM_ADMIN_CHAT_ID
       - ADMIN_NOTIFICATIONS_ENABLED
+      - BLOG_HOST=http://blog.internal
       - BLOG_DOMAIN_NAME
     networks:
       - appnet

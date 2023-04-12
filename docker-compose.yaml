@@ -1,7 +1,6 @@
 version: '3.4'
 services:
   frontend:
-    hostname: blog_server
     image: nginx:1.21
     volumes:
       - ./.docker/nginx.conf:/etc/nginx/templates/default.conf.template:ro
@@ -9,7 +8,9 @@ services:
     ports:
       - "80:80"
     networks:
-      - appnet
+      appnet:
+        aliases:
+          - blog.internal
     depends_on:
       - backend
   backend:
@@ -20,7 +21,7 @@ services:
       - .env
       - .env.local
     environment:
-      - BLOG_HOST=http://blog_server
+      - BLOG_HOST=http://blog.internal
     volumes:
       - ./:/app
       - .composer/:/var/www/.composer/
