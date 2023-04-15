@@ -11,11 +11,12 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-        <h1>{{ post.title }}</h1>
-        <div>
-            <p class="pub-date">{{ post.publishedAt|date('j F Y') }}</p>
-        </div>
-        <div class="post">{{ post.content|markdown_to_html }}</div>
-    {% include'component/_comments.html.twig' %}
-    {% include 'component/_disclaimer.html' with { post: post } %}
+    <h1>{{ post.title }}</h1>
+    <div>
+        <p class="pub-date">{{ post.publishedAt|date('j F Y') }}</p>
+    </div>
+    <div class="post">{{ post.content|markdown_to_html }}</div>
+    {% include'component/_tags.html.twig'  with { tags: post.tags } %}
+    {% include'component/_comments.html.twig' with { post: post } %}
+    {% include 'component/_disclaimer.html' %}
 {% endblock %}

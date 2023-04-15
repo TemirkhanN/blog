@@ -1,0 +1,5 @@
+<div class="tags">
+    {% for tag in tags %}
+        <a href="{{ path('blog_posts_by_tag', { tag: tag }) }}" title="Read posts tagged {{ tag }}">#{{ tag }}</a>
+    {% endfor %}
+</div>

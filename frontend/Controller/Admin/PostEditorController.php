@@ -98,7 +98,7 @@ class PostEditorController extends AbstractBlogController
      */
     private function unserializeTags(string $raw): array
     {
-        return explode(',', $raw);
+        return array_map('trim', explode(',', $raw));
     }
 
     /**

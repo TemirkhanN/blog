@@ -93,7 +93,7 @@ class Client
         $error    = $this->getErrorMessage($response);
 
         if ($error !== '') {
-            return Result::error(Error::create($error));
+            return Result::error(Error::create($response->getContent(false)));
         }
 
         return Result::success(Post::unmarshall($response->toArray(false)));

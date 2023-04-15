@@ -8,7 +8,7 @@
         {% if pagination.nextPage %}
             <li>
                 <a href="{{ path(route, {page: pagination.nextPage}) }}" title="Next page" class="page-link right">
-                    Older &raquo;
+                    {{ pagination.page > 1 ? "Older" : "Read more"}} &raquo;
                 </a>
             </li>
         {% endif %}

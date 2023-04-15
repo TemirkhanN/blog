@@ -9,33 +9,21 @@ use ViTech\DataObjectBundle\Object\AbstractObject;
 
 /**
  * Post creation data transfer object.
- *
- * @uses Assert
  */
 class PostData extends AbstractObject
 {
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public string $title;
 
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public string $preview;
 
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public string $content;
 
     /**
      * @var string[]
-     *
-     * @Assert\All({
-     * @Assert\NotBlank(),
-     * @Assert\Type("alnum")
-     * })
      */
+    #[Assert\All([new Assert\NotBlank(), new Assert\Type('alnum')])]
     public array $tags;
 }

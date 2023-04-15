@@ -1,6 +1,7 @@
 html {
     height: 100%;
     font-size: 18px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 body {
@@ -63,8 +64,9 @@ blockquote {
 }
 
 .pagination .page-link, .pagination .page-link:visited {
-    color: black;
+    color: #5b5b5b;
     text-decoration: none;
+    font-weight: bold;
 }
 
 .right {
@@ -117,14 +119,6 @@ footer {
     padding: 1em 0;
 }
 
-.post-preview {
-    padding-top: 0;
-}
-
-.preview p {
-    margin: 0;
-}
-
 .preview-link {
     color: black;
     font-size: 1.2em;
@@ -137,11 +131,20 @@ footer {
     font-size: 0.8em;
 }
 
+.tags {
+    padding: 0.5em;
+}
+
 .tags a {
     display: inline;
-    color: gray;
+    color: darkblue;
     text-decoration: none;
-    font-size: 0.6em;
+    font-size: 1em;
+    font-weight: bolder;
+}
+
+.tags a:hover {
+    text-decoration: underline;
 }
 
 #disclaimer {

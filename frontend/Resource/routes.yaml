@@ -3,6 +3,16 @@ index:
   methods: [ GET ]
   controller: Frontend\Controller\Post\ListController
 
+blog_posts_by_tag:
+  path: /blog/tag/{tag}/{page}
+  requirements:
+    tag: '[a-zA-Z0-9]+'
+    page: '[1-9][0-9]*'
+  defaults:
+    page: 1
+  methods: [ GET ]
+  controller: Frontend\Controller\Post\ListController
+
 blog:
   path: /blog/{page}
   requirements:
