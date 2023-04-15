@@ -41,9 +41,9 @@
     }
 </script>
 <div id="comment-form">
+    <input type="hidden" name="replyTo" value="">
+    <input type="hidden" name="post" value="{{ postSlug }}">
     <label>
-        <input type="hidden" name="replyTo" value="">
-        <input type="hidden" name="post" value="{{ postSlug }}">
         <textarea name="comment" placeholder="Leave a comment"></textarea>
     </label>
     <button onclick="writeComment()">Submit</button>
