@@ -205,6 +205,14 @@ footer {
     padding: 0 1em;
 }
 
+.comment .reply-button {
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    background-color: transparent;
+    padding: 0;
+}
+
 .comment-text {
     background-color: #fbfbfb;
     border-radius: 5px;

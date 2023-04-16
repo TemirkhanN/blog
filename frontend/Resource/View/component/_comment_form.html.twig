@@ -15,29 +15,25 @@
             return;
         }
 
-        const postSlug = inputs.post.value;
-
         const req = new XMLHttpRequest();
-
         const replyTo = inputs.replyTo.value ?? "";
-
-        let apiUrl = "/api/posts/" + postSlug + "/comments";
-        if (replyTo !== "") {
-            apiUrl += "/" + replyTo;
-        }
+        const apiUrl = "{{ path('blog_post_comments_action', {postSlug: post.slug}) }}";
 
         req.addEventListener('load', (e) => {
             if (e.target.status === 200) {
                 window.location.reload()
             } else {
+                alert("Unexpected error occurred.");
+
                 console.log(e.target.response);
+                submitButton.disabled = false;
             }
         });
         req.addEventListener('error', () => submitButton.disabled = false);
 
-        req.open('POST', apiUrl)
+        req.open('POST', apiUrl);
         req.setRequestHeader("Content-Type", "application/json");
-        req.send(JSON.stringify({text: comment}));
+        req.send(JSON.stringify({action: "add", comment: comment, replyTo: replyTo}));
     }
 </script>
 <div id="comment-form">

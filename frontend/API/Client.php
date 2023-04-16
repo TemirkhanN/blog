@@ -154,6 +154,47 @@ class Client
         return new PostsCollection($posts, $metadata);
     }
 
+    /**
+     * @param string $postSlug
+     * @param string $comment
+     *
+     * @return ResultInterface<void>
+     */
+    public function addComment(string $postSlug, string $comment): ResultInterface
+    {
+        $payload  = ['text' => $comment];
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT_COMMENTS, $postSlug), $payload);
+
+        $error = $this->getErrorMessage($response);
+        if ($error !== '') {
+            return Result::error(Error::create($error));
+        }
+
+        return Result::success();
+    }
+
+    /**
+     * @param string $commentId
+     * @param string $inPost
+     * @param string $reply
+     *
+     * @return ResultInterface<void>
+     */
+    public function replyToComment(string $commentId, string $inPost, string $reply): ResultInterface
+    {
+        $payload  = ['text' => $reply];
+        $endpoint = sprintf(self::ENDPOINT_COMMENTS . '/%s', $inPost, $commentId);
+
+        $response = $this->sendRequest('POST', $endpoint, $payload);
+
+        $error = $this->getErrorMessage($response);
+        if ($error !== '') {
+            return Result::error(Error::create($error));
+        }
+
+        return Result::success();
+    }
+
     private function sendRequest(string $method, string $uri, array $payload = []): ResponseInterface
     {
         $options = [];

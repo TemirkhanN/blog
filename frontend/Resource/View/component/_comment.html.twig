@@ -17,7 +17,7 @@
     <div class="comment-text">
         {{ comment.text }}
         <div>
-            <Button onclick="selectCommentForReply('{{comment.guid}}')">reply</Button>
+            <button class="reply-button" onclick="selectCommentForReply('{{comment.guid}}')">reply</button>
         </div>
     </div>
     {% for reply in comment.replies %}
