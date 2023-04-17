@@ -38,6 +38,6 @@ class LoginController extends AbstractBlogController
             $error = $result->getError()->getMessage();
         }
 
-        return $this->renderer->render(Page::LOGIN, compact('login', 'password', 'error'));
+        return new Response($this->renderer->render(Page::LOGIN, compact('login', 'password', 'error')));
     }
 }

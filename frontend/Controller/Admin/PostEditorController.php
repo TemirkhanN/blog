@@ -16,7 +16,7 @@ class PostEditorController extends AbstractBlogController
     public function __invoke(Request $request, string $slug, Access $access): Response
     {
         if (!$access->isAdmin()) {
-            return $this->renderer->render(Page::ERROR, ['error' => 404]);
+            return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
         }
 
         if ($slug !== '') {
@@ -50,9 +50,11 @@ class PostEditorController extends AbstractBlogController
             $error = $postCreation->getError()->getMessage();
         }
 
-        return $this->renderer->render(
-            Page::ADMIN_POST_EDIT,
-            compact('title', 'preview', 'content', 'tags', 'error')
+        return new Response(
+            $this->renderer->render(
+                Page::ADMIN_POST_EDIT,
+                compact('title', 'preview', 'content', 'tags', 'error')
+            )
         );
     }
 
@@ -60,7 +62,7 @@ class PostEditorController extends AbstractBlogController
     {
         $post = $this->blogApi->getPost($postSlug);
         if ($post === null) {
-            return $this->renderer->render(Page::ERROR, ['error' => 404]);
+            return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
         }
 
         $title   = $post->title;
@@ -85,9 +87,11 @@ class PostEditorController extends AbstractBlogController
             $error = $postUpdate->getError()->getMessage();
         }
 
-        return $this->renderer->render(
-            Page::ADMIN_POST_EDIT,
-            compact('title', 'preview', 'content', 'tags', 'error')
+        return new Response(
+            $this->renderer->render(
+                Page::ADMIN_POST_EDIT,
+                compact('title', 'preview', 'content', 'tags', 'error')
+            )
         );
     }
 

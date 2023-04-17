@@ -16,8 +16,8 @@ class Renderer
     {
     }
 
-    public function render(Page $page, array $context = []): Response
+    public function render(Page $page, array $context = []): string
     {
-        return new Response($this->twig->render($page->value, $context));
+        return $this->twig->render($page->value, $context);
     }
 }

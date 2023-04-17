@@ -25,10 +25,12 @@ class ListController extends AbstractBlogController
             }
 
             if ($tag !== null) {
-                return $this->renderer->render(Page::ERROR, ['error' => 'NOT FOUND']);
+                return new Response($this->renderer->render(Page::ERROR, ['error' => 'NOT FOUND']), 404);
             }
         }
 
-        return $this->cacheGateway->cache($this->renderer->render(Page::POSTS, ['posts' => $posts]), TTL::hours(1));
+        $response = new Response($this->renderer->render(Page::POSTS, ['posts' => $posts]));
+
+        return $this->cacheGateway->cache($response, TTL::hours(1));
     }
 }

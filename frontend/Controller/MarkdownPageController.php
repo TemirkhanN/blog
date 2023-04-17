@@ -23,15 +23,17 @@ class MarkdownPageController extends AbstractBlogController
     public function __invoke(string $name): Response
     {
         if (!isset(self::$pages[$name])) {
-            return $this->renderer->render(Page::ERROR, ['error' => 404]);
+            return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
         }
 
         $page = self::$pages[$name];
 
-        $response = $this->renderer->render(Page::MARKDOWN_PAGE, [
-            'content' => file_get_contents($page['source']),
-            'title'   => $page['title'],
-        ]);
+        $response = new Response(
+            $this->renderer->render(Page::MARKDOWN_PAGE, [
+                'content' => file_get_contents($page['source']),
+                'title'   => $page['title'],
+            ])
+        );
 
         return $this->cacheGateway->cache($response, TTL::hours(24));
     }

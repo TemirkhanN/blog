@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Frontend\Controller;
 
 use Frontend\Resource\View\Page;
@@ -21,17 +23,34 @@ class ErrorController
     {
         switch (true) {
             case $exception instanceof NotFoundHttpException:
-                return $this->renderer->render(Page::ERROR, ['error' => '404']);
+                return $this->notFound();
             case $exception instanceof AccessDeniedHttpException:
-                return $this->renderer->render(Page::ERROR, ['error' => '403']);
+                return $this->forbidden();
             case $exception instanceof UnauthorizedHttpException:
-                return $this->renderer->render(Page::ERROR, ['error' => '401']);
+                return $this->unauthorized();
             case $exception instanceof HttpException:
                 $msg = sprintf('UNEXPECTED ERROR(%d)', $exception->getStatusCode());
 
-                return $this->renderer->render(Page::ERROR, ['error' => $msg]);
+                return new Response(
+                    $this->renderer->render(Page::ERROR, ['error' => $msg]), $exception->getStatusCode()
+                );
             default:
-                return $this->renderer->render(Page::ERROR, ['error' => 'INTERNAL ERROR']);
+                return new Response($this->renderer->render(Page::ERROR, ['error' => 'INTERNAL ERROR']), 500);
         }
+    }
+
+    public function notFound(): Response
+    {
+        return new Response($this->renderer->render(Page::ERROR, ['error' => '404']), 404);
+    }
+
+    public function forbidden(): Response
+    {
+        return new Response($this->renderer->render(Page::ERROR, ['error' => '403']), 403);
+    }
+
+    public function unauthorized(): Response
+    {
+        return new Response($this->renderer->render(Page::ERROR, ['error' => '401']), 401);
     }
 }

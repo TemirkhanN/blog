@@ -23,14 +23,16 @@ class PostListController extends AbstractBlogController
     public function __invoke(Request $request, int $page, Access $access): Response
     {
         if (!$access->isAdmin()) {
-            return $this->renderer->render(Page::ERROR, ['error' => 404]);
+            return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
         }
 
         $this->performAction($request);
 
         $posts = $this->blogApi->getPosts($page, self::POSTS_PER_PAGE);
 
-        return $this->renderer->render(Page::ADMIN_POST_LIST, ['posts' => $posts, 'errors' => $this->errors]);
+        return new Response(
+            $this->renderer->render(Page::ADMIN_POST_LIST, ['posts' => $posts, 'errors' => $this->errors])
+        );
     }
 
     private function performAction(Request $request): void

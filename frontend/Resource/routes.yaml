@@ -5,6 +5,7 @@ index:
 
 blog_posts_by_tag:
   path: /blog/tag/{tag}/{page}
+  stateless: true
   requirements:
     tag: '[a-zA-Z0-9]+'
     page: '[1-9][0-9]*'
@@ -15,6 +16,7 @@ blog_posts_by_tag:
 
 blog:
   path: /blog/{page}
+  stateless: true
   requirements:
     page: '[1-9][0-9]*'
   defaults:
@@ -24,6 +26,7 @@ blog:
 
 blog_post:
   path: /blog/{slug}
+  stateless: true
   requirements:
     slug: '[a-zA-Z0-9_-]{10,}'
   methods: [ GET ]
@@ -35,7 +38,6 @@ blog_post_comments_action:
     postSlug: '[a-zA-Z0-9_-]{10,}'
   methods: [ POST ]
   controller: Frontend\Controller\Post\CommentController
-
 
 login:
   path: /admin/login
@@ -67,3 +69,9 @@ static_pages:
   controller: Frontend\Controller\MarkdownPageController
   requirements:
     name: about
+
+error.not_found:
+  path: /404
+  stateless: true
+  methods: [GET]
+  controller: Frontend\Controller\ErrorController::notFound
