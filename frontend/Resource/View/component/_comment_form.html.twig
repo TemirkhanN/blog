@@ -7,9 +7,17 @@
 
         const inputs = commentForm.getElementsByTagName("input");
 
-        const comment = commentForm.getElementsByTagName("textarea").comment.value;
+        const comment = commentForm.getElementsByTagName("textarea").comment.value.trim();
         if (comment.length < 30) {
             alert("Meaningful comment should contains at least 5-6 words.");
+            submitButton.disabled = false;
+
+            return;
+        }
+
+        if (comment.length > 4000) {
+            alert("Your comment is probably bigger than the whole publication. Please, send it via email.");
+
             submitButton.disabled = false;
 
             return;
