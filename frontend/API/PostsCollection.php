@@ -22,6 +22,11 @@ class PostsCollection implements IteratorAggregate
     {
     }
 
+    public function count(): int
+    {
+        return count($this->posts);
+    }
+
     /**
      * @return Traversable<Post>
      */

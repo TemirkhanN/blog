@@ -23,7 +23,7 @@ class PostListController extends AbstractBlogController
     public function __invoke(Request $request, int $page, Access $access): Response
     {
         if (!$access->isAdmin()) {
-            return $this->renderer->render(Page::ERROR_FORBIDDEN);
+            return $this->renderer->render(Page::ERROR, ['error' => 404]);
         }
 
         $this->performAction($request);

@@ -232,3 +232,13 @@ form input {
 form textarea {
     width: 100%;
 }
+
+#error-details {
+    text-align: center;
+    font-size: 6em;
+}
+
+#error-details p {
+    padding: 0;
+    margin: 0;
+}

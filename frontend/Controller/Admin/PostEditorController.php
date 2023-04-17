@@ -16,7 +16,7 @@ class PostEditorController extends AbstractBlogController
     public function __invoke(Request $request, string $slug, Access $access): Response
     {
         if (!$access->isAdmin()) {
-            return $this->renderer->render(Page::ERROR_FORBIDDEN);
+            return $this->renderer->render(Page::ERROR, ['error' => 404]);
         }
 
         if ($slug !== '') {
@@ -60,7 +60,7 @@ class PostEditorController extends AbstractBlogController
     {
         $post = $this->blogApi->getPost($postSlug);
         if ($post === null) {
-            return $this->renderer->render(Page::ERROR_NOT_FOUND);
+            return $this->renderer->render(Page::ERROR, ['error' => 404]);
         }
 
         $title   = $post->title;

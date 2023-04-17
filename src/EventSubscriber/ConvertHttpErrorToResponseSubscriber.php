@@ -12,18 +12,13 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Throwable;
 
 class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
 {
-    public function __construct(
-        private readonly ResponseFactoryInterface $responseFactory,
-        private readonly string $logFile
-    ) {
-    }
+    public function __construct(private readonly ResponseFactoryInterface $responseFactory) {}
 
     /** @return array<class-string, string> */
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [ExceptionEvent::class => 'onKernelError'];
     }
@@ -31,6 +26,11 @@ class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
     public function onKernelError(ExceptionEvent $event): void
     {
         if (!$event->isMainRequest()) {
+            return;
+        }
+
+        $request = $event->getRequest();
+        if (preg_match('#^/api/.+#', $request->getPathInfo()) !== 1) {
             return;
         }
 
@@ -52,25 +52,10 @@ class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
             case $error instanceof HttpException:
                 $response = $this->responseFactory->createResponse($error->getMessage(), $error->getStatusCode());
                 break;
-            case $error instanceof Throwable:
-                $this->logError($error);
-                return;
             default:
                 return;
         }
 
         $event->setResponse($response);
-    }
-
-    private function logError(Throwable $error): void
-    {
-        $msg = sprintf(
-            "%s: %s in %s at %d\n\n",
-            date('H:i:s d-m-Y '),
-            $error->getMessage(),
-            $error->getFile(),
-            $error->getLine()
-        );
-        file_put_contents($this->logFile, $msg, FILE_APPEND);
     }
 }

@@ -19,3 +19,11 @@ doctrine:
                 dir: '%kernel.project_dir%/config/mapping/'
                 prefix: 'App\Entity'
                 alias: App
+when@dev:
+  doctrine:
+    dbal:
+      connections:
+        default:
+          driver: pdo_sqlite
+          path: '%kernel.project_dir%/var/sqlite'
+

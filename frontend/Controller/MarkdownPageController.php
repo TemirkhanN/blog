@@ -23,7 +23,7 @@ class MarkdownPageController extends AbstractBlogController
     public function __invoke(string $name): Response
     {
         if (!isset(self::$pages[$name])) {
-            return $this->renderer->render(Page::ERROR_NOT_FOUND);
+            return $this->renderer->render(Page::ERROR, ['error' => 404]);
         }
 
         $page = self::$pages[$name];
