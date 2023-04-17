@@ -100,7 +100,7 @@ footer {
     }
 }
 
-.copyright a {
+.copyright, .copyright a {
     font-size: 0.9em;
     color: #898888;
     text-decoration: none;
@@ -195,6 +195,7 @@ footer {
 #comments textarea {
     width: 100%;
     box-sizing: border-box;
+    padding: 0.5em;
     height: 5em;
     border-color: #aaa;
     border-radius: 5px;

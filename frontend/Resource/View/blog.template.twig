@@ -43,7 +43,7 @@
 <footer>
     {% block footer %}
         <div class="copyright">
-            <a href="{{ path('static_pages', {name: 'about'}) }}">&copy; 2018-{{ 'now'|date('Y') }} Temirkhan Nasukhov</a>
+            &copy; 2018-{{ 'now'|date('Y') }} <a href="{{ path('static_pages', {name: 'about'}) }}">Temirkhan Nasukhov</a>
         </div>
     {% endblock %}
 </footer>
