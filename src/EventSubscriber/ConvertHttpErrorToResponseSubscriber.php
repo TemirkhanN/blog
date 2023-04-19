@@ -15,7 +15,9 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly ResponseFactoryInterface $responseFactory) {}
+    public function __construct(private readonly ResponseFactoryInterface $responseFactory)
+    {
+    }
 
     /** @return array<class-string, string> */
     public static function getSubscribedEvents(): array

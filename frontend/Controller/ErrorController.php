@@ -32,7 +32,8 @@ class ErrorController
                 $msg = sprintf('UNEXPECTED ERROR(%d)', $exception->getStatusCode());
 
                 return new Response(
-                    $this->renderer->render(Page::ERROR, ['error' => $msg]), $exception->getStatusCode()
+                    $this->renderer->render(Page::ERROR, ['error' => $msg]),
+                    $exception->getStatusCode()
                 );
             default:
                 return new Response($this->renderer->render(Page::ERROR, ['error' => 'INTERNAL ERROR']), 500);
