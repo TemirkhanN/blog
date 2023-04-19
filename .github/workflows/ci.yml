@@ -19,4 +19,4 @@ jobs:
       - name: tests
         run: ./vendor/bin/phpunit
       - name: architecture layers analyze
-        run: ./vendor/bin/phpunit
+        run: ./vendor/bin/deptrac analyse
