@@ -18,3 +18,5 @@ jobs:
         run: ./vendor/bin/phpstan
       - name: tests
         run: ./vendor/bin/phpunit
+      - name: architecture layers analyze
+        run: ./vendor/bin/phpunit

@@ -1,0 +1,85 @@
+parameters:
+  formatters:
+    graphviz:
+      hidden_layers:
+        - ExternalDependency
+      point_to_groups: false
+      groups:
+        Domain:
+          - Model
+          - Service
+        Application:
+          - Controller
+          - View
+  paths:
+    - ./src
+  layers:
+    - name: Controller
+      collectors:
+        - { type: directory, value: /src/Controller/ }
+        - { type: className, value: \\App\\EventSubscriber\\NotifyAdminSubscriber }
+
+    - name: Model
+      collectors:
+        - { type: directory, value: /src/Entity/ }
+
+    - name: Service
+      collectors:
+        - type: bool
+          must:
+            - { type: directory, value: /src/Service/ }
+            - { type: directory, value: /src/Event }
+          must_not:
+            - { type: layer, value: Infrastructure }
+
+    - name: View
+      collectors:
+        - { type: directory, value: /src/View/ }
+
+    - name: ExternalDependency
+      collectors:
+        - { type: bool, must_not: [ { type: classLike, value: ^App\\ } ] }
+
+    - name: Infrastructure
+      collectors:
+        - { type: className, value: \\App\\EventSubscriber\\ConvertHttpErrorToResponseSubscriber }
+        - { type: className, value: \\App\\EventSubscriber\\ConvertHttpErrorSubscriber }
+        - { type: directory, value: /src/Service/Response/ }
+        - { type: directory, value: /src/Service/Notification/ }
+        - { type: directory, value: /src/Service/DateTime/ }
+        - { type: className, value: \\App\\Service\\UriResolver }
+        - { type: className, value: \\App\\Service\\TokenIssuer }
+        - { type: directory, value: /src/Repository/ }
+
+  ruleset:
+    Controller:
+      - Model
+      - Service
+      - View
+      - Infrastructure
+      - ExternalDependency
+    Model:
+      - ExternalDependency
+      - Infrastructure
+    Service:
+      - Model
+      - Infrastructure
+      - ExternalDependency
+    View:
+      - Model
+      - ExternalDependency
+      - Infrastructure
+    Infrastructure:
+      - ExternalDependency
+
+  skip_violations:
+    App\Repository\CommentRepositoryInterface:
+      - App\Entity\Comment
+      - App\Entity\Post
+    App\Repository\CommentRepository:
+      - App\Entity\Comment
+      - App\Entity\Post
+    App\Repository\PostRepositoryInterface:
+      - App\Entity\Post
+    App\Repository\PostRepository:
+      - App\Entity\Post

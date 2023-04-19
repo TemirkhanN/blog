@@ -38,6 +38,7 @@
         "phpstan/phpstan": "^1.8",
         "phpstan/phpstan-phpunit": "^1.1",
         "phpunit/phpunit": "^9.5",
+        "qossmic/deptrac-shim": "^1.0",
         "roave/security-advisories": "dev-latest",
         "symfony/browser-kit": "6.1.*",
         "symfony/phpunit-bridge": "^5.3"
