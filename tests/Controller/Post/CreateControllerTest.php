@@ -16,7 +16,7 @@ class CreateControllerTest extends FunctionalTestCase
         $response = $this->sendRequest('POST', self::API_URI);
 
         self::assertEquals(
-            '{"code":400,"message":"Invalid request is passed"}',
+            '{"message":"Invalid data","code":0,"details":{"title":"This value should not be blank.","preview":"This value should not be blank.","content":"This value should not be blank."}}',
             $response->getContent()
         );
     }
@@ -55,7 +55,7 @@ class CreateControllerTest extends FunctionalTestCase
             'title'   => 'This value should not be blank.',
             'preview' => 'This value should not be blank.',
             'content' => 'This value should not be blank.',
-            'tags[0]' => 'This value should be of type alnum.',
+            'tags'    => [0 => 'This value should not be blank.'],
         ]);
     }
 

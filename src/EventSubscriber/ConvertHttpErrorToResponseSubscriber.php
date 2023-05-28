@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Service\Post\Dto\InvalidInput;
 use App\Service\Response\ResponseFactoryInterface;
+use App\View\ErrorView;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -53,6 +55,9 @@ class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
                 break;
             case $error instanceof HttpException:
                 $response = $this->responseFactory->createResponse($error->getMessage(), $error->getStatusCode());
+                break;
+            case $error instanceof InvalidInput:
+                $response = $this->responseFactory->createResponse(ErrorView::create($error), 400);
                 break;
             default:
                 return;

@@ -9,6 +9,7 @@ use App\Service\Post\Dto\PostData;
 use App\Service\Response\ResponseFactoryInterface;
 use App\View\ErrorView;
 use App\View\PostView;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -21,8 +22,10 @@ class CreateController
     ) {
     }
 
-    public function __invoke(PostData $postData): Response
+    public function __invoke(Request $request): Response
     {
+        $postData = PostData::unmarshall($request->request->all());
+
         if (!$this->security->isGranted('create_post')) {
             return $this->responseFactory->forbidden("You're not allowed to create posts");
         }
