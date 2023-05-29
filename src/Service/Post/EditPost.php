@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Service\Post;
 
+use App\Dto\PostData;
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 use App\Service\InvalidData;
-use App\Service\Post\Dto\PostData;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use TemirkhanN\Generic\Error;
 use TemirkhanN\Generic\Result;

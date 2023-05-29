@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Post\Dto;
+namespace App\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 use ViTech\DataObjectBundle\Object\AbstractObject;

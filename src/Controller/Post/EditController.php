@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
-use App\Service\Post\Dto\PostData;
+use App\Dto\PostData;
 use App\Service\Post\EditPost;
 use App\Service\Post\PostListService;
 use App\Service\Response\ResponseFactoryInterface;

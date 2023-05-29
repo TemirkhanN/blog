@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Service\DateTime\DateTimeFactory;
+use App\ValueObject\Slug;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -42,34 +43,25 @@ class Post
      */
     private Collection $comments;
 
-    /**
-     * @param string        $slug
-     * @param string        $title
-     * @param string        $preview
-     * @param string        $content
-     * @param iterable<Tag> $tags
-     */
-    public function __construct(string $slug, string $title, string $preview, string $content, iterable $tags = [])
+    public function __construct(string $title, string $preview, string $content)
     {
-        $this->slug     = $slug;
         $this->state    = self::STATE_DRAFT;
         $this->title    = $title;
         $this->preview  = $preview;
         $this->content  = $content;
         $this->comments = new ArrayCollection();
         $this->tags     = new ArrayCollection();
-        foreach ($tags as $tag) {
-            $this->addTag($tag);
-        }
 
         $this->createdAt   = DateTimeFactory::now();
         $this->publishedAt = null;
         $this->updatedAt   = null;
+        $this->slug     = (string) new Slug($this->createdAt, $title);
     }
 
     public function changeTitle(string $newTitle): void
     {
         $this->title     = $newTitle;
+        $this->slug = (string) new Slug($this->createdAt, $newTitle);
         $this->updatedAt = DateTimeFactory::now();
     }
 

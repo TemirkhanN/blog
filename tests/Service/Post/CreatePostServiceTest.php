@@ -6,10 +6,8 @@ namespace App\Service\Post;
 
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
-use App\Service\Post\Dto\PostData;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreatePostServiceTest extends TestCase
@@ -38,18 +36,10 @@ class CreatePostServiceTest extends TestCase
 
     public function testDuplicatePostCreation(): void
     {
-        $postData = new PostData([
-            'title'   => 'Some title',
-            'preview' => 'Some preview',
-            'content' => 'Some content',
-            'tags'    => [],
-        ]);
-
-        $this->validator
-            ->expects(self::once())
-            ->method('validate')
-            ->with(self::identicalTo($postData))
-            ->willReturn(new ConstraintViolationList());
+        $title = 'Some title';
+        $preview = 'Some preview';
+        $content = 'Some content';
+        $tags    = [];
 
         $expectedSlug = date('Y-m-d') . '_Some-title';
         $this->postRepository
@@ -58,25 +48,17 @@ class CreatePostServiceTest extends TestCase
             ->with(self::equalTo($expectedSlug))
             ->willReturn($this->createMock(Post::class));
 
-        $result = $this->service->execute($postData);
+        $result = $this->service->execute($title, $preview, $content, $tags);
         self::assertFalse($result->isSuccessful());
         self::assertEquals('There already exists a post with a similar title', $result->getError()->getMessage());
     }
 
     public function testPostCreation(): void
     {
-        $postData = new PostData([
-            'title'   => 'Some title',
-            'preview' => 'Some preview',
-            'content' => 'Some content',
-            'tags'    => [],
-        ]);
-
-        $this->validator
-            ->expects(self::once())
-            ->method('validate')
-            ->with(self::identicalTo($postData))
-            ->willReturn(new ConstraintViolationList());
+        $title = 'Some title';
+        $preview = 'Some preview';
+        $content = 'Some content';
+        $tags    = [];
 
         $expectedSlug = date('Y-m-d') . '_Some-title';
         $this->postRepository
@@ -103,7 +85,7 @@ class CreatePostServiceTest extends TestCase
                 return true;
             }));
 
-        $result = $this->service->execute($postData);
+        $result = $this->service->execute($title, $preview, $content, $tags);
 
         self::assertTrue($result->isSuccessful());
 
