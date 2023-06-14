@@ -97,6 +97,11 @@ class Post
         return $this->slug;
     }
 
+    /**
+     * @param string $newSlug
+     * @return void
+     * @deprecated
+     */
     public function changeSlug(string $newSlug): void
     {
         $this->slug      = $newSlug;
@@ -126,21 +131,40 @@ class Post
         }
     }
 
-    public function setTags(Tag ...$tags): void
+    /**
+     * @param string[] $tags
+     *
+     * @return void
+     */
+    public function setTags(array $tags): void
     {
-        $this->tags->clear();
-        foreach ($tags as $tag) {
-            $this->tags->add($tag);
+        $assigningTags = array_unique($tags);
+        $newTags = array_diff($assigningTags, $this->tags());
+
+        foreach ($this->tags as $tag) {
+            if (!in_array($tag->name(), $assigningTags)) {
+                $this->tags->removeElement($tag);
+            }
         }
+
+        foreach ($newTags as $newTag) {
+            $this->tags->add(new Tag($newTag, $this));
+        }
+
         $this->updatedAt = DateTimeFactory::now();
     }
 
     /**
-     * @return Tag[]
+     * @return string[]
      */
     public function tags(): array
     {
-        return $this->tags->toArray();
+        return array_map(
+            static function (Tag $tag) {
+                return $tag->name();
+            },
+            $this->tags->toArray()
+        );
     }
 
     public function isPublished(): bool

@@ -8,9 +8,12 @@ class Tag
 {
     private string $name;
 
-    public function __construct(string $name)
+    private Post $post;
+
+    public function __construct(string $name, Post $post)
     {
         $this->name = $name;
+        $this->post = $post;
     }
 
     public function name(): string

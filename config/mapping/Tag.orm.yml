@@ -8,3 +8,13 @@ App\Entity\Tag:
       length: 50
       generator:
         strategy: NONE
+  manyToOne:
+    post:
+      targetEntity: App\Entity\Post
+      inversedBy: tags
+      joinColumn:
+        name: post_id
+        referencedColumnName: id
+        nullable: false
+        cascade: [remove]
+        onDelete: CASCADE

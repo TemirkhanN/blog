@@ -8,15 +8,11 @@ use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreatePostServiceTest extends TestCase
 {
     /** @var PostRepositoryInterface&MockObject */
     private PostRepositoryInterface $postRepository;
-
-    /** @var ValidatorInterface&MockObject */
-    private ValidatorInterface $validator;
 
     private CreatePostService $service;
 
@@ -25,13 +21,7 @@ class CreatePostServiceTest extends TestCase
         parent::setUp();
 
         $this->postRepository = $this->createMock(PostRepositoryInterface::class);
-        $this->validator      = $this->createMock(ValidatorInterface::class);
-        $this->service        = new CreatePostService(
-            $this->postRepository,
-            $this->createMock(TagService::class),
-            new SlugGenerator(),
-            $this->validator
-        );
+        $this->service        = new CreatePostService($this->postRepository);
     }
 
     public function testDuplicatePostCreation(): void

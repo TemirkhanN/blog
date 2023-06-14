@@ -13,11 +13,7 @@ use TemirkhanN\Generic\ResultInterface;
 
 class CreatePostService
 {
-    public function __construct(
-        private readonly PostRepositoryInterface $repository,
-        private readonly TagService $tagService
-    ) {
-    }
+    public function __construct(private readonly PostRepositoryInterface $repository) {}
 
     /**
      * @param string $title
@@ -38,7 +34,7 @@ class CreatePostService
             return Result::error(Error::create('There already exists a post with a similar title'));
         }
 
-        $this->tagService->addTags($post, $tags);
+        $post->setTags($tags);
         $this->repository->save($post);
 
         return Result::success($post);
