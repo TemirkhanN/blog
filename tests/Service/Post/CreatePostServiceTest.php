@@ -6,6 +6,7 @@ namespace App\Service\Post;
 
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
+use Carbon\CarbonImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -16,22 +17,34 @@ class CreatePostServiceTest extends TestCase
 
     private CreatePostService $service;
 
+    private CarbonImmutable $currentTime;
+
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->postRepository = $this->createMock(PostRepositoryInterface::class);
         $this->service        = new CreatePostService($this->postRepository);
+
+        $this->currentTime = new CarbonImmutable();
+        CarbonImmutable::setTestNow($this->currentTime);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        CarbonImmutable::setTestNow(null);
     }
 
     public function testDuplicatePostCreation(): void
     {
-        $title = 'Some title';
+        $title   = 'Some title';
         $preview = 'Some preview';
         $content = 'Some content';
         $tags    = [];
 
-        $expectedSlug = date('Y-m-d') . '_Some-title';
+        $expectedSlug = $this->currentTime->format('Y-m-d') . '_Some-title';
         $this->postRepository
             ->expects(self::once())
             ->method('findOneBySlug')
@@ -45,12 +58,12 @@ class CreatePostServiceTest extends TestCase
 
     public function testPostCreation(): void
     {
-        $title = 'Some title';
+        $title   = 'Some title';
         $preview = 'Some preview';
         $content = 'Some content';
         $tags    = [];
 
-        $expectedSlug = date('Y-m-d') . '_Some-title';
+        $expectedSlug = $this->currentTime->format('Y-m-d') . '_Some-title';
         $this->postRepository
             ->expects(self::once())
             ->method('findOneBySlug')
@@ -65,7 +78,7 @@ class CreatePostServiceTest extends TestCase
                 self::assertEquals($expectedSlug, $actualPost->slug());
                 self::assertEquals('Some content', $actualPost->content());
                 self::assertEquals('Some preview', $actualPost->preview());
-                self::assertEqualsWithDelta(time(), $actualPost->createdAt()->getTimestamp(), 2);
+                self::assertTrue($this->currentTime->eq($actualPost->createdAt()));
                 self::assertNull($actualPost->publishedAt());
                 self::assertNull($actualPost->updatedAt());
                 self::assertEquals('Some title', $actualPost->title());

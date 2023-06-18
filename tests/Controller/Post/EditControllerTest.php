@@ -70,10 +70,7 @@ class EditControllerTest extends FunctionalTestCase
 
     public function testInvalidPostData(): void
     {
-        $postSlug = 'Some-slug-123';
-
         $post = $this->createPost(
-            $postSlug,
             'Some title',
             'Some preview',
             'Some content',
@@ -92,7 +89,7 @@ class EditControllerTest extends FunctionalTestCase
 
         $this->authenticate('SomeHardCodedToken');
 
-        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug), $newData);
+        $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $post->slug()), $newData);
 
         $this->assertResponseContainsError('Invalid data', [
             'title'   => 'This value should not be blank.',
@@ -104,9 +101,7 @@ class EditControllerTest extends FunctionalTestCase
 
     public function testSuccess(): void
     {
-        $postSlug = 'Some-slug-123';
-        $post     = $this->createPost(
-            $postSlug,
+        $post = $this->createPost(
             'Some title',
             'Some preview',
             'Some content',
@@ -127,14 +122,13 @@ class EditControllerTest extends FunctionalTestCase
         ];
 
         $this->authenticate('SomeHardCodedToken');
-        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug), $newData);
+        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $post->slug()), $newData);
 
         self::assertEquals(200, $response->getStatusCode());
         $this->assertPostModified($post, $newData);
     }
 
     /**
-     * @param string        $slug
      * @param string        $title
      * @param string        $preview
      * @param string        $content
@@ -143,19 +137,13 @@ class EditControllerTest extends FunctionalTestCase
      * @return Post
      */
     private function createPost(
-        string $slug,
         string $title,
         string $preview,
         string $content,
         array $tags
     ): Post {
-        $post = new Post($slug, $title, $preview, $content);
-
-        foreach ($tags as $tagName) {
-            $tag = new Tag($tagName);
-            $this->saveState($tag);
-            $post->addTag($tag);
-        }
+        $post = new Post($title, $preview, $content);
+        $post->setTags($tags);
         $this->saveState($post);
 
         return $post;
@@ -174,10 +162,6 @@ class EditControllerTest extends FunctionalTestCase
         self::assertEquals($withData['title'], $post->title());
         self::assertEquals($withData['preview'], $post->preview());
         self::assertEquals($withData['content'], $post->content());
-
-        $postTags = array_map(function (Tag $tag): string {
-            return $tag->name();
-        }, $post->tags());
-        self::assertEquals($withData['tags'], $postTags);
+        self::assertEquals($withData['tags'], $post->tags());
     }
 }

@@ -22,6 +22,6 @@ class Slug
 
     private function convertChars(string $text): string
     {
-        return (string)preg_replace('#\W#u', '-', $text);
+        return (string) preg_replace('#\W#u', '-', $text);
     }
 }

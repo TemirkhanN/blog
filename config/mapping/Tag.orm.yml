@@ -3,11 +3,16 @@ App\Entity\Tag:
   table: tags
   readOnly: true
   id:
+    id:
+      type: integer
+      generator:
+        strategy: IDENTITY
+      options:
+        unsigned: true
+  fields:
     name:
       type: string
       length: 50
-      generator:
-        strategy: NONE
   manyToOne:
     post:
       targetEntity: App\Entity\Post
@@ -15,6 +20,3 @@ App\Entity\Tag:
       joinColumn:
         name: post_id
         referencedColumnName: id
-        nullable: false
-        cascade: [remove]
-        onDelete: CASCADE

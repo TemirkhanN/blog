@@ -39,7 +39,12 @@ App\Entity\Post:
     comments:
       targetEntity: App\Entity\Comment
       mappedBy: post
+      orphanRemoval: true
+      cascade: [persist, remove]
     tags:
       targetEntity: App\Entity\Tag
       mappedBy: post
+      orphanRemoval: true
+      cascade: [persist, remove]
+      onDelete: CASCADE
 

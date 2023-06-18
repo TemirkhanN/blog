@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Entity\Post;
-use App\Entity\Tag;
 use App\FunctionalTestCase;
 
 class ViewControllerTest extends FunctionalTestCase
@@ -16,12 +15,12 @@ class ViewControllerTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $draftPost    = $this->createPost('789draft-post-slug', 'Draft post title', 'Preview', 'Content');
-        $archivedPost = $this->createPost('012archived-post-slug', 'Archived post title', 'Preview', 'Content');
+        $draftPost    = $this->createPost('Draft post title', 'Preview', 'Content');
+        $archivedPost = $this->createPost('Archived post title', 'Preview', 'Content');
         $archivedPost->archive();
-        $publishedPost1 = $this->createPost('some-slug_link123', 'Some title', 'Some preview', 'Some content');
+        $publishedPost1 = $this->createPost('Some title', 'Some preview', 'Some content');
         $publishedPost1->publish();
-        $publishedPost2 = $this->createPost('456another-slug_link', 'Another title', 'Preview', 'Content');
+        $publishedPost2 = $this->createPost('Another title', 'Preview', 'Content');
         $publishedPost2->publish();
 
         $this->saveState($draftPost, $archivedPost, $publishedPost1, $publishedPost2);
@@ -47,9 +46,9 @@ class ViewControllerTest extends FunctionalTestCase
      */
     public function unreachablePostSlugProvider(): iterable
     {
-        yield 'archived post' => ['012archived-post-slug'];
+        yield 'archived post' => ['2023-12-27_Archived-post-title'];
 
-        yield 'draft post' => ['789draft-post-slug'];
+        yield 'draft post' => ['2023-12-27_Draft-post-title'];
 
         yield 'non existent post' => ['some-non-existent-post-slug'];
     }
@@ -57,7 +56,7 @@ class ViewControllerTest extends FunctionalTestCase
     /**
      * @param string $slug
      *
-     * @dataProvider slugProvider
+     * @dataProvider publishedPostsSlugProvider
      */
     public function testView(string $slug): void
     {
@@ -78,12 +77,7 @@ class ViewControllerTest extends FunctionalTestCase
                 'title'       => $post->title(),
                 'preview'     => $post->preview(),
                 'content'     => $post->content(),
-                'tags'        => array_map(
-                    function (Tag $tag): string {
-                        return $tag->name();
-                    },
-                    $post->tags()
-                ),
+                'tags'        => $post->tags(),
                 'createdAt'   => $post->createdAt()->format(DATE_ATOM),
                 'updatedAt'   => $post->updatedAt()->format(DATE_W3C),
                 'publishedAt' => $post->publishedAt()->format(DATE_ATOM),
@@ -94,20 +88,19 @@ class ViewControllerTest extends FunctionalTestCase
     /**
      * @return iterable<array{0: string}>
      */
-    public function slugProvider(): iterable
+    public function publishedPostsSlugProvider(): iterable
     {
-        yield ['some-slug_link123'];
+        yield ['2023-12-27_Some-title'];
 
-        yield ['456another-slug_link'];
+        yield ['2023-12-27_Another-title'];
     }
 
     private function createPost(
-        string $slug,
         string $title,
         string $preview,
         string $content
     ): Post {
-        $post = new Post($slug, $title, $preview, $content);
+        $post = new Post($title, $preview, $content);
         $this->saveState($post);
 
         return $post;

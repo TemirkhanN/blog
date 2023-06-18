@@ -44,7 +44,7 @@ class PostRepository implements PostRepositoryInterface
             $query->setParameter('state', Post::STATE_PUBLISHED);
             $query->addOrderBy('p.publishedAt', 'DESC');
         } else {
-            // HIDDEN keyword removes following field from the result
+            // HIDDEN keyword removes a following field from the result
             $query->addSelect('COALESCE(p.publishedAt, p.updatedAt, p.createdAt) as HIDDEN modifiedDate');
             $query->addOrderBy('modifiedDate', 'DESC');
         }

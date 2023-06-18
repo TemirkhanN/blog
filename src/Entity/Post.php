@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Service\DateTime\DateTimeFactory;
 use App\ValueObject\Slug;
+use Carbon\CarbonImmutable;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -52,17 +52,17 @@ class Post
         $this->comments = new ArrayCollection();
         $this->tags     = new ArrayCollection();
 
-        $this->createdAt   = DateTimeFactory::now();
+        $this->createdAt   = CarbonImmutable::now();
         $this->publishedAt = null;
         $this->updatedAt   = null;
-        $this->slug     = (string) new Slug($this->createdAt, $title);
+        $this->slug        = (string) new Slug($this->createdAt, $title);
     }
 
     public function changeTitle(string $newTitle): void
     {
         $this->title     = $newTitle;
-        $this->slug = (string) new Slug($this->createdAt, $newTitle);
-        $this->updatedAt = DateTimeFactory::now();
+        $this->slug      = (string) new Slug($this->createdAt, $newTitle);
+        $this->updatedAt = CarbonImmutable::now();
     }
 
     public function title(): string
@@ -73,7 +73,7 @@ class Post
     public function changeContent(string $newContent): void
     {
         $this->content   = $newContent;
-        $this->updatedAt = DateTimeFactory::now();
+        $this->updatedAt = CarbonImmutable::now();
     }
 
     public function content(): string
@@ -84,7 +84,7 @@ class Post
     public function changePreview(string $newPreview): void
     {
         $this->preview   = $newPreview;
-        $this->updatedAt = DateTimeFactory::now();
+        $this->updatedAt = CarbonImmutable::now();
     }
 
     public function preview(): string
@@ -95,17 +95,6 @@ class Post
     public function slug(): string
     {
         return $this->slug;
-    }
-
-    /**
-     * @param string $newSlug
-     * @return void
-     * @deprecated
-     */
-    public function changeSlug(string $newSlug): void
-    {
-        $this->slug      = $newSlug;
-        $this->updatedAt = DateTimeFactory::now();
     }
 
     public function createdAt(): DateTimeInterface
@@ -123,14 +112,6 @@ class Post
         return $this->publishedAt;
     }
 
-    public function addTag(Tag $tag): void
-    {
-        if (!$this->tags->contains($tag)) {
-            $this->tags->add($tag);
-            $this->updatedAt = DateTimeFactory::now();
-        }
-    }
-
     /**
      * @param string[] $tags
      *
@@ -139,7 +120,7 @@ class Post
     public function setTags(array $tags): void
     {
         $assigningTags = array_unique($tags);
-        $newTags = array_diff($assigningTags, $this->tags());
+        $newTags       = array_diff($assigningTags, $this->tags());
 
         foreach ($this->tags as $tag) {
             if (!in_array($tag->name(), $assigningTags)) {
@@ -150,8 +131,6 @@ class Post
         foreach ($newTags as $newTag) {
             $this->tags->add(new Tag($newTag, $this));
         }
-
-        $this->updatedAt = DateTimeFactory::now();
     }
 
     /**
@@ -191,8 +170,8 @@ class Post
         }
 
         $this->state       = self::STATE_PUBLISHED;
-        $this->publishedAt = DateTimeFactory::now();
-        $this->updatedAt   = DateTimeFactory::now();
+        $this->publishedAt = CarbonImmutable::now();
+        $this->updatedAt   = CarbonImmutable::now();
     }
 
     public function archive(): void
@@ -202,7 +181,7 @@ class Post
         }
 
         $this->state     = self::STATE_ARCHIVED;
-        $this->updatedAt = DateTimeFactory::now();
+        $this->updatedAt = CarbonImmutable::now();
     }
 
     private function getStateName(int $state): string

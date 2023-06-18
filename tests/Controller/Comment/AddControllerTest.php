@@ -6,8 +6,6 @@ use App\Entity\Comment;
 use App\Entity\Post;
 use App\FunctionalTestCase;
 use App\Repository\CommentRepositoryInterface;
-use App\Service\DateTime\DateTimeFactory;
-use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Response;
 
 class AddControllerTest extends FunctionalTestCase
@@ -15,32 +13,19 @@ class AddControllerTest extends FunctionalTestCase
     private const ENDPOINT = '/api/posts/%s/comments';
     private Post $post;
 
-    private DateTimeImmutable $currentTime;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->currentTime = new DateTimeImmutable();
-        DateTimeFactory::alwaysReturn($this->currentTime);
-
-        $this->post = new Post('SomePostSlug', 'Some post title', 'Some preview', 'Some content');
+        $this->post = new Post('Some post title', 'Some preview', 'Some content');
         $this->saveState($this->post);
-    }
-
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        DateTimeFactory::alwaysReturn(null);
     }
 
     public function testSpamDetection(): void
     {
         $this->exceedSpamThreshold();
 
-        $uri      = sprintf(self::ENDPOINT, 'NonExistingSlug');
+        $uri      = sprintf(self::ENDPOINT, $this->post->slug());
         $payload  = ['text' => 'Some comment text'];
         $response = $this->sendRequest('POST', $uri, $payload);
 

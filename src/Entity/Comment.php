@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Service\DateTime\DateTimeFactory;
+use Carbon\CarbonImmutable;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
@@ -34,7 +34,7 @@ class Comment
         $this->guid      = Uuid::uuid4()->toString();
         $this->post      = $post;
         $this->comment   = $comment;
-        $this->createdAt = DateTimeFactory::now();
+        $this->createdAt = CarbonImmutable::now();
     }
 
     public function guid(): string

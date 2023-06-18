@@ -13,12 +13,14 @@ use TemirkhanN\Generic\ResultInterface;
 
 class CreatePostService
 {
-    public function __construct(private readonly PostRepositoryInterface $repository) {}
+    public function __construct(private readonly PostRepositoryInterface $repository)
+    {
+    }
 
     /**
-     * @param string $title
-     * @param string $preview
-     * @param string $content
+     * @param string   $title
+     * @param string   $preview
+     * @param string   $content
      * @param string[] $tags
      *
      * @return ResultInterface<Post>
