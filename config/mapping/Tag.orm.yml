@@ -1,6 +1,9 @@
 App\Entity\Tag:
   type: entity
-  table: tags
+  table: posts_tags
+  indexes:
+    name_idx:
+      columns: [name]
   readOnly: true
   id:
     id:
@@ -20,3 +23,4 @@ App\Entity\Tag:
       joinColumn:
         name: post_id
         referencedColumnName: id
+        nullable: false
