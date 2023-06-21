@@ -10,6 +10,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use DomainException;
 use UnexpectedValueException;
 
 class Post
@@ -45,6 +46,18 @@ class Post
 
     public function __construct(string $title, string $preview, string $content)
     {
+        if ($title === '') {
+            throw new DomainException('Title can not be empty');
+        }
+
+        if ($preview === '') {
+            throw new DomainException('Preview can not be empty');
+        }
+
+        if ($content === '') {
+            throw new DomainException('Content can not be empty');
+        }
+
         $this->state    = self::STATE_DRAFT;
         $this->title    = $title;
         $this->preview  = $preview;

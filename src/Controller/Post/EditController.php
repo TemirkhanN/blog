@@ -6,11 +6,10 @@ namespace App\Controller\Post;
 
 use App\Dto\PostData;
 use App\Repository\PostRepositoryInterface;
-use App\Service\InvalidData;
 use App\Service\Post\PostListService;
 use App\Service\Response\ResponseFactoryInterface;
-use App\View\ErrorView;
 use App\View\PostView;
+use App\View\ValidationErrorsView;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -34,9 +33,7 @@ class EditController
 
         $violations = $this->validator->validate($newData);
         if ($violations->count() !== 0) {
-            return $this->responseFactory->createResponse(
-                ErrorView::create(InvalidData::fromConstraintsViolation($violations))
-            );
+            return $this->responseFactory->createResponse(ValidationErrorsView::create($violations));
         }
 
         $post = $this->postListService->getPostBySlug($slug);
