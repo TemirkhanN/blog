@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Service\DateTime\DateTimeFactory;
+use Carbon\CarbonImmutable;
 use DateTimeImmutable;
 use DateTimeInterface;
+use DomainException;
 use Ramsey\Uuid\Uuid;
 
 class Comment
@@ -31,10 +32,14 @@ class Comment
 
     public function __construct(Post $post, string $comment)
     {
+        if ($comment === '') {
+            throw new DomainException('Comment can not be empty.');
+        }
+
         $this->guid      = Uuid::uuid4()->toString();
         $this->post      = $post;
         $this->comment   = $comment;
-        $this->createdAt = DateTimeFactory::now();
+        $this->createdAt = CarbonImmutable::now();
     }
 
     public function guid(): string

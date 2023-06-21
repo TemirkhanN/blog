@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -14,6 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class FunctionalTestCase extends WebTestCase
 {
+    protected CarbonImmutable $currentTime;
+    private CarbonImmutable $absoluteCurrentTime;
+
     private ?string $authToken = null;
 
     private KernelBrowser $browser;
@@ -26,6 +31,11 @@ class FunctionalTestCase extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
+
+        $this->absoluteCurrentTime = new CarbonImmutable('2023-12-27 13:00:00');
+        $this->currentTime         = $this->absoluteCurrentTime;
+
+        $this->setCurrentTime($this->currentTime);
 
         $this->browser = self::createClient();
 
@@ -48,6 +58,7 @@ class FunctionalTestCase extends WebTestCase
         $schema->dropSchema(static::$cachedMetadata);
 
         $this->authToken = null;
+        $this->setCurrentTime(null);
 
         parent::tearDown();
     }
@@ -158,5 +169,16 @@ class FunctionalTestCase extends WebTestCase
                 'details' => $details,
             ]
         );
+    }
+
+    protected function setCurrentTime(?CarbonImmutable $currentTime): void
+    {
+        if ($currentTime === null) {
+            $currentTime = $this->absoluteCurrentTime;
+        }
+
+        $this->currentTime = $currentTime;
+        Carbon::setTestNow($currentTime);
+        CarbonImmutable::setTestNow($currentTime);
     }
 }

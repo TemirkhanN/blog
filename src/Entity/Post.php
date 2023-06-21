@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Service\DateTime\DateTimeFactory;
+use App\ValueObject\Slug;
+use Carbon\CarbonImmutable;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use DomainException;
 use UnexpectedValueException;
 
 class Post
@@ -42,35 +44,38 @@ class Post
      */
     private Collection $comments;
 
-    /**
-     * @param string        $slug
-     * @param string        $title
-     * @param string        $preview
-     * @param string        $content
-     * @param iterable<Tag> $tags
-     */
-    public function __construct(string $slug, string $title, string $preview, string $content, iterable $tags = [])
+    public function __construct(string $title, string $preview, string $content)
     {
-        $this->slug     = $slug;
+        if ($title === '') {
+            throw new DomainException('Title can not be empty');
+        }
+
+        if ($preview === '') {
+            throw new DomainException('Preview can not be empty');
+        }
+
+        if ($content === '') {
+            throw new DomainException('Content can not be empty');
+        }
+
         $this->state    = self::STATE_DRAFT;
         $this->title    = $title;
         $this->preview  = $preview;
         $this->content  = $content;
         $this->comments = new ArrayCollection();
         $this->tags     = new ArrayCollection();
-        foreach ($tags as $tag) {
-            $this->addTag($tag);
-        }
 
-        $this->createdAt   = DateTimeFactory::now();
+        $this->createdAt   = CarbonImmutable::now();
         $this->publishedAt = null;
         $this->updatedAt   = null;
+        $this->slug        = (string) new Slug($this->createdAt, $title);
     }
 
     public function changeTitle(string $newTitle): void
     {
         $this->title     = $newTitle;
-        $this->updatedAt = DateTimeFactory::now();
+        $this->slug      = (string) new Slug($this->createdAt, $newTitle);
+        $this->updatedAt = CarbonImmutable::now();
     }
 
     public function title(): string
@@ -81,7 +86,7 @@ class Post
     public function changeContent(string $newContent): void
     {
         $this->content   = $newContent;
-        $this->updatedAt = DateTimeFactory::now();
+        $this->updatedAt = CarbonImmutable::now();
     }
 
     public function content(): string
@@ -92,7 +97,7 @@ class Post
     public function changePreview(string $newPreview): void
     {
         $this->preview   = $newPreview;
-        $this->updatedAt = DateTimeFactory::now();
+        $this->updatedAt = CarbonImmutable::now();
     }
 
     public function preview(): string
@@ -103,12 +108,6 @@ class Post
     public function slug(): string
     {
         return $this->slug;
-    }
-
-    public function changeSlug(string $newSlug): void
-    {
-        $this->slug      = $newSlug;
-        $this->updatedAt = DateTimeFactory::now();
     }
 
     public function createdAt(): DateTimeInterface
@@ -126,29 +125,38 @@ class Post
         return $this->publishedAt;
     }
 
-    public function addTag(Tag $tag): void
+    /**
+     * @param string[] $tags
+     *
+     * @return void
+     */
+    public function setTags(array $tags): void
     {
-        if (!$this->tags->contains($tag)) {
-            $this->tags->add($tag);
-            $this->updatedAt = DateTimeFactory::now();
-        }
-    }
+        $assigningTags = array_unique($tags);
+        $newTags       = array_diff($assigningTags, $this->tags());
 
-    public function setTags(Tag ...$tags): void
-    {
-        $this->tags->clear();
-        foreach ($tags as $tag) {
-            $this->tags->add($tag);
+        foreach ($this->tags as $tag) {
+            if (!in_array($tag->name(), $assigningTags)) {
+                $this->tags->removeElement($tag);
+            }
         }
-        $this->updatedAt = DateTimeFactory::now();
+
+        foreach ($newTags as $newTag) {
+            $this->tags->add(new Tag($newTag, $this));
+        }
     }
 
     /**
-     * @return Tag[]
+     * @return string[]
      */
     public function tags(): array
     {
-        return $this->tags->toArray();
+        return array_map(
+            static function (Tag $tag) {
+                return $tag->name();
+            },
+            $this->tags->toArray()
+        );
     }
 
     public function isPublished(): bool
@@ -175,8 +183,8 @@ class Post
         }
 
         $this->state       = self::STATE_PUBLISHED;
-        $this->publishedAt = DateTimeFactory::now();
-        $this->updatedAt   = DateTimeFactory::now();
+        $this->publishedAt = CarbonImmutable::now();
+        $this->updatedAt   = CarbonImmutable::now();
     }
 
     public function archive(): void
@@ -186,7 +194,7 @@ class Post
         }
 
         $this->state     = self::STATE_ARCHIVED;
-        $this->updatedAt = DateTimeFactory::now();
+        $this->updatedAt = CarbonImmutable::now();
     }
 
     private function getStateName(int $state): string

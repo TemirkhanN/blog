@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Post;
-use App\Entity\Tag;
 use App\FunctionalTestCase;
-use App\Service\DateTime\DateTimeFactory;
 use App\Service\Post\Dto\PostFilter;
-use DateTimeImmutable;
 
 class PostRepositoryTest extends FunctionalTestCase
 {
@@ -19,16 +16,11 @@ class PostRepositoryTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->repository = new PostRepository($this->getDoctrineRegistry());
+        /** @var PostRepository $repo */
+        $repo             = $this->getContainer()->get(PostRepositoryInterface::class);
+        $this->repository = $repo;
 
         $this->createFixtures();
-    }
-
-    protected function tearDown(): void
-    {
-        DateTimeFactory::alwaysReturn(null);
-
-        parent::tearDown();
     }
 
     public function testCountPosts(): void
@@ -60,27 +52,27 @@ class PostRepositoryTest extends FunctionalTestCase
     /** @return iterable<string[]> */
     public function postSlugProvider(): iterable
     {
-        yield ['Some-slug-1'];
-        yield ['Some-slug-2'];
-        yield ['Some-slug-3'];
-        yield ['Some-slug-4'];
-        yield ['Some-slug-5'];
-        yield ['Another-slug-1'];
-        yield ['Another-slug-2'];
-        yield ['Another-slug-3'];
-        yield ['Another-slug-4'];
-        yield ['Multitagged-slug'];
+        yield ['2023-12-27_Some-title-1'];
+        yield ['2023-12-27_Some-title-2'];
+        yield ['2023-12-27_Some-title-3'];
+        yield ['2023-12-27_Some-title-4'];
+        yield ['2023-12-27_Some-title-5'];
+        yield ['2023-12-27_Another-title-1'];
+        yield ['2023-12-27_Another-title-2'];
+        yield ['2023-12-27_Another-title-3'];
+        yield ['2023-12-27_Another-title-4'];
+        yield ['2023-12-27_Multitagged-post'];
     }
 
     public function testSave(): void
     {
-        $slug = 'Some-new-post-slug';
-        self::assertNull($this->repository->findOneBySlug($slug));
+        $post = new Post('Some new post', 'Some preview', 'Some content');
 
-        $post = new Post($slug, 'Some new post', 'Some preview', 'Some content');
+        self::assertNull($this->repository->findOneBySlug($post->slug()));
+
         $this->repository->save($post);
 
-        $savedPost = $this->repository->findOneBySlug($slug);
+        $savedPost = $this->repository->findOneBySlug($post->slug());
 
         self::assertSame($savedPost, $post);
     }
@@ -218,60 +210,55 @@ class PostRepositoryTest extends FunctionalTestCase
     {
         $entityManager = $this->getEntityManager();
 
-        $someTag    = new Tag('SomeTag');
-        $anotherTag = new Tag('AnotherTag');
-
         // An artificial time gap between posts with step >=1second
-        $counter = 60;
+        $this->setCurrentTime($this->currentTime->subSeconds(60));
+
         foreach (range(1, 5) as $postWithSomeTag) {
-            DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
+            $this->setCurrentTime($this->currentTime->addSecond());
+
             $post = new Post(
-                'Some-slug-' . $postWithSomeTag,
                 'Some title ' . $postWithSomeTag,
                 'Some preview ' . $postWithSomeTag,
                 'Some content ' . $postWithSomeTag
             );
-            $post->addTag($someTag);
+            $post->setTags(['SomeTag']);
             $post->publish();
             $entityManager->persist($post);
         }
 
         foreach (range(1, 4) as $postWithAnotherTag) {
-            DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
+            $this->setCurrentTime($this->currentTime->addSecond());
             $post2 = new Post(
-                'Another-slug-' . $postWithAnotherTag,
                 'Another title ' . $postWithAnotherTag,
                 'Another preview ' . $postWithAnotherTag,
                 'Another content ' . $postWithAnotherTag
             );
-            $post2->addTag($anotherTag);
+            $post2->setTags(['AnotherTag']);
             $post2->publish();
             $entityManager->persist($post2);
         }
 
-        DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
+        $this->setCurrentTime($this->currentTime->addSecond());
         $postWithMultipleTags = new Post(
-            'Multitagged-slug',
             'Multitagged post',
             'Some multitag preview',
             'Some multitag content'
         );
-        $postWithMultipleTags->addTag($someTag);
-        $postWithMultipleTags->addTag($anotherTag);
+        $postWithMultipleTags->setTags(['SomeTag', 'AnotherTag']);
         $postWithMultipleTags->publish();
         $entityManager->persist($postWithMultipleTags);
 
-        DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
-        $draftPost = new Post('23th-post-slug', 'Some draft title 23', 'Some preview of 23', 'Some content of 23');
-        $draftPost->setTags($someTag, $anotherTag);
-        DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
-        $archivedPost = new Post('24th-post-slug', 'Archived title 24', 'Some preview of 24', 'Some content of 24');
-        $archivedPost->setTags($someTag, $anotherTag);
+        $this->setCurrentTime($this->currentTime->addSecond());
+        $draftPost = new Post('Some draft title 23', 'Some preview of 23', 'Some content of 23');
+        $draftPost->setTags(['SomeTag', 'AnotherTag']);
+
+        $this->setCurrentTime($this->currentTime->addSecond());
+        $archivedPost = new Post('Archived title 24', 'Some preview of 24', 'Some content of 24');
+        $archivedPost->setTags(['SomeTag', 'AnotherTag']);
         $archivedPost->archive();
 
-        DateTimeFactory::alwaysReturn(new DateTimeImmutable(sprintf('-%d seconds', --$counter)));
+        $this->setCurrentTime($this->currentTime->addSecond());
         $draftPostThatWasNeverUpdated = new Post(
-            '25th-post-slug',
             'Some draft title 25',
             'Some preview of 25',
             'Some content of 25'

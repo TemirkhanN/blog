@@ -13,6 +13,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.0",
         "doctrine/orm": "^2.7",
         "league/commonmark": "^2.4",
+        "nesbot/carbon": "^2.67",
         "ramsey/uuid": "^3.8",
         "spatie/data-transfer-object": "^1.13",
         "symfony-bundles/json-request-bundle": "^4.0",

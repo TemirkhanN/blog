@@ -35,20 +35,16 @@ App\Entity\Post:
     updatedAt:
       type: datetime_immutable
       nullable: true
-  manyToMany:
-    tags:
-      targetEntity: App\Entity\Tag
-      joinTable:
-        name: posts_tags
-        joinColumns:
-          post_id:
-            referencedColumnName: id
-        inverseJoinColumns:
-          tag_id:
-            referencedColumnName: name
-      cascade:
-        - persist
   oneToMany:
     comments:
       targetEntity: App\Entity\Comment
       mappedBy: post
+      orphanRemoval: true
+      cascade: [persist, remove]
+    tags:
+      targetEntity: App\Entity\Tag
+      mappedBy: post
+      orphanRemoval: true
+      cascade: [persist, remove]
+      onDelete: CASCADE
+

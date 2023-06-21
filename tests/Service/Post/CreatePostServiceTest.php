@@ -6,79 +6,64 @@ namespace App\Service\Post;
 
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
-use App\Service\Post\Dto\PostData;
+use Carbon\CarbonImmutable;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class CreatePostServiceTest extends TestCase
 {
     /** @var PostRepositoryInterface&MockObject */
     private PostRepositoryInterface $postRepository;
 
-    /** @var ValidatorInterface&MockObject */
-    private ValidatorInterface $validator;
-
     private CreatePostService $service;
+
+    private CarbonImmutable $currentTime;
 
     protected function setUp(): void
     {
         parent::setUp();
 
         $this->postRepository = $this->createMock(PostRepositoryInterface::class);
-        $this->validator      = $this->createMock(ValidatorInterface::class);
-        $this->service        = new CreatePostService(
-            $this->postRepository,
-            $this->createMock(TagService::class),
-            new SlugGenerator(),
-            $this->validator
-        );
+        $this->service        = new CreatePostService($this->postRepository);
+
+        $this->currentTime = new CarbonImmutable();
+        CarbonImmutable::setTestNow($this->currentTime);
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        CarbonImmutable::setTestNow(null);
     }
 
     public function testDuplicatePostCreation(): void
     {
-        $postData = new PostData([
-            'title'   => 'Some title',
-            'preview' => 'Some preview',
-            'content' => 'Some content',
-            'tags'    => [],
-        ]);
+        $title   = 'Some title';
+        $preview = 'Some preview';
+        $content = 'Some content';
+        $tags    = [];
 
-        $this->validator
-            ->expects(self::once())
-            ->method('validate')
-            ->with(self::identicalTo($postData))
-            ->willReturn(new ConstraintViolationList());
-
-        $expectedSlug = date('Y-m-d') . '_Some-title';
+        $expectedSlug = $this->currentTime->format('Y-m-d') . '_Some-title';
         $this->postRepository
             ->expects(self::once())
             ->method('findOneBySlug')
             ->with(self::equalTo($expectedSlug))
             ->willReturn($this->createMock(Post::class));
 
-        $result = $this->service->execute($postData);
+        $result = $this->service->execute($title, $preview, $content, $tags);
         self::assertFalse($result->isSuccessful());
         self::assertEquals('There already exists a post with a similar title', $result->getError()->getMessage());
     }
 
     public function testPostCreation(): void
     {
-        $postData = new PostData([
-            'title'   => 'Some title',
-            'preview' => 'Some preview',
-            'content' => 'Some content',
-            'tags'    => [],
-        ]);
+        $title   = 'Some title';
+        $preview = 'Some preview';
+        $content = 'Some content';
+        $tags    = [];
 
-        $this->validator
-            ->expects(self::once())
-            ->method('validate')
-            ->with(self::identicalTo($postData))
-            ->willReturn(new ConstraintViolationList());
-
-        $expectedSlug = date('Y-m-d') . '_Some-title';
+        $expectedSlug = $this->currentTime->format('Y-m-d') . '_Some-title';
         $this->postRepository
             ->expects(self::once())
             ->method('findOneBySlug')
@@ -93,7 +78,7 @@ class CreatePostServiceTest extends TestCase
                 self::assertEquals($expectedSlug, $actualPost->slug());
                 self::assertEquals('Some content', $actualPost->content());
                 self::assertEquals('Some preview', $actualPost->preview());
-                self::assertEqualsWithDelta(time(), $actualPost->createdAt()->getTimestamp(), 2);
+                self::assertTrue($this->currentTime->eq($actualPost->createdAt()));
                 self::assertNull($actualPost->publishedAt());
                 self::assertNull($actualPost->updatedAt());
                 self::assertEquals('Some title', $actualPost->title());
@@ -103,7 +88,7 @@ class CreatePostServiceTest extends TestCase
                 return true;
             }));
 
-        $result = $this->service->execute($postData);
+        $result = $this->service->execute($title, $preview, $content, $tags);
 
         self::assertTrue($result->isSuccessful());
 

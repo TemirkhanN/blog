@@ -101,7 +101,7 @@ class CreateControllerTest extends FunctionalTestCase
                     'Tag1',
                 ],
                 'createdAt'   => $post->createdAt()->format(DATE_ATOM),
-                'updatedAt'   => null,
+                'updatedAt'   => $post->updatedAt()?->format(DATE_ATOM),
                 'publishedAt' => null,
             ]
         );

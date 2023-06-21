@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Entity\Post;
-use App\Entity\Tag;
 use App\FunctionalTestCase;
-use App\Service\DateTime\DateTimeFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListControllerTest extends FunctionalTestCase
@@ -93,16 +91,16 @@ class ListControllerTest extends FunctionalTestCase
         yield 'Last 10 posts' => [
             'query'         => [],
             'matchingPosts' => [
-                '22th-post-slug',
-                '21th-post-slug',
-                '20th-post-slug',
-                '19th-post-slug',
-                '18th-post-slug',
-                '17th-post-slug',
-                '16th-post-slug',
-                '15th-post-slug',
-                '14th-post-slug',
-                '13th-post-slug',
+                '2023-12-27_Some-title-22',
+                '2023-12-27_Some-title-21',
+                '2023-12-27_Some-title-20',
+                '2023-12-27_Some-title-19',
+                '2023-12-27_Some-title-18',
+                '2023-12-27_Some-title-17',
+                '2023-12-27_Some-title-16',
+                '2023-12-27_Some-title-15',
+                '2023-12-27_Some-title-14',
+                '2023-12-27_Some-title-13',
             ],
             'pagination'    => [
                 'limit'  => 10,
@@ -114,11 +112,11 @@ class ListControllerTest extends FunctionalTestCase
         yield 'Last 5 posts' => [
             'query'         => ['limit' => 5],
             'matchingPosts' => [
-                '22th-post-slug',
-                '21th-post-slug',
-                '20th-post-slug',
-                '19th-post-slug',
-                '18th-post-slug',
+                '2023-12-27_Some-title-22',
+                '2023-12-27_Some-title-21',
+                '2023-12-27_Some-title-20',
+                '2023-12-27_Some-title-19',
+                '2023-12-27_Some-title-18',
             ],
             'pagination'    => [
                 'limit'  => 5,
@@ -133,11 +131,11 @@ class ListControllerTest extends FunctionalTestCase
                 'offset' => 4,
             ],
             'matchingPosts' => [
-                '18th-post-slug',
-                '17th-post-slug',
-                '16th-post-slug',
-                '15th-post-slug',
-                '14th-post-slug',
+                '2023-12-27_Some-title-18',
+                '2023-12-27_Some-title-17',
+                '2023-12-27_Some-title-16',
+                '2023-12-27_Some-title-15',
+                '2023-12-27_Some-title-14',
             ],
             'pagination'    => [
                 'limit'  => 5,
@@ -149,26 +147,26 @@ class ListControllerTest extends FunctionalTestCase
         yield 'Maximum allowed limit' => [
             'query'         => ['limit' => 20],
             'matchingPosts' => [
-                '22th-post-slug',
-                '21th-post-slug',
-                '20th-post-slug',
-                '19th-post-slug',
-                '18th-post-slug',
-                '17th-post-slug',
-                '16th-post-slug',
-                '15th-post-slug',
-                '14th-post-slug',
-                '13th-post-slug',
-                '12th-post-slug',
-                '11th-post-slug',
-                '10th-post-slug',
-                '9th-post-slug',
-                '8th-post-slug',
-                '7th-post-slug',
-                '6th-post-slug',
-                '5th-post-slug',
-                '4th-post-slug',
-                '3rd-post-slug',
+                '2023-12-27_Some-title-22',
+                '2023-12-27_Some-title-21',
+                '2023-12-27_Some-title-20',
+                '2023-12-27_Some-title-19',
+                '2023-12-27_Some-title-18',
+                '2023-12-27_Some-title-17',
+                '2023-12-27_Some-title-16',
+                '2023-12-27_Some-title-15',
+                '2023-12-27_Some-title-14',
+                '2023-12-27_Some-title-13',
+                '2023-12-27_Some-title-12',
+                '2023-12-27_Some-title-11',
+                '2023-12-27_Some-title-10',
+                '2023-12-27_Some-title-9',
+                '2023-12-27_Some-title-8',
+                '2023-12-27_Some-title-7',
+                '2023-12-27_Some-title-6',
+                '2023-12-27_Some-title-5',
+                '2023-12-27_Some-title-4',
+                '2023-12-27_Some-title-3',
             ],
             'pagination'    => [
                 'limit'  => 20,
@@ -183,8 +181,8 @@ class ListControllerTest extends FunctionalTestCase
                 'offset' => 20,
             ],
             'matchingPosts' => [
-                '2nd-post-slug',
-                '1st-post-slug',
+                '2023-12-27_Some-title-2',
+                '2023-12-27_Some-title-1',
             ],
             'pagination'    => [
                 'limit'  => 5,
@@ -196,12 +194,12 @@ class ListControllerTest extends FunctionalTestCase
         yield 'Posts tagged with "SomeTag"' => [
             'query'         => ['tag' => 'SomeTag'],
             'matchingPosts' => [
-                '14th-post-slug',
-                '13th-post-slug',
-                '12th-post-slug',
-                '10th-post-slug',
-                '7th-post-slug',
-                '1st-post-slug',
+                '2023-12-27_Some-title-14',
+                '2023-12-27_Some-title-13',
+                '2023-12-27_Some-title-12',
+                '2023-12-27_Some-title-10',
+                '2023-12-27_Some-title-7',
+                '2023-12-27_Some-title-1',
             ],
             'pagination'    => [
                 'limit'  => 10,
@@ -213,11 +211,11 @@ class ListControllerTest extends FunctionalTestCase
         yield 'Posts tagged with "AnotherTag"' => [
             'query'         => ['tag' => 'AnotherTag'],
             'matchingPosts' => [
-                '13th-post-slug',
-                '11th-post-slug',
-                '10th-post-slug',
-                '6th-post-slug',
-                '2nd-post-slug',
+                '2023-12-27_Some-title-13',
+                '2023-12-27_Some-title-11',
+                '2023-12-27_Some-title-10',
+                '2023-12-27_Some-title-6',
+                '2023-12-27_Some-title-2',
             ],
             'pagination'    => [
                 'limit'  => 10,
@@ -229,14 +227,14 @@ class ListControllerTest extends FunctionalTestCase
         yield 'Posts tagged with "OneMoreTag"' => [
             'query'         => ['tag' => 'OneMoreTag'],
             'matchingPosts' => [
-                '22th-post-slug',
-                '15th-post-slug',
-                '14th-post-slug',
-                '13th-post-slug',
-                '12th-post-slug',
-                '11th-post-slug',
-                '5th-post-slug',
-                '3rd-post-slug',
+                '2023-12-27_Some-title-22',
+                '2023-12-27_Some-title-15',
+                '2023-12-27_Some-title-14',
+                '2023-12-27_Some-title-13',
+                '2023-12-27_Some-title-12',
+                '2023-12-27_Some-title-11',
+                '2023-12-27_Some-title-5',
+                '2023-12-27_Some-title-3',
             ],
             'pagination'    => [
                 'limit'  => 10,
@@ -252,10 +250,10 @@ class ListControllerTest extends FunctionalTestCase
                 'offset' => 3,
             ],
             'matchingPosts' => [
-                '13th-post-slug',
-                '12th-post-slug',
-                '11th-post-slug',
-                '5th-post-slug',
+                '2023-12-27_Some-title-13',
+                '2023-12-27_Some-title-12',
+                '2023-12-27_Some-title-11',
+                '2023-12-27_Some-title-5',
             ],
             'pagination'    => [
                 'limit'  => 4,
@@ -269,148 +267,117 @@ class ListControllerTest extends FunctionalTestCase
     {
         $em = $this->getEntityManager();
 
-        $tag1 = new Tag('SomeTag');
-        $tag2 = new Tag('AnotherTag');
-        $tag3 = new Tag('OneMoreTag');
-
-        $em->persist($tag1);
-        $em->persist($tag2);
-        $em->persist($tag3);
-
         $posts = [
             [
-                'slug' => '1st-post-slug',
-                'tags' => [$tag1],
+                'tags' => ['SomeTag'],
             ],
             [
-                'slug' => '2nd-post-slug',
-                'tags' => [$tag2],
+                'tags' => ['AnotherTag'],
             ],
             [
-                'slug' => '3rd-post-slug',
-                'tags' => [$tag3],
+                'tags' => ['OneMoreTag'],
             ],
             [
-                'slug' => '4th-post-slug',
                 'tags' => [],
             ],
             [
-                'slug' => '5th-post-slug',
-                'tags' => [$tag3],
+                'tags' => ['OneMoreTag'],
             ],
             [
-                'slug' => '6th-post-slug',
-                'tags' => [$tag2],
+                'tags' => ['AnotherTag'],
             ],
             [
-                'slug' => '7th-post-slug',
-                'tags' => [$tag1],
+                'tags' => ['SomeTag'],
             ],
             [
-                'slug' => '8th-post-slug',
                 'tags' => [],
             ],
             [
-                'slug' => '9th-post-slug',
                 'tags' => [],
             ],
             [
-                'slug' => '10th-post-slug',
                 'tags' => [
-                    $tag1,
-                    $tag2,
+                    'SomeTag',
+                    'AnotherTag',
                 ],
             ],
             [
-                'slug' => '11th-post-slug',
                 'tags' => [
-                    $tag2,
-                    $tag3,
+                    'AnotherTag',
+                    'OneMoreTag',
                 ],
             ],
             [
-                'slug' => '12th-post-slug',
                 'tags' => [
-                    $tag3,
-                    $tag1,
+                    'OneMoreTag',
+                    'SomeTag',
                 ],
             ],
             [
-                'slug' => '13th-post-slug',
                 'tags' => [
-                    $tag1,
-                    $tag2,
-                    $tag3,
+                    'SomeTag',
+                    'AnotherTag',
+                    'OneMoreTag',
                 ],
             ],
             [
-                'slug' => '14th-post-slug',
                 'tags' => [
-                    $tag1,
-                    $tag3,
+                    'SomeTag',
+                    'OneMoreTag',
                 ],
             ],
             [
-                'slug' => '15th-post-slug',
-                'tags' => [$tag3],
+                'tags' => ['OneMoreTag'],
             ],
             [
-                'slug' => '16th-post-slug',
                 'tags' => [],
             ],
             [
-                'slug' => '17th-post-slug',
                 'tags' => [],
             ],
             [
-                'slug' => '18th-post-slug',
                 'tags' => [],
             ],
             [
-                'slug' => '19th-post-slug',
                 'tags' => [],
             ],
             [
-                'slug' => '20th-post-slug',
                 'tags' => [],
             ],
             [
-                'slug' => '21th-post-slug',
                 'tags' => [],
             ],
             [
-                'slug' => '22th-post-slug',
-                'tags' => [$tag3],
+                'tags' => ['OneMoreTag'],
             ],
         ];
 
-        $totalPosts = count($posts);
+        $this->currentTime = $this->currentTime->subSeconds(count($posts) + 1);
         foreach ($posts as $key => $postDetails) {
-            DateTimeFactory::alwaysReturn(new \DateTimeImmutable(sprintf('-%d minute', $totalPosts--)));
-            $slug = $postDetails['slug'];
-            $post = new Post(
-                $slug,
-                'Some title ' . $key,
-                'Some preview of ' . $slug,
-                'Some content of ' . $slug,
-                $postDetails['tags']
-            );
+            $this->currentTime = $this->currentTime->addSecond();
+            $this->setCurrentTime($this->currentTime);
 
+            $order = $key + 1;
+
+            $post = new Post(
+                'Some title ' . $order,
+                'Some preview ' . $order,
+                'Some content ' . $order
+            );
+            $post->setTags($postDetails['tags']);
             $post->publish();
 
             $em->persist($post);
         }
 
-        $draftPost = new Post('23th-post-slug', 'Some title 23', 'Some preview of 23', 'Some content of 23');
-        $draftPost->setTags($tag1, $tag2, $tag3);
-        $archivedPost = new Post('24th-post-slug', 'Some title 24', 'Some preview of 24', 'Some content of 24');
-        $archivedPost->setTags($tag1, $tag2, $tag3);
+        $draftPost = new Post('Some title 23', 'Some preview of 23', 'Some content of 23');
+        $draftPost->setTags(['SomeTag', 'AnotherTag', 'OneMoreTag']);
+        $archivedPost = new Post('Some title 24', 'Some preview of 24', 'Some content of 24');
+        $archivedPost->setTags(['SomeTag', 'AnotherTag', 'OneMoreTag']);
         $archivedPost->archive();
 
         $em->persist($draftPost);
         $em->persist($archivedPost);
-
-        DateTimeFactory::alwaysReturn(null);
 
         $em->flush();
     }
@@ -447,12 +414,7 @@ class ListControllerTest extends FunctionalTestCase
                 'createdAt'   => $post->createdAt()->format(DATE_W3C),
                 'updatedAt'   => $post->updatedAt()->format(DATE_W3C),
                 'preview'     => $post->preview(),
-                'tags'        => array_map(
-                    static function (Tag $tag) {
-                        return (string) $tag;
-                    },
-                    $post->tags()
-                ),
+                'tags'        => $post->tags(),
             ];
         }
 

@@ -33,12 +33,7 @@ class PostView
             'updatedAt'   => $post->updatedAt() ? DateTimeView::create($post->updatedAt()) : null,
             'publishedAt' => $post->publishedAt() ? DateTimeView::create($post->publishedAt()) : null,
             'preview'     => $post->preview(),
-            'tags'        => array_map(
-                static function (Tag $tag) {
-                    return (string) $tag;
-                },
-                $post->tags()
-            ),
+            'tags'        => $post->tags(),
         ];
 
         if ($extended) {

@@ -38,11 +38,10 @@ class PublishControllerTest extends FunctionalTestCase
 
     public function testPublishDraftPost(): void
     {
-        $postSlug = 'Some-slug-123';
-        $post     = $this->createPost($postSlug, 'Some title', 'Some preview', 'Some content');
+        $post = $this->createPost('Some title', 'Some preview', 'Some content');
 
         $this->authenticate('SomeHardCodedToken');
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $postSlug));
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->slug()));
 
         self::assertEquals('[]', $response->getContent());
         $this->assertPostIsPublished($post);
@@ -50,13 +49,12 @@ class PublishControllerTest extends FunctionalTestCase
 
     public function testPublishAlreadyPublishedPost(): void
     {
-        $postSlug = 'Some-slug-123';
-        $post     = $this->createPost($postSlug, 'Some title', 'Some preview', 'Some content');
+        $post = $this->createPost('Some title', 'Some preview', 'Some content');
         $post->publish();
         $this->saveState($post);
 
         $this->authenticate('SomeHardCodedToken');
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $postSlug));
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->slug()));
 
         self::assertEquals('[]', $response->getContent());
         $this->assertPostIsPublished($post);
@@ -64,13 +62,12 @@ class PublishControllerTest extends FunctionalTestCase
 
     public function testPublishArchivedPost(): void
     {
-        $postSlug = 'Some-slug-123';
-        $post     = $this->createPost($postSlug, 'Some title', 'Some preview', 'Some content');
+        $post = $this->createPost('Some title', 'Some preview', 'Some content');
         $post->archive();
         $this->saveState($post);
 
         $this->authenticate('SomeHardCodedToken');
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $postSlug));
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->slug()));
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals(
@@ -83,12 +80,11 @@ class PublishControllerTest extends FunctionalTestCase
     }
 
     private function createPost(
-        string $slug,
         string $title,
         string $preview,
         string $content
     ): Post {
-        $post = new Post($slug, $title, $preview, $content);
+        $post = new Post($title, $preview, $content);
         $this->saveState($post);
 
         return $post;
@@ -100,6 +96,6 @@ class PublishControllerTest extends FunctionalTestCase
 
         self::assertTrue($post->isPublished());
         self::assertNotNull($post->publishedAt());
-        self::assertEqualsWithDelta(time(), $post->publishedAt()->getTimestamp(), 5);
+        self::assertTrue($this->currentTime->equalTo($post->publishedAt()));
     }
 }

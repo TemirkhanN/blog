@@ -6,43 +6,32 @@ namespace App\Service\Post;
 
 use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
-use App\Service\InvalidData;
-use App\Service\Post\Dto\PostData;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use TemirkhanN\Generic\Error;
 use TemirkhanN\Generic\Result;
 use TemirkhanN\Generic\ResultInterface;
 
 class CreatePostService
 {
-    public function __construct(
-        private readonly PostRepositoryInterface $repository,
-        private readonly TagService $tagService,
-        private readonly SlugGenerator $slugGenerator,
-        private readonly ValidatorInterface $validator
-    ) {
+    public function __construct(private readonly PostRepositoryInterface $repository)
+    {
     }
 
     /**
-     * @param PostData $data
+     * @param string   $title
+     * @param string   $preview
+     * @param string   $content
+     * @param string[] $tags
      *
      * @return ResultInterface<Post>
      */
-    public function execute(PostData $data): ResultInterface
+    public function execute(string $title, string $preview, string $content, array $tags = []): ResultInterface
     {
-        $violations = $this->validator->validate($data);
-        if ($violations->count() !== 0) {
-            return Result::error(InvalidData::fromConstraintsViolation($violations));
-        }
-
-        $slug = $this->slugGenerator->generate($data->title);
-        if ($this->repository->findOneBySlug($slug)) {
+        $post = new Post($title, $preview, $content);
+        if ($this->repository->findOneBySlug($post->slug())) {
             return Result::error(Error::create('There already exists a post with a similar title'));
         }
 
-        $tags = $this->tagService->createTags($data->tags);
-        $post = new Post($slug, $data->title, $data->preview, $data->content, $tags);
-
+        $post->setTags($tags);
         $this->repository->save($post);
 
         return Result::success($post);

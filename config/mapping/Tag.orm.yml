@@ -1,10 +1,26 @@
 App\Entity\Tag:
   type: entity
-  table: tags
+  table: posts_tags
+  indexes:
+    name_idx:
+      columns: [name]
   readOnly: true
   id:
+    id:
+      type: integer
+      generator:
+        strategy: IDENTITY
+      options:
+        unsigned: true
+  fields:
     name:
       type: string
       length: 50
-      generator:
-        strategy: NONE
+  manyToOne:
+    post:
+      targetEntity: App\Entity\Post
+      inversedBy: tags
+      joinColumn:
+        name: post_id
+        referencedColumnName: id
+        nullable: false
