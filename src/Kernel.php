@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Repository\PostRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -10,6 +12,16 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
+
+    public function boot(): void
+    {
+        parent::boot();
+
+        /** @var ManagerRegistry $doctrineRegistry */
+        $doctrineRegistry = $this->getContainer()->get('app.db.registry');
+
+        PostRepository::init($doctrineRegistry);
+    }
 
     protected function configureContainer(ContainerConfigurator $container): void
     {

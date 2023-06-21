@@ -64,19 +64,6 @@ class PostRepositoryTest extends FunctionalTestCase
         yield ['2023-12-27_Multitagged-post'];
     }
 
-    public function testSave(): void
-    {
-        $post = new Post('Some new post', 'Some preview', 'Some content');
-
-        self::assertNull($this->repository->findOneBySlug($post->slug()));
-
-        $this->repository->save($post);
-
-        $savedPost = $this->repository->findOneBySlug($post->slug());
-
-        self::assertSame($savedPost, $post);
-    }
-
     /**
      * @param PostFilter $filter
      * @param string[]   $expectedTitles
@@ -223,7 +210,6 @@ class PostRepositoryTest extends FunctionalTestCase
             );
             $post->setTags(['SomeTag']);
             $post->publish();
-            $entityManager->persist($post);
         }
 
         foreach (range(1, 4) as $postWithAnotherTag) {
@@ -235,7 +221,6 @@ class PostRepositoryTest extends FunctionalTestCase
             );
             $post2->setTags(['AnotherTag']);
             $post2->publish();
-            $entityManager->persist($post2);
         }
 
         $this->setCurrentTime($this->currentTime->addSecond());
@@ -246,7 +231,6 @@ class PostRepositoryTest extends FunctionalTestCase
         );
         $postWithMultipleTags->setTags(['SomeTag', 'AnotherTag']);
         $postWithMultipleTags->publish();
-        $entityManager->persist($postWithMultipleTags);
 
         $this->setCurrentTime($this->currentTime->addSecond());
         $draftPost = new Post('Some draft title 23', 'Some preview of 23', 'Some content of 23');
@@ -263,11 +247,5 @@ class PostRepositoryTest extends FunctionalTestCase
             'Some preview of 25',
             'Some content of 25'
         );
-
-        $entityManager->persist($draftPost);
-        $entityManager->persist($archivedPost);
-        $entityManager->persist($draftPostThatWasNeverUpdated);
-
-        $entityManager->flush();
     }
 }

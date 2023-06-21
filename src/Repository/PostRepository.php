@@ -17,8 +17,16 @@ use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class PostRepository implements PostRepositoryInterface
 {
-    public function __construct(private readonly ManagerRegistry $registry)
+    private static ?ManagerRegistry $registry = null;
+
+    public function __construct(ManagerRegistry $managerRegistry)
     {
+        self::init($managerRegistry);
+    }
+
+    public static function init(ManagerRegistry $registry): void
+    {
+        self::$registry = $registry;
     }
 
     /**
@@ -26,9 +34,9 @@ class PostRepository implements PostRepositoryInterface
      *
      * @return CollectionInterface<Post>
      */
-    public function getPosts(PostFilter $filter): CollectionInterface
+    public static function getPosts(PostFilter $filter): CollectionInterface
     {
-        $query = $this->createQueryBuilder()
+        $query = self::createQueryBuilder()
                       ->addSelect('p', 'pt')
                       ->from(Post::class, 'p');
 
@@ -60,9 +68,9 @@ class PostRepository implements PostRepositoryInterface
         return new Collection(new Paginator($query));
     }
 
-    public function countPosts(PostFilter $filter): int
+    public static function countPosts(PostFilter $filter): int
     {
-        $query = $this->createQueryBuilder()
+        $query = self::createQueryBuilder()
                       ->addSelect('COUNT(p)')
                       ->from(Post::class, 'p');
 
@@ -80,14 +88,14 @@ class PostRepository implements PostRepositoryInterface
         return (int) $query->getQuery()->getSingleScalarResult();
     }
 
-    public function findOneBySlug(string $slug): ?Post
+    public static function findOneBySlug(string $slug): ?Post
     {
-        return $this->registry->getRepository(Post::class)->findOneBy(['slug' => $slug]);
+        return self::registry()->getRepository(Post::class)->findOneBy(['slug' => $slug]);
     }
 
-    public function save(Post $post): void
+    public static function save(Post $post): void
     {
-        $em = $this->registry->getManagerForClass(Post::class);
+        $em = self::registry()->getManagerForClass(Post::class);
         if ($em === null) {
             throw new RuntimeException('No relation configured to handle Post entity');
         }
@@ -96,11 +104,20 @@ class PostRepository implements PostRepositoryInterface
         $em->flush();
     }
 
-    private function createQueryBuilder(): QueryBuilder
+    private static function createQueryBuilder(): QueryBuilder
     {
         /** @var EntityManager $em */
-        $em = $this->registry->getManager();
+        $em = self::registry()->getManager();
 
         return $em->createQueryBuilder();
+    }
+
+    private static function registry(): ManagerRegistry
+    {
+        if (self::$registry === null) {
+            throw new RuntimeException('Repository has to be initialized before accessing static calls');
+        }
+
+        return self::$registry;
     }
 }
