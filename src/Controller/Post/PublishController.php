@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
+use App\Entity\Exception\ImpossibleTransitionException;
 use App\Repository\PostRepositoryInterface;
-use App\Service\Post\PublishPost;
 use App\Service\Response\Dto\SystemMessage;
 use App\Service\Response\ResponseFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +16,6 @@ class PublishController
     public function __construct(
         private readonly PostRepositoryInterface $postRepository,
         private readonly AuthorizationCheckerInterface $security,
-        private readonly PublishPost $publisher,
         private readonly ResponseFactoryInterface $responseFactory
     ) {
     }
@@ -32,9 +31,10 @@ class PublishController
             return $this->responseFactory->notFound("Publication doesn't exist");
         }
 
-        $result = $this->publisher->execute($post);
-        if (!$result->isSuccessful()) {
-            return $this->responseFactory->createResponse(new SystemMessage($result->getError()->getMessage()));
+        try {
+            $post->publish();
+        } catch (ImpossibleTransitionException $e) {
+            return $this->responseFactory->createResponse(new SystemMessage($e->getMessage()));
         }
 
         return $this->responseFactory->createResponse([]);
