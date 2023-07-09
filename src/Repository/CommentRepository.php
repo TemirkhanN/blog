@@ -16,15 +16,23 @@ use RuntimeException;
 use TemirkhanN\Generic\Collection\Collection;
 use TemirkhanN\Generic\Collection\CollectionInterface;
 
-class CommentRepository implements CommentRepositoryInterface
+class CommentRepository
 {
-    public function __construct(private readonly ManagerRegistry $registry)
+    private static ?ObjectManager $entityManager = null;
+
+    public function __construct(ManagerRegistry $managerRegistry)
     {
+        self::init($managerRegistry);
     }
 
-    public function save(Comment $comment): void
+    public static function init(ManagerRegistry $registry): void
     {
-        $em = $this->getEntityManager();
+        self::$entityManager = $registry->getManagerForClass(Comment::class);
+    }
+
+    public static function save(Comment $comment): void
+    {
+        $em = self::entityManager();
 
         $em->persist($comment);
         $em->flush();
@@ -32,10 +40,10 @@ class CommentRepository implements CommentRepositoryInterface
 
     public function findCommentByGuid(string $guid): ?Comment
     {
-        return $this->getEntityManager()->find(Comment::class, $guid);
+        return self::entityManager()->find(Comment::class, $guid);
     }
 
-    public function countCommentsInLastInterval(DateInterval $interval): int
+    public function countCommentsInInterval(DateInterval $interval): int
     {
         // @phpstan-ignore-next-line
         return (int) $this->createQueryBuilder()
@@ -66,21 +74,20 @@ class CommentRepository implements CommentRepositoryInterface
         return new Collection($comments);
     }
 
-    private function getEntityManager(): ObjectManager
-    {
-        $em = $this->registry->getManagerForClass(Comment::class);
-        if ($em === null) {
-            throw new RuntimeException('No relation configured to handle Comment entity');
-        }
-
-        return $em;
-    }
-
-    private function createQueryBuilder(): QueryBuilder
+    private static function createQueryBuilder(): QueryBuilder
     {
         /** @var EntityManager $em */
-        $em = $this->getEntityManager();
+        $em = self::entityManager();
 
         return $em->createQueryBuilder();
+    }
+
+    private static function entityManager(): ObjectManager
+    {
+        if (self::$entityManager === null) {
+            throw new RuntimeException('Repository has to be initialized before accessing static calls');
+        }
+
+        return self::$entityManager;
     }
 }

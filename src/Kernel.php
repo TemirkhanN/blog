@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Repository\PostRepository;
+use App\Repository\Registry;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -20,7 +20,7 @@ class Kernel extends BaseKernel
         /** @var ManagerRegistry $doctrineRegistry */
         $doctrineRegistry = $this->getContainer()->get('app.db.registry');
 
-        PostRepository::init($doctrineRegistry);
+        Registry::init($doctrineRegistry);
     }
 
     protected function configureContainer(ContainerConfigurator $container): void

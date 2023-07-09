@@ -248,6 +248,11 @@ class Post
         !$this->inTransaction && PostRepository::save($this);
     }
 
+    public function addComment(string $comment): Comment
+    {
+        return new Comment($this, $comment);
+    }
+
     private function getStateName(int $state): string
     {
         static $statesMap = [

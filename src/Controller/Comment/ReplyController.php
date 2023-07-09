@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace App\Controller\Comment;
 
-use App\Service\Post\CommentService;
+use App\Event\PostCommentedEvent;
+use App\Repository\CommentRepository;
 use App\Service\Post\Dto\NewComment;
 use App\Service\Response\Dto\SystemMessage;
 use App\Service\Response\ResponseFactoryInterface;
 use App\View\CommentView;
-use App\View\ErrorView;
 use App\View\ValidationErrorsView;
 use DateInterval;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -19,31 +20,28 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ReplyController
 {
     public function __construct(
-        private readonly CommentService $commentService,
+        private readonly CommentRepository $commentRepository,
         private readonly AuthorizationCheckerInterface $security,
         private readonly ResponseFactoryInterface $responseFactory,
-        private readonly ValidatorInterface $validator
+        private readonly ValidatorInterface $validator,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
     }
 
     public function __invoke(string $slug, string $replyTo, NewComment $commentData): Response
     {
-        $commentsInLastTenMinutes = $this->commentService->countCommentsInInterval(new DateInterval('PT10M'));
+        $commentsInLastTenMinutes = $this->commentRepository->countCommentsInInterval(new DateInterval('PT10M'));
         if ($commentsInLastTenMinutes > 10) {
             return $this->responseFactory->createResponse(new SystemMessage('Request limit match'), 429);
         }
 
-        $replyToComment = $this->commentService->findCommentByGuid($replyTo);
-        if (
-            $replyToComment === null
-            ||
-            $replyToComment->getPost()->slug() !== $slug
-        ) {
+        $target = $this->commentRepository->findCommentByGuid($replyTo);
+        if ($target === null || $target->getPost()->slug() !== $slug) {
             return $this->responseFactory->notFound('Target comment does not exist');
         }
 
-        if (!$this->security->isGranted('view_post', $replyToComment->getPost())) {
-            return $this->responseFactory->forbidden("You're not allowed to comment this publication");
+        if (!$this->security->isGranted('view_post', $target->getPost())) {
+            return $this->responseFactory->forbidden('You are not allowed to comment this post');
         }
 
         $violations = $this->validator->validate($commentData);
@@ -51,11 +49,10 @@ class ReplyController
             return $this->responseFactory->createResponse(ValidationErrorsView::create($violations));
         }
 
-        $result = $this->commentService->replyToComment($replyToComment, $commentData->text);
-        if (!$result->isSuccessful()) {
-            return $this->responseFactory->createResponse(ErrorView::create($result->getError()));
-        }
+        $reply = $target->addReply($commentData->text);
+        // TODO async static events
+        $this->eventDispatcher->dispatch(new PostCommentedEvent($reply));
 
-        return $this->responseFactory->createResponse(CommentView::create($result->getData()));
+        return $this->responseFactory->createResponse(CommentView::create($reply));
     }
 }

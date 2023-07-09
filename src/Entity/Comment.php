@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\CommentRepository;
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -22,14 +23,6 @@ class Comment
 
     private ?string $repliedToCommentGuid = null;
 
-    public static function replyTo(Comment $to, string $reply): self
-    {
-        $comment                       = new self($to->post, $reply);
-        $comment->repliedToCommentGuid = $to->guid();
-
-        return $comment;
-    }
-
     public function __construct(Post $post, string $comment)
     {
         if ($comment === '') {
@@ -40,6 +33,17 @@ class Comment
         $this->post      = $post;
         $this->comment   = $comment;
         $this->createdAt = CarbonImmutable::now();
+
+        CommentRepository::save($this);
+    }
+
+    public function addReply(string $reply): Comment
+    {
+        $comment                       = new self($this->post, $reply);
+        $comment->repliedToCommentGuid = $this->guid();
+        CommentRepository::save($comment);
+
+        return $comment;
     }
 
     public function guid(): string

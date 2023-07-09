@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Entity\Post;
+use App\Repository\PostRepository;
 use App\Service\Post\Dto\PostFilter;
 use App\Service\Post\PostListService;
 use App\Service\Response\Cache\CacheGatewayInterface;

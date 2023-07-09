@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Comment;
 
 use App\Entity\Comment;
@@ -8,23 +10,25 @@ use App\FunctionalTestCase;
 use App\Repository\CommentRepository;
 use Symfony\Component\HttpFoundation\Response;
 
-class AddControllerTest extends FunctionalTestCase
+class ReplyControllerTest extends FunctionalTestCase
 {
-    private const ENDPOINT = '/api/posts/%s/comments';
+    private const ENDPOINT = '/api/posts/%s/comments/%s';
     private Post $post;
+    private Comment $comment;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->post = new Post('Some post title', 'Some preview', 'Some content');
+        $this->post    = new Post('Some post title', 'Some preview', 'Some content');
+        $this->comment = new Comment($this->post, 'Some comment');
     }
 
     public function testSpamDetection(): void
     {
         $this->exceedSpamThreshold();
 
-        $uri      = sprintf(self::ENDPOINT, $this->post->slug());
+        $uri      = sprintf(self::ENDPOINT, $this->post->slug(), $this->comment->guid());
         $payload  = ['text' => 'Some comment text'];
         $response = $this->sendRequest('POST', $uri, $payload);
 
@@ -33,16 +37,16 @@ class AddControllerTest extends FunctionalTestCase
 
     public function testAddCommentToNonExistingPost(): void
     {
-        $uri      = sprintf(self::ENDPOINT, 'NonExistingSlug');
+        $uri      = sprintf(self::ENDPOINT, 'NonExistingSlug', $this->comment->guid());
         $payload  = ['text' => 'Some comment text'];
         $response = $this->sendRequest('POST', $uri, $payload);
 
-        self::assertEquals('{"code":404,"message":"Target post does not exist"}', $response->getContent());
+        self::assertEquals('{"code":404,"message":"Target comment does not exist"}', $response->getContent());
     }
 
     public function testAddCommentToHiddenPost(): void
     {
-        $uri      = sprintf(self::ENDPOINT, $this->post->slug());
+        $uri      = sprintf(self::ENDPOINT, $this->post->slug(), $this->comment->guid());
         $payload  = ['text' => 'Some comment text that is longer than 6 words.'];
         $response = $this->sendRequest('POST', $uri, $payload);
 
@@ -56,7 +60,7 @@ class AddControllerTest extends FunctionalTestCase
     {
         $this->post->publish();
 
-        $uri      = sprintf(self::ENDPOINT, $this->post->slug());
+        $uri      = sprintf(self::ENDPOINT, $this->post->slug(), $this->comment->guid());
         $payload  = ['text' => 'Some comment text that is longer than 6 words.'];
         $response = $this->sendRequest('POST', $uri, $payload);
 
@@ -64,7 +68,7 @@ class AddControllerTest extends FunctionalTestCase
         $commentInResponse = self::getCommentDetailsFromResponse($response);
         self::assertEquals($payload['text'], $commentInResponse['comment']);
 
-        $this->assertCommentIsAddedToPost($commentInResponse);
+        $this->assertReplyAddedToComment($commentInResponse);
     }
 
     private function exceedSpamThreshold(): void
@@ -75,12 +79,14 @@ class AddControllerTest extends FunctionalTestCase
     }
 
     /**
-     * @param array{guid: string, createdAt: string, comment: string, repliedTo: ?string} $expectedComment
+     * @param array{guid: string, createdAt: string, comment: string, repliedTo: string} $expectedComment
      *
      * @return void
      */
-    private function assertCommentIsAddedToPost(array $expectedComment): void
+    private function assertReplyAddedToComment(array $expectedComment): void
     {
+        self::assertSame($this->comment->guid(), $expectedComment['repliedTo']);
+
         self::assertEquals($this->currentTime->format(DATE_ATOM), $expectedComment['createdAt']);
 
         /** @var CommentRepository $commentRepository */
@@ -107,7 +113,7 @@ class AddControllerTest extends FunctionalTestCase
     /**
      * @param Response $response
      *
-     * @return array{guid: string, createdAt: string, comment: string, repliedTo: ?string}
+     * @return array{guid: string, createdAt: string, comment: string, repliedTo: string}
      */
     private function getCommentDetailsFromResponse(Response $response): array
     {
