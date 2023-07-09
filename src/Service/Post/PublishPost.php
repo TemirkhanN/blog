@@ -11,6 +11,9 @@ use TemirkhanN\Generic\Error;
 use TemirkhanN\Generic\Result;
 use TemirkhanN\Generic\ResultInterface;
 
+/**
+ * @todo this service is no longer required.
+ */
 class PublishPost
 {
     public function __construct(private readonly PostRepositoryInterface $postRepository)

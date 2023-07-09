@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Comment;
 
 use App\Repository\CommentRepository;
-use App\Service\Post\PostListService;
+use App\Repository\PostRepositoryInterface;
 use App\Service\Response\Cache\CacheGatewayInterface;
 use App\Service\Response\Cache\TTL;
 use App\Service\Response\ResponseFactoryInterface;
@@ -16,14 +16,14 @@ class ListController
 {
     public function __construct(
         private readonly CommentRepository $commentRepository,
-        private readonly PostListService $postListService,
+        private readonly PostRepositoryInterface $postRepository,
         private readonly ResponseFactoryInterface $responseFactory
     ) {
     }
 
     public function __invoke(string $slug, CacheGatewayInterface $cacheGateway): Response
     {
-        $post = $this->postListService->getPostBySlug($slug);
+        $post = $this->postRepository->findOneBySlug($slug);
         if (!$post) {
             return $this->responseFactory->notFound('Post not found');
         }

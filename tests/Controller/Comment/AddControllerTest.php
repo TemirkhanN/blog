@@ -5,7 +5,7 @@ namespace App\Controller\Comment;
 use App\Entity\Comment;
 use App\Entity\Post;
 use App\FunctionalTestCase;
-use App\Repository\CommentRepository;
+use App\Repository\CommentRepositoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class AddControllerTest extends FunctionalTestCase
@@ -83,8 +83,8 @@ class AddControllerTest extends FunctionalTestCase
     {
         self::assertEquals($this->currentTime->format(DATE_ATOM), $expectedComment['createdAt']);
 
-        /** @var CommentRepository $commentRepository */
-        $commentRepository = $this->getContainer()->get(CommentRepository::class);
+        /** @var CommentRepositoryInterface $commentRepository */
+        $commentRepository = $this->getContainer()->get(CommentRepositoryInterface::class);
 
         $comments = $commentRepository->findCommentsByPost($this->post);
 

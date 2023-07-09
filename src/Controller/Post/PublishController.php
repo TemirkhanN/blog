@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
-use App\Service\Post\PostListService;
+use App\Repository\PostRepositoryInterface;
 use App\Service\Post\PublishPost;
 use App\Service\Response\Dto\SystemMessage;
 use App\Service\Response\ResponseFactoryInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class PublishController
 {
     public function __construct(
-        private readonly PostListService $postListService,
+        private readonly PostRepositoryInterface $postRepository,
         private readonly AuthorizationCheckerInterface $security,
         private readonly PublishPost $publisher,
         private readonly ResponseFactoryInterface $responseFactory
@@ -27,7 +27,7 @@ class PublishController
             return $this->responseFactory->forbidden("You're not allowed to modify posts");
         }
 
-        $post = $this->postListService->getPostBySlug($slug);
+        $post = $this->postRepository->findOneBySlug($slug);
         if ($post === null) {
             return $this->responseFactory->notFound("Publication doesn't exist");
         }

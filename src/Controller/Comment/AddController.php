@@ -6,8 +6,8 @@ namespace App\Controller\Comment;
 
 use App\Event\PostCommentedEvent;
 use App\Repository\CommentRepository;
+use App\Repository\PostRepositoryInterface;
 use App\Service\Post\Dto\NewComment;
-use App\Service\Post\PostListService;
 use App\Service\Response\Dto\SystemMessage;
 use App\Service\Response\ResponseFactoryInterface;
 use App\View\CommentView;
@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class AddController
 {
     public function __construct(
-        private readonly PostListService $postListService,
+        private readonly PostRepositoryInterface $postRepository,
         private readonly CommentRepository $commentRepository,
         private readonly AuthorizationCheckerInterface $security,
         private readonly ResponseFactoryInterface $responseFactory,
@@ -37,7 +37,7 @@ class AddController
             return $this->responseFactory->createResponse(new SystemMessage('Request limit match'), 429);
         }
 
-        $post = $this->postListService->getPostBySlug($slug);
+        $post = $this->postRepository->findOneBySlug($slug);
         if ($post === null) {
             return $this->responseFactory->notFound('Target post does not exist');
         }

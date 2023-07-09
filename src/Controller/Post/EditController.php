@@ -6,7 +6,7 @@ namespace App\Controller\Post;
 
 use App\Dto\PostData;
 use App\Entity\Post;
-use App\Service\Post\PostListService;
+use App\Repository\PostRepositoryInterface;
 use App\Service\Response\ResponseFactoryInterface;
 use App\View\PostView;
 use App\View\ValidationErrorsView;
@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class EditController
 {
     public function __construct(
-        private readonly PostListService $postListService,
+        private readonly PostRepositoryInterface $postRepository,
         private readonly ValidatorInterface $validator,
         private readonly AuthorizationCheckerInterface $security,
         private readonly ResponseFactoryInterface $responseFactory
@@ -35,7 +35,7 @@ class EditController
             return $this->responseFactory->createResponse(ValidationErrorsView::create($violations));
         }
 
-        $post = $this->postListService->getPostBySlug($slug);
+        $post = $this->postRepository->findOneBySlug($slug);
         if ($post === null) {
             return $this->responseFactory->notFound("Publication doesn't exist");
         }

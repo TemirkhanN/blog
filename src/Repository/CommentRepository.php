@@ -16,7 +16,7 @@ use RuntimeException;
 use TemirkhanN\Generic\Collection\Collection;
 use TemirkhanN\Generic\Collection\CollectionInterface;
 
-class CommentRepository
+class CommentRepository implements CommentRepositoryInterface
 {
     private static ?ObjectManager $entityManager = null;
 
