@@ -101,7 +101,6 @@ class PostRepository implements PostRepositoryInterface
         }
 
         $em->persist($post);
-        $em->flush();
     }
 
     private static function createQueryBuilder(): QueryBuilder

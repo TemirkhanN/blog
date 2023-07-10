@@ -40,12 +40,10 @@ class EditController
             return $this->responseFactory->notFound("Publication doesn't exist");
         }
 
-        $post->transaction(function (Post $post) use ($newData) {
-            $post->changeTitle($newData->title);
-            $post->changePreview($newData->preview);
-            $post->changeContent($newData->content);
-            $post->setTags($newData->tags);
-        });
+        $post->changeTitle($newData->title);
+        $post->changePreview($newData->preview);
+        $post->changeContent($newData->content);
+        $post->setTags($newData->tags);
 
         return $this->responseFactory->createResponse(PostView::create($post));
     }

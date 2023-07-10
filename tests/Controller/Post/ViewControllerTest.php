@@ -23,7 +23,7 @@ class ViewControllerTest extends FunctionalTestCase
         $publishedPost2 = $this->createPost('Another title', 'Preview', 'Content');
         $publishedPost2->publish();
 
-        $this->saveState($draftPost, $archivedPost, $publishedPost1, $publishedPost2);
+        $this->saveState();
     }
 
     /**
@@ -101,7 +101,7 @@ class ViewControllerTest extends FunctionalTestCase
         string $content
     ): Post {
         $post = new Post($title, $preview, $content);
-        $this->saveState($post);
+        $this->saveState();
 
         return $post;
     }

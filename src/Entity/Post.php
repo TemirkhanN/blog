@@ -45,8 +45,6 @@ class Post
      */
     private Collection $comments;
 
-    private bool $inTransaction = false;
-
     /**
      * @param string   $title
      * @param string   $preview
@@ -95,28 +93,13 @@ class Post
         PostRepository::save($this);
     }
 
-    /**
-     * @param callable(Post): void $action
-     */
-    public function transaction(callable $action): void
-    {
-        $this->inTransaction = true;
-
-        try {
-            $action($this);
-            PostRepository::save($this);
-        } finally {
-            $this->inTransaction = false;
-        }
-    }
-
     public function changeTitle(string $newTitle): void
     {
         $this->title     = $newTitle;
         $this->slug      = (string) new Slug($this->createdAt, $newTitle);
         $this->updatedAt = CarbonImmutable::now();
 
-        !$this->inTransaction && PostRepository::save($this);
+        PostRepository::save($this);
     }
 
     public function title(): string
@@ -129,7 +112,7 @@ class Post
         $this->content   = $newContent;
         $this->updatedAt = CarbonImmutable::now();
 
-        !$this->inTransaction && PostRepository::save($this);
+        PostRepository::save($this);
     }
 
     public function content(): string
@@ -142,7 +125,7 @@ class Post
         $this->preview   = $newPreview;
         $this->updatedAt = CarbonImmutable::now();
 
-        !$this->inTransaction && PostRepository::save($this);
+        PostRepository::save($this);
     }
 
     public function preview(): string
@@ -190,7 +173,7 @@ class Post
             $this->tags->add(new Tag($newTag, $this));
         }
 
-        !$this->inTransaction && PostRepository::save($this);
+        PostRepository::save($this);
     }
 
     /**
@@ -233,7 +216,7 @@ class Post
         $this->publishedAt = CarbonImmutable::now();
         $this->updatedAt   = CarbonImmutable::now();
 
-        !$this->inTransaction && PostRepository::save($this);
+        PostRepository::save($this);
     }
 
     public function archive(): void
@@ -245,7 +228,7 @@ class Post
         $this->state     = self::STATE_ARCHIVED;
         $this->updatedAt = CarbonImmutable::now();
 
-        !$this->inTransaction && PostRepository::save($this);
+        PostRepository::save($this);
     }
 
     public function addComment(string $comment): Comment

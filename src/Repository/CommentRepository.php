@@ -35,7 +35,6 @@ class CommentRepository implements CommentRepositoryInterface
         $em = self::entityManager();
 
         $em->persist($comment);
-        $em->flush();
     }
 
     public function findCommentByGuid(string $guid): ?Comment

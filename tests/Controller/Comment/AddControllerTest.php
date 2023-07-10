@@ -17,6 +17,7 @@ class AddControllerTest extends FunctionalTestCase
         parent::setUp();
 
         $this->post = new Post('Some post title', 'Some preview', 'Some content');
+        $this->saveState();
     }
 
     public function testSpamDetection(): void
@@ -71,6 +72,7 @@ class AddControllerTest extends FunctionalTestCase
         for ($i = 0; $i <= 10; $i++) {
             $this->post->addComment('Comment ' . $i);
         }
+        $this->saveState();
     }
 
     /**

@@ -195,8 +195,6 @@ class PostRepositoryTest extends FunctionalTestCase
 
     private function createFixtures(): void
     {
-        $entityManager = $this->getEntityManager();
-
         // An artificial time gap between posts with step >=1second
         $this->setCurrentTime($this->currentTime->subSeconds(60));
 
@@ -247,5 +245,7 @@ class PostRepositoryTest extends FunctionalTestCase
             'Some preview of 25',
             'Some content of 25'
         );
+
+        $this->saveState();
     }
 }
