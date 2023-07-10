@@ -250,7 +250,7 @@ class Post
 
     public function addComment(string $comment): Comment
     {
-        return new Comment($this, $comment);
+        return Comment::addToPost($this, $comment);
     }
 
     private function getStateName(int $state): string

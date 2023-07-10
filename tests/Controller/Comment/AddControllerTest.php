@@ -2,7 +2,6 @@
 
 namespace App\Controller\Comment;
 
-use App\Entity\Comment;
 use App\Entity\Post;
 use App\FunctionalTestCase;
 use App\Repository\CommentRepositoryInterface;
@@ -70,7 +69,7 @@ class AddControllerTest extends FunctionalTestCase
     private function exceedSpamThreshold(): void
     {
         for ($i = 0; $i <= 10; $i++) {
-            new Comment($this->post, 'Comment ' . $i);
+            $this->post->addComment('Comment ' . $i);
         }
     }
 

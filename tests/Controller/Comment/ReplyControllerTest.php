@@ -21,7 +21,7 @@ class ReplyControllerTest extends FunctionalTestCase
         parent::setUp();
 
         $this->post    = new Post('Some post title', 'Some preview', 'Some content');
-        $this->comment = new Comment($this->post, 'Some comment');
+        $this->comment = $this->post->addComment('Some comment');
     }
 
     public function testSpamDetection(): void
@@ -74,7 +74,7 @@ class ReplyControllerTest extends FunctionalTestCase
     private function exceedSpamThreshold(): void
     {
         for ($i = 0; $i <= 10; $i++) {
-            new Comment($this->post, 'Comment ' . $i);
+            $this->post->addComment('Comment ' . $i);
         }
     }
 

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Comment;
 
 use App\Event\PostCommentedEvent;
-use App\Repository\CommentRepository;
+use App\Repository\CommentRepositoryInterface;
 use App\Repository\PostRepositoryInterface;
 use App\Service\Post\Dto\NewComment;
 use App\Service\Response\Dto\SystemMessage;
@@ -22,7 +22,7 @@ class AddController
 {
     public function __construct(
         private readonly PostRepositoryInterface $postRepository,
-        private readonly CommentRepository $commentRepository,
+        private readonly CommentRepositoryInterface $commentRepository,
         private readonly AuthorizationCheckerInterface $security,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ValidatorInterface $validator,

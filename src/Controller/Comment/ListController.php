@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Comment;
 
-use App\Repository\CommentRepository;
+use App\Repository\CommentRepositoryInterface;
 use App\Repository\PostRepositoryInterface;
 use App\Service\Response\Cache\CacheGatewayInterface;
 use App\Service\Response\Cache\TTL;
@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 class ListController
 {
     public function __construct(
-        private readonly CommentRepository $commentRepository,
+        private readonly CommentRepositoryInterface $commentRepository,
         private readonly PostRepositoryInterface $postRepository,
         private readonly ResponseFactoryInterface $responseFactory
     ) {
