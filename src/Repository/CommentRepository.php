@@ -6,40 +6,22 @@ namespace App\Repository;
 
 use App\Entity\Comment;
 use App\Entity\Post;
+use Carbon\Carbon;
 use DateInterval;
-use DateTime;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
-use RuntimeException;
 use TemirkhanN\Generic\Collection\Collection;
 use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class CommentRepository implements CommentRepositoryInterface
 {
-    private static ?ObjectManager $entityManager = null;
-
-    public function __construct(ManagerRegistry $managerRegistry)
-    {
-        self::init($managerRegistry);
-    }
-
-    public static function init(ManagerRegistry $registry): void
-    {
-        self::$entityManager = $registry->getManagerForClass(Comment::class);
-    }
-
     public static function save(Comment $comment): void
     {
-        $em = self::entityManager();
-
-        $em->persist($comment);
+        ORM::instance()->persist($comment);
     }
 
     public function findCommentByGuid(string $guid): ?Comment
     {
-        return self::entityManager()->find(Comment::class, $guid);
+        return ORM::instance()->getRepository(Comment::class)->find($guid);
     }
 
     public function countCommentsInInterval(DateInterval $interval): int
@@ -49,7 +31,7 @@ class CommentRepository implements CommentRepositoryInterface
             ->select('COUNT(c)')
             ->from(Comment::class, 'c')
             ->where('c.createdAt > :fromTime')
-            ->setParameters(['fromTime' => (new DateTime())->sub($interval)])
+            ->setParameters(['fromTime' => Carbon::now()->sub($interval)])
             ->getQuery()->getSingleScalarResult();
     }
 
@@ -75,18 +57,6 @@ class CommentRepository implements CommentRepositoryInterface
 
     private static function createQueryBuilder(): QueryBuilder
     {
-        /** @var EntityManager $em */
-        $em = self::entityManager();
-
-        return $em->createQueryBuilder();
-    }
-
-    private static function entityManager(): ObjectManager
-    {
-        if (self::$entityManager === null) {
-            throw new RuntimeException('Repository has to be initialized before accessing static calls');
-        }
-
-        return self::$entityManager;
+        return ORM::instance()->createQueryBuilder();
     }
 }

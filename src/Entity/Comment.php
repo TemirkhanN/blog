@@ -24,6 +24,9 @@ class Comment
     private ?string $repliedToCommentGuid = null;
 
     /**
+     * @param Post   $post
+     * @param string $comment
+     *
      * @internal use Post::addComment()
      */
     public static function addToPost(Post $post, string $comment): Comment
