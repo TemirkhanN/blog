@@ -136,12 +136,13 @@ class FunctionalTestCase extends WebTestCase
         );
     }
 
-    protected function saveState(object ...$entities): void
+    /**
+     * Saves in-memory state to the persistent storage.
+     * It is used to flush in-memory changes to the database between requests/actions.
+     */
+    protected function saveState(): void
     {
         $em = $this->getEntityManager();
-        foreach ($entities as $entity) {
-            $em->persist($entity);
-        }
         $em->flush();
     }
 

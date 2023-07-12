@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Entity\Post;
+use App\Repository\PostRepositoryInterface;
 use App\Service\Post\Dto\PostFilter;
-use App\Service\Post\PostListService;
 use App\Service\Response\Cache\CacheGatewayInterface;
 use App\Service\Response\Cache\TTL;
 use App\Service\Response\ResponseFactoryInterface;
@@ -25,7 +25,7 @@ class ListController
     private const POSTS_PER_PAGE = 10;
 
     public function __construct(
-        private readonly PostListService $postListService,
+        private readonly PostRepositoryInterface $postRepository,
         private readonly AuthorizationCheckerInterface $security,
         private readonly ResponseFactoryInterface $responseFactory
     ) {
@@ -39,8 +39,8 @@ class ListController
         }
         $filter = $parseFilter->getData();
 
-        $posts        = $this->postListService->getPosts($filter);
-        $ofTotalPosts = $this->postListService->countPosts($filter);
+        $posts        = $this->postRepository->getPosts($filter);
+        $ofTotalPosts = $this->postRepository->countPosts($filter);
 
         $collection = new CollectionChunk((int) $filter->limit, $filter->offset, $ofTotalPosts, $posts);
         $response   = $this->responseFactory->createResponse($this->createView($collection));

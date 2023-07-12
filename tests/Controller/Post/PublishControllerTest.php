@@ -51,7 +51,7 @@ class PublishControllerTest extends FunctionalTestCase
     {
         $post = $this->createPost('Some title', 'Some preview', 'Some content');
         $post->publish();
-        $this->saveState($post);
+        $this->saveState();
 
         $this->authenticate('SomeHardCodedToken');
         $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->slug()));
@@ -64,7 +64,7 @@ class PublishControllerTest extends FunctionalTestCase
     {
         $post = $this->createPost('Some title', 'Some preview', 'Some content');
         $post->archive();
-        $this->saveState($post);
+        $this->saveState();
 
         $this->authenticate('SomeHardCodedToken');
         $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->slug()));
@@ -85,7 +85,7 @@ class PublishControllerTest extends FunctionalTestCase
         string $content
     ): Post {
         $post = new Post($title, $preview, $content);
-        $this->saveState($post);
+        $this->saveState();
 
         return $post;
     }

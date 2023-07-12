@@ -15,11 +15,11 @@ interface PostRepositoryInterface
      *
      * @return CollectionInterface<Post>
      */
-    public function getPosts(PostFilter $filter): CollectionInterface;
+    public static function getPosts(PostFilter $filter): CollectionInterface;
 
-    public function countPosts(PostFilter $filter): int;
+    public static function countPosts(PostFilter $filter): int;
 
-    public function findOneBySlug(string $slug): ?Post;
+    public static function findOneBySlug(string $slug): ?Post;
 
-    public function save(Post $post): void;
+    public static function save(Post $post): void;
 }

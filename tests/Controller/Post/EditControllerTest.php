@@ -144,7 +144,7 @@ class EditControllerTest extends FunctionalTestCase
     ): Post {
         $post = new Post($title, $preview, $content);
         $post->setTags($tags);
-        $this->saveState($post);
+        $this->saveState();
 
         return $post;
     }

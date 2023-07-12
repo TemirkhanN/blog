@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Repository\CommentRepository;
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -22,15 +23,21 @@ class Comment
 
     private ?string $repliedToCommentGuid = null;
 
-    public static function replyTo(Comment $to, string $reply): self
+    /**
+     * @param Post   $post
+     * @param string $comment
+     *
+     * @internal use Post::addComment()
+     */
+    public static function addToPost(Post $post, string $comment): Comment
     {
-        $comment                       = new self($to->post, $reply);
-        $comment->repliedToCommentGuid = $to->guid();
+        $entity = new self($post, $comment);
+        CommentRepository::save($entity);
 
-        return $comment;
+        return $entity;
     }
 
-    public function __construct(Post $post, string $comment)
+    private function __construct(Post $post, string $comment)
     {
         if ($comment === '') {
             throw new DomainException('Comment can not be empty.');
@@ -40,6 +47,15 @@ class Comment
         $this->post      = $post;
         $this->comment   = $comment;
         $this->createdAt = CarbonImmutable::now();
+    }
+
+    public function addReply(string $reply): Comment
+    {
+        $comment                       = new self($this->post, $reply);
+        $comment->repliedToCommentGuid = $this->guid();
+        CommentRepository::save($comment);
+
+        return $comment;
     }
 
     public function guid(): string

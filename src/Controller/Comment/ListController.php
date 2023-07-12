@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Comment;
 
-use App\Service\Post\CommentService;
-use App\Service\Post\PostListService;
+use App\Repository\CommentRepositoryInterface;
+use App\Repository\PostRepositoryInterface;
 use App\Service\Response\Cache\CacheGatewayInterface;
 use App\Service\Response\Cache\TTL;
 use App\Service\Response\ResponseFactoryInterface;
@@ -15,20 +15,20 @@ use Symfony\Component\HttpFoundation\Response;
 class ListController
 {
     public function __construct(
-        private readonly CommentService $commentService,
-        private readonly PostListService $postListService,
+        private readonly CommentRepositoryInterface $commentRepository,
+        private readonly PostRepositoryInterface $postRepository,
         private readonly ResponseFactoryInterface $responseFactory
     ) {
     }
 
     public function __invoke(string $slug, CacheGatewayInterface $cacheGateway): Response
     {
-        $post = $this->postListService->getPostBySlug($slug);
+        $post = $this->postRepository->findOneBySlug($slug);
         if (!$post) {
             return $this->responseFactory->notFound('Post not found');
         }
 
-        $comments = $this->commentService->getCommentsByPost($post);
+        $comments = $this->commentRepository->findCommentsByPost($post);
 
         $response = $this->responseFactory->createResponse(CommentsTreeView::create($comments));
 

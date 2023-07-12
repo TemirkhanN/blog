@@ -11,7 +11,7 @@ use TemirkhanN\Generic\Collection\CollectionInterface;
 
 interface CommentRepositoryInterface
 {
-    public function save(Comment $comment): void;
+    public static function save(Comment $comment): void;
 
     public function findCommentByGuid(string $guid): ?Comment;
 
@@ -22,5 +22,5 @@ interface CommentRepositoryInterface
      */
     public function findCommentsByPost(Post $post): CollectionInterface;
 
-    public function countCommentsInLastInterval(DateInterval $interval): int;
+    public function countCommentsInInterval(DateInterval $interval): int;
 }

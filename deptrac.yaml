@@ -50,6 +50,7 @@ parameters:
         - { type: className, value: \\App\\Service\\UriResolver }
         - { type: className, value: \\App\\Service\\TokenIssuer }
         - { type: directory, value: /src/Repository/ }
+        - { type: bool, must: [{type: directory, value: /src/Repository/}], must_not: [{type: className, value: \\App\\Repository\\ORM}]}
 
   ruleset:
     Controller:

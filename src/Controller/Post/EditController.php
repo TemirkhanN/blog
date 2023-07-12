@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Dto\PostData;
+use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
-use App\Service\Post\PostListService;
 use App\Service\Response\ResponseFactoryInterface;
 use App\View\PostView;
 use App\View\ValidationErrorsView;
@@ -18,7 +18,6 @@ class EditController
 {
     public function __construct(
         private readonly PostRepositoryInterface $postRepository,
-        private readonly PostListService $postListService,
         private readonly ValidatorInterface $validator,
         private readonly AuthorizationCheckerInterface $security,
         private readonly ResponseFactoryInterface $responseFactory
@@ -36,7 +35,7 @@ class EditController
             return $this->responseFactory->createResponse(ValidationErrorsView::create($violations));
         }
 
-        $post = $this->postListService->getPostBySlug($slug);
+        $post = $this->postRepository->findOneBySlug($slug);
         if ($post === null) {
             return $this->responseFactory->notFound("Publication doesn't exist");
         }
@@ -45,8 +44,6 @@ class EditController
         $post->changePreview($newData->preview);
         $post->changeContent($newData->content);
         $post->setTags($newData->tags);
-
-        $this->postRepository->save($post);
 
         return $this->responseFactory->createResponse(PostView::create($post));
     }
