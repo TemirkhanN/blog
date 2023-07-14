@@ -11,16 +11,6 @@ class CreateControllerTest extends FunctionalTestCase
 {
     private const API_URI = '/api/posts';
 
-    public function testBadRequest(): void
-    {
-        $response = $this->sendRequest('POST', self::API_URI);
-
-        self::assertEquals(
-            '{"code":400,"message":"Invalid request is passed"}',
-            $response->getContent()
-        );
-    }
-
     public function testForbiddenAccess(): void
     {
         $data = [
@@ -36,6 +26,18 @@ class CreateControllerTest extends FunctionalTestCase
             '{"code":403,"message":"You\u0027re not allowed to create posts"}',
             $response->getContent()
         );
+    }
+
+    public function testBadRequest(): void
+    {
+        $this->authenticate('SomeHardCodedToken');
+        $response = $this->sendRequest('POST', self::API_URI);
+
+        $this->assertResponseContainsError('Invalid data', [
+            'title'   => 'This value should not be blank.',
+            'preview' => 'This value should not be blank.',
+            'content' => 'This value should not be blank.',
+        ]);
     }
 
     public function testInvalidPostData(): void

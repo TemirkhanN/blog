@@ -5,25 +5,21 @@ declare(strict_types=1);
 namespace App\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use ViTech\DataObjectBundle\Object\AbstractObject;
 
-/**
- * Post creation data transfer object.
- */
-class PostData extends AbstractObject
+class PostData
 {
-    #[Assert\NotBlank]
-    public string $title;
-
-    #[Assert\NotBlank]
-    public string $preview;
-
-    #[Assert\NotBlank]
-    public string $content;
-
-    /**
-     * @var string[]
-     */
-    #[Assert\All([new Assert\NotBlank(), new Assert\Type('alnum')])]
-    public array $tags;
+    public function __construct(
+        #[Assert\NotBlank]
+        public readonly string $title,
+        #[Assert\NotBlank]
+        public readonly string $preview,
+        #[Assert\NotBlank]
+        public readonly string $content,
+        /**
+         * @var string[]
+         */
+        #[Assert\All([new Assert\NotBlank(), new Assert\Type('alnum')])]
+        public readonly array $tags = [],
+    ) {
+    }
 }

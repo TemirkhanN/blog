@@ -20,6 +20,19 @@ class AddControllerTest extends FunctionalTestCase
         $this->saveState();
     }
 
+    public function testInvalidComment(): void
+    {
+        $this->post->publish();
+
+        $uri = sprintf(self::ENDPOINT, $this->post->slug());
+        $this->sendRequest('POST', $uri);
+
+        self::assertResponseContainsError(
+            'Invalid data',
+            ['text' => 'Meaningful comment shall contain at least 5-6 words.']
+        );
+    }
+
     public function testSpamDetection(): void
     {
         $this->exceedSpamThreshold();

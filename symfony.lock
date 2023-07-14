@@ -228,6 +228,9 @@
     "sebastian/version": {
         "version": "3.0.2"
     },
+    "ser/dto-request-bundle": {
+        "version": "0.1.1"
+    },
     "spatie/data-transfer-object": {
         "version": "1.13.3"
     },
@@ -501,9 +504,6 @@
     },
     "theseer/tokenizer": {
         "version": "1.2.0"
-    },
-    "vi-tech/dto-bundle": {
-        "version": "2.0.0"
     },
     "webmozart/assert": {
         "version": "1.10.0"

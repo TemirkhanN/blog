@@ -12,18 +12,6 @@ class EditControllerTest extends FunctionalTestCase
 {
     private const ENDPOINT = '/api/posts/%s';
 
-    public function testBadRequest(): void
-    {
-        $postSlug = 'Some-slug-123';
-
-        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug));
-
-        self::assertEquals(
-            '{"code":400,"message":"Invalid request is passed"}',
-            $response->getContent()
-        );
-    }
-
     public function testForbiddenAccess(): void
     {
         $postSlug = 'Some-slug-123';
@@ -66,6 +54,20 @@ class EditControllerTest extends FunctionalTestCase
             '{"code":404,"message":"Publication doesn\u0027t exist"}',
             $response->getContent()
         );
+    }
+
+    public function testBadRequest(): void
+    {
+        $postSlug = 'Some-slug-123';
+
+        $this->authenticate('SomeHardCodedToken');
+        $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug));
+
+        $this->assertResponseContainsError('Invalid data', [
+            'title'   => 'This value should not be blank.',
+            'preview' => 'This value should not be blank.',
+            'content' => 'This value should not be blank.',
+        ]);
     }
 
     public function testInvalidPostData(): void

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "66af75d8c82e3367527da9e536d39983",
+    "content-hash": "cd0adec9bf5ca7d3ad824794f1204616",
     "packages": [
         {
             "name": "composer/package-versions-deprecated",
@@ -2577,6 +2577,59 @@
                 }
             ],
             "time": "2022-12-19T21:55:10+00:00"
+        },
+        {
+            "name": "ser/dto-request-bundle",
+            "version": "0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SerRashin/dto-request-bundle.git",
+                "reference": "8b7e2430da16c796b7a43fa077f4eeb35397af5f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SerRashin/dto-request-bundle/zipball/8b7e2430da16c796b7a43fa077f4eeb35397af5f",
+                "reference": "8b7e2430da16c796b7a43fa077f4eeb35397af5f",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": "^8.1",
+                "symfony/config": "^6.2",
+                "symfony/dependency-injection": "^6.2",
+                "symfony/http-kernel": "^6.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^10.0",
+                "squizlabs/php_codesniffer": "^3.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ser\\DtoRequestBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sergey Rashin",
+                    "email": "ser@rashin.me"
+                }
+            ],
+            "description": "Convert Symfony request to DTO object.",
+            "keywords": [
+                "dto",
+                "request",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/SerRashin/dto-request-bundle/issues",
+                "source": "https://github.com/SerRashin/dto-request-bundle/tree/0.1.2"
+            },
+            "time": "2023-07-14T10:20:36+00:00"
         },
         {
             "name": "spatie/data-transfer-object",
@@ -6852,56 +6905,6 @@
                 }
             ],
             "time": "2023-06-08T12:52:13+00:00"
-        },
-        {
-            "name": "vi-tech/dto-bundle",
-            "version": "3.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/vseinstrumentiru/dto-bundle.git",
-                "reference": "844a380ca93f61efe8df3555a6d4513879169472"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/vseinstrumentiru/dto-bundle/zipball/844a380ca93f61efe8df3555a6d4513879169472",
-                "reference": "844a380ca93f61efe8df3555a6d4513879169472",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": "^7.3|~8.0.0|^8.1",
-                "spatie/data-transfer-object": "^1.13|^2.5",
-                "symfony/dependency-injection": "^4.1|^5.0|^6.0",
-                "symfony/http-kernel": "^4.1|^5.1|^6.0"
-            },
-            "require-dev": {
-                "php-coveralls/php-coveralls": "^2.2",
-                "phpunit/phpunit": "^9.3",
-                "roave/security-advisories": "dev-master",
-                "squizlabs/php_codesniffer": "^3.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "ViTech\\DataObjectBundle\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Temirkhan",
-                    "email": "temirkhan@nasukhov.me"
-                }
-            ],
-            "description": "DTO resolver for symfony projects",
-            "support": {
-                "issues": "https://github.com/vseinstrumentiru/dto-bundle/issues",
-                "source": "https://github.com/vseinstrumentiru/dto-bundle/tree/3.0.1"
-            },
-            "time": "2022-02-01T11:51:15+00:00"
         }
     ],
     "packages-dev": [
@@ -9762,8 +9765,5 @@
         "ext-redis": "^5.0"
     },
     "platform-dev": [],
-    "platform-overrides": {
-        "php": "8.1"
-    },
     "plugin-api-version": "2.3.0"
 }

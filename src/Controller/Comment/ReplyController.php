@@ -12,6 +12,7 @@ use App\Service\Response\ResponseFactoryInterface;
 use App\View\CommentView;
 use App\View\ValidationErrorsView;
 use DateInterval;
+use Ser\DtoRequestBundle\Attributes\Dto;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -28,7 +29,7 @@ class ReplyController
     ) {
     }
 
-    public function __invoke(string $slug, string $replyTo, NewComment $commentData): Response
+    public function __invoke(string $slug, string $replyTo, #[Dto] NewComment $commentData): Response
     {
         $commentsInLastTenMinutes = $this->commentRepository->countCommentsInInterval(new DateInterval('PT10M'));
         if ($commentsInLastTenMinutes > 10) {

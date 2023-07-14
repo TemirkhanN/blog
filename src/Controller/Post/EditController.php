@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Dto\PostData;
-use App\Entity\Post;
 use App\Repository\PostRepositoryInterface;
 use App\Service\Response\ResponseFactoryInterface;
 use App\View\PostView;
 use App\View\ValidationErrorsView;
+use Ser\DtoRequestBundle\Attributes\Dto;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -24,7 +24,7 @@ class EditController
     ) {
     }
 
-    public function __invoke(string $slug, PostData $newData): Response
+    public function __invoke(string $slug, #[Dto] PostData $newData): Response
     {
         if (!$this->security->isGranted('create_post')) {
             return $this->responseFactory->forbidden("You're not allowed to edit posts");

@@ -15,6 +15,7 @@
         "league/commonmark": "^2.4",
         "nesbot/carbon": "^2.67",
         "ramsey/uuid": "^3.8",
+        "ser/dto-request-bundle": "^0.1.2",
         "spatie/data-transfer-object": "^1.13",
         "symfony-bundles/json-request-bundle": "^4.0",
         "symfony/cache": "6.3.*",
@@ -31,8 +32,7 @@
         "symfony/validator": "6.3.*",
         "symfony/yaml": "6.3.*",
         "temirkhann/generic": "^0.3.0",
-        "twig/twig": "^3.5",
-        "vi-tech/dto-bundle": "^3.0"
+        "twig/twig": "^3.5"
     },
     "require-dev": {
         "free2er/coding-standard": "^1.1",

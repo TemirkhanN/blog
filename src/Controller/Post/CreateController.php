@@ -9,6 +9,7 @@ use App\Entity\Post;
 use App\Service\Response\ResponseFactoryInterface;
 use App\View\PostView;
 use App\View\ValidationErrorsView;
+use Ser\DtoRequestBundle\Attributes\Dto;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -22,7 +23,7 @@ class CreateController
     ) {
     }
 
-    public function __invoke(PostData $postData): Response
+    public function __invoke(#[Dto] PostData $postData): Response
     {
         if (!$this->security->isGranted('create_post')) {
             return $this->responseFactory->forbidden("You're not allowed to create posts");
