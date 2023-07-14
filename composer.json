@@ -42,7 +42,7 @@
         "qossmic/deptrac-shim": "^1.0",
         "roave/security-advisories": "dev-latest",
         "symfony/browser-kit": "6.3.*",
-        "symfony/phpunit-bridge": "^5.3"
+        "symfony/phpunit-bridge": "6.3.*"
     },
     "config": {
         "preferred-install": {
