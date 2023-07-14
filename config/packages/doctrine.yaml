@@ -15,7 +15,6 @@ doctrine:
         mappings:
             App:
                 is_bundle: false
-                type: yml
+                type: xml
                 dir: '%kernel.project_dir%/config/mapping/'
                 prefix: 'App\Entity'
-                alias: App
