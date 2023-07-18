@@ -2,3 +2,4 @@ framework:
     router:
         strict_requirements: null
         utf8: true
+        default_uri: 'https://%env(BLOG_DOMAIN_NAME)%'

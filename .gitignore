@@ -31,4 +31,4 @@
 /.deptrac.cache
 ###< qossmic/deptrac-shim ###
 
-sitemap.xml
+public/sitemap.xml

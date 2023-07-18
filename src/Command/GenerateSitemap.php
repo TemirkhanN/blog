@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class GenerateSitemap extends Command
 {
-    private const SITEMAP_DIR = __DIR__ . './../..';
+    private const SITEMAP_DIR = __DIR__ . './../../public';
 
     public function __construct(
         private readonly SitemapGenerator $sitemapGenerator,
