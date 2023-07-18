@@ -16,7 +16,7 @@ services:
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
-        resource: '../src/{EventSubscriber,Repository,Service,Security}'
+        resource: '../src/{Command,EventSubscriber,Repository,Service,Security}'
         exclude: '../src/Service/Response'
 
     # controllers are imported separately to make sure services can be injected
@@ -38,10 +38,6 @@ services:
                 -
                   login: admin
                   password: '%env(MY_VERY_SECRET_TOKEN)%'
-
-    App\Service\UriResolver:
-      arguments:
-        - '%env(BLOG_DOMAIN_NAME)%'
 
     App\EventSubscriber\NotifyAdminSubscriber:
       arguments:
