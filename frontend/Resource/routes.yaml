@@ -75,3 +75,9 @@ error.not_found:
   stateless: true
   methods: [GET]
   controller: Frontend\Controller\ErrorController::notFound
+
+sitemap:
+  path: /sitemap.xml
+  stateless: true
+  methods: [GET]
+  controller: Frontend\Controller\SitemapController
