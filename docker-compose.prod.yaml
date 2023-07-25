@@ -17,6 +17,11 @@ services:
           - blog.internal
     depends_on:
       - backend
+    logging:
+      driver: local
+      options:
+        max-size: "5m"
+        max-file: "3"
   backend:
     build:
       context: ./
