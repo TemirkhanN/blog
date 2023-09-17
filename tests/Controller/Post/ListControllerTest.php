@@ -6,6 +6,7 @@ namespace App\Controller\Post;
 
 use App\Entity\Post;
 use App\FunctionalTestCase;
+use App\Repository\PostRepositoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListControllerTest extends FunctionalTestCase
@@ -265,7 +266,7 @@ class ListControllerTest extends FunctionalTestCase
 
     private function createPosts(): void
     {
-        $em = $this->getEntityManager();
+        $postRepository = $this->getService(PostRepositoryInterface::class);
 
         $posts = [
             [
@@ -360,6 +361,7 @@ class ListControllerTest extends FunctionalTestCase
             $order = $key + 1;
 
             $post = new Post(
+                $postRepository,
                 'Some title ' . $order,
                 'Some preview ' . $order,
                 'Some content ' . $order
@@ -367,19 +369,17 @@ class ListControllerTest extends FunctionalTestCase
             $post->setTags($postDetails['tags']);
             $post->publish();
 
-            $em->persist($post);
+            $postRepository->save($post);
         }
 
-        $draftPost = new Post('Some title 23', 'Some preview of 23', 'Some content of 23');
+        $draftPost = new Post($postRepository, 'Some title 23', 'Some preview of 23', 'Some content of 23');
         $draftPost->setTags(['SomeTag', 'AnotherTag', 'OneMoreTag']);
-        $archivedPost = new Post('Some title 24', 'Some preview of 24', 'Some content of 24');
+        $archivedPost = new Post($postRepository, 'Some title 24', 'Some preview of 24', 'Some content of 24');
         $archivedPost->setTags(['SomeTag', 'AnotherTag', 'OneMoreTag']);
         $archivedPost->archive();
 
-        $em->persist($draftPost);
-        $em->persist($archivedPost);
-
-        $em->flush();
+        $postRepository->save($draftPost);
+        $postRepository->save($archivedPost);
     }
 
     /**

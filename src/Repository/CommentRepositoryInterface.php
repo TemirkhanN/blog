@@ -11,7 +11,7 @@ use TemirkhanN\Generic\Collection\CollectionInterface;
 
 interface CommentRepositoryInterface
 {
-    public static function save(Comment $comment): void;
+    public function save(Comment $comment): void;
 
     public function findCommentByGuid(string $guid): ?Comment;
 

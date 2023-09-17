@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Entity\Post;
+use App\Repository\PostRepositoryInterface;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Doctrine\ORM\EntityManager;
@@ -28,6 +30,8 @@ class FunctionalTestCase extends WebTestCase
 
     private ManagerRegistry $doctrineRegistry;
 
+    private PostRepositoryInterface $postRepository;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,6 +54,8 @@ class FunctionalTestCase extends WebTestCase
         }
 
         $schema->createSchema(static::$cachedMetadata);
+
+        $this->postRepository = $this->getService(PostRepositoryInterface::class);
     }
 
     protected function tearDown(): void
@@ -136,16 +142,6 @@ class FunctionalTestCase extends WebTestCase
         );
     }
 
-    /**
-     * Saves in-memory state to the persistent storage.
-     * It is used to flush in-memory changes to the database between requests/actions.
-     */
-    protected function saveState(): void
-    {
-        $em = $this->getEntityManager();
-        $em->flush();
-    }
-
     protected function refreshState(object $entity): void
     {
         $this->getEntityManager()->refresh($entity);
@@ -181,5 +177,46 @@ class FunctionalTestCase extends WebTestCase
         $this->currentTime = $currentTime;
         Carbon::setTestNow($currentTime);
         CarbonImmutable::setTestNow($currentTime);
+    }
+
+
+    /**
+     * @param string        $title
+     * @param string        $preview
+     * @param string        $content
+     * @param array<string> $tags
+     *
+     * @return Post
+     */
+    protected function createPost(
+        string $title,
+        string $preview,
+        string $content,
+        array $tags = []
+    ): Post {
+        $post = new Post($this->postRepository, $title, $preview, $content);
+        $post->setTags($tags);
+        $this->postRepository->save($post);
+
+        return $post;
+    }
+
+    protected function saveState(object $entity): void
+    {
+        $this->getEntityManager()->persist($entity);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $className
+     *
+     * @return T
+     */
+    protected function getService(string $className): object
+    {
+        // @phpstan-ignore-next-line
+        return $this->getContainer()->get($className);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use App\Repository\PostRepositoryInterface;
 use App\ValueObject\Slug;
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
@@ -53,8 +54,13 @@ class Post
      *
      * @throws DomainException
      */
-    public function __construct(string $title, string $preview, string $content, array $tags = [])
-    {
+    public function __construct(
+        PostRepositoryInterface $postRepository,
+        string $title,
+        string $preview,
+        string $content,
+        array $tags = []
+    ) {
         if ($title === '') {
             throw new DomainException('Title can not be empty');
         }
@@ -71,7 +77,7 @@ class Post
 
         $slug = (string) new Slug($createdAt, $title);
 
-        if (PostRepository::findOneBySlug($slug)) {
+        if ($postRepository->findOneBySlug($slug)) {
             throw new DomainException('There already exists a post with a similar title');
         }
 
@@ -89,17 +95,20 @@ class Post
         $this->publishedAt = null;
         $this->updatedAt   = null;
         $this->slug        = $slug;
-
-        PostRepository::save($this);
     }
 
-    public function changeTitle(string $newTitle): void
+    public function changeTitle(string $newTitle, PostRepositoryInterface $postRepository): void
     {
-        $this->title     = $newTitle;
-        $this->slug      = (string) new Slug($this->createdAt, $newTitle);
-        $this->updatedAt = CarbonImmutable::now();
+        // TODO check uniqueness of the slug on title change
+        $slug = (string) new Slug($this->createdAt, $newTitle);
 
-        PostRepository::save($this);
+        if ($postRepository->findOneBySlug($slug)) {
+            throw new DomainException('There already exists a post with a similar title');
+        }
+
+        $this->title     = $newTitle;
+        $this->slug      = $slug;
+        $this->updatedAt = CarbonImmutable::now();
     }
 
     public function title(): string
@@ -111,8 +120,6 @@ class Post
     {
         $this->content   = $newContent;
         $this->updatedAt = CarbonImmutable::now();
-
-        PostRepository::save($this);
     }
 
     public function content(): string
@@ -124,8 +131,6 @@ class Post
     {
         $this->preview   = $newPreview;
         $this->updatedAt = CarbonImmutable::now();
-
-        PostRepository::save($this);
     }
 
     public function preview(): string
@@ -172,8 +177,6 @@ class Post
         foreach ($newTags as $newTag) {
             $this->tags->add(new Tag($newTag, $this));
         }
-
-        PostRepository::save($this);
     }
 
     /**
@@ -215,8 +218,6 @@ class Post
         $this->state       = self::STATE_PUBLISHED;
         $this->publishedAt = CarbonImmutable::now();
         $this->updatedAt   = CarbonImmutable::now();
-
-        PostRepository::save($this);
     }
 
     public function archive(): void
@@ -227,13 +228,11 @@ class Post
 
         $this->state     = self::STATE_ARCHIVED;
         $this->updatedAt = CarbonImmutable::now();
-
-        PostRepository::save($this);
     }
 
     public function addComment(string $comment): Comment
     {
-        return Comment::addToPost($this, $comment);
+        return new Comment($this, $comment);
     }
 
     private function getStateName(int $state): string

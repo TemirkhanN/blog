@@ -16,13 +16,13 @@ class AddControllerTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->post = new Post('Some post title', 'Some preview', 'Some content');
-        $this->saveState();
+        $this->post = $this->createPost('Some post title', 'Some preview', 'Some content');
     }
 
     public function testInvalidComment(): void
     {
         $this->post->publish();
+        $this->saveState($this->post);
 
         $uri = sprintf(self::ENDPOINT, $this->post->slug());
         $this->sendRequest('POST', $uri);
@@ -68,6 +68,7 @@ class AddControllerTest extends FunctionalTestCase
     public function testAddComment(): void
     {
         $this->post->publish();
+        $this->saveState($this->post);
 
         $uri      = sprintf(self::ENDPOINT, $this->post->slug());
         $payload  = ['text' => 'Some comment text that is longer than 6 words.'];
@@ -83,9 +84,9 @@ class AddControllerTest extends FunctionalTestCase
     private function exceedSpamThreshold(): void
     {
         for ($i = 0; $i <= 10; $i++) {
-            $this->post->addComment('Comment ' . $i);
+            $comment = $this->post->addComment('Comment ' . $i);
+            $this->saveState($comment);
         }
-        $this->saveState();
     }
 
     /**
@@ -97,8 +98,7 @@ class AddControllerTest extends FunctionalTestCase
     {
         self::assertEquals($this->currentTime->format(DATE_ATOM), $expectedComment['createdAt']);
 
-        /** @var CommentRepositoryInterface $commentRepository */
-        $commentRepository = $this->getContainer()->get(CommentRepositoryInterface::class);
+        $commentRepository = $this->getService(CommentRepositoryInterface::class);
 
         $comments = $commentRepository->findCommentsByPost($this->post);
 

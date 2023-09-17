@@ -16,9 +16,7 @@ class PostRepositoryTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        /** @var PostRepository $repo */
-        $repo             = $this->getContainer()->get(PostRepositoryInterface::class);
-        $this->repository = $repo;
+        $this->repository = $this->getService(PostRepository::class);
 
         $this->createFixtures();
     }
@@ -202,50 +200,69 @@ class PostRepositoryTest extends FunctionalTestCase
             $this->setCurrentTime($this->currentTime->addSecond());
 
             $post = new Post(
+                $this->repository,
                 'Some title ' . $postWithSomeTag,
                 'Some preview ' . $postWithSomeTag,
                 'Some content ' . $postWithSomeTag
             );
             $post->setTags(['SomeTag']);
             $post->publish();
+            $this->repository->save($post);
         }
 
         foreach (range(1, 4) as $postWithAnotherTag) {
             $this->setCurrentTime($this->currentTime->addSecond());
             $post2 = new Post(
+                $this->repository,
                 'Another title ' . $postWithAnotherTag,
                 'Another preview ' . $postWithAnotherTag,
                 'Another content ' . $postWithAnotherTag
             );
             $post2->setTags(['AnotherTag']);
             $post2->publish();
+            $this->repository->save($post2);
         }
 
         $this->setCurrentTime($this->currentTime->addSecond());
         $postWithMultipleTags = new Post(
+            $this->repository,
             'Multitagged post',
             'Some multitag preview',
             'Some multitag content'
         );
         $postWithMultipleTags->setTags(['SomeTag', 'AnotherTag']);
         $postWithMultipleTags->publish();
+        $this->repository->save($postWithMultipleTags);
 
         $this->setCurrentTime($this->currentTime->addSecond());
-        $draftPost = new Post('Some draft title 23', 'Some preview of 23', 'Some content of 23');
+        $draftPost = new Post(
+            $this->repository,
+            'Some draft title 23',
+            'Some preview of 23',
+            'Some content of 23'
+        );
         $draftPost->setTags(['SomeTag', 'AnotherTag']);
+        $this->repository->save($draftPost);
 
         $this->setCurrentTime($this->currentTime->addSecond());
-        $archivedPost = new Post('Archived title 24', 'Some preview of 24', 'Some content of 24');
+        $archivedPost = new Post(
+            $this->repository,
+            'Archived title 24',
+            'Some preview of 24',
+            'Some content of 24'
+        );
         $archivedPost->setTags(['SomeTag', 'AnotherTag']);
         $archivedPost->archive();
+        $this->repository->save($archivedPost);
 
         $this->setCurrentTime($this->currentTime->addSecond());
         $draftPostThatWasNeverUpdated = new Post(
+            $this->repository,
             'Some draft title 25',
             'Some preview of 25',
             'Some content of 25'
         );
 
-        $this->saveState();
+        $this->repository->save($draftPostThatWasNeverUpdated);
     }
 }

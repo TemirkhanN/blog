@@ -23,7 +23,10 @@ class ViewControllerTest extends FunctionalTestCase
         $publishedPost2 = $this->createPost('Another title', 'Preview', 'Content');
         $publishedPost2->publish();
 
-        $this->saveState();
+        $this->saveState($draftPost);
+        $this->saveState($archivedPost);
+        $this->saveState($publishedPost1);
+        $this->saveState($publishedPost2);
     }
 
     /**
@@ -93,16 +96,5 @@ class ViewControllerTest extends FunctionalTestCase
         yield ['2023-12-27_Some-title'];
 
         yield ['2023-12-27_Another-title'];
-    }
-
-    private function createPost(
-        string $title,
-        string $preview,
-        string $content
-    ): Post {
-        $post = new Post($title, $preview, $content);
-        $this->saveState();
-
-        return $post;
     }
 }

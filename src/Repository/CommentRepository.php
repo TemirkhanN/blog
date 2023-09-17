@@ -6,22 +6,33 @@ namespace App\Repository;
 
 use App\Entity\Comment;
 use App\Entity\Post;
-use Carbon\Carbon;
 use DateInterval;
+use DateTime;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
+use RuntimeException;
 use TemirkhanN\Generic\Collection\Collection;
 use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class CommentRepository implements CommentRepositoryInterface
 {
-    public static function save(Comment $comment): void
+    public function __construct(private readonly ManagerRegistry $registry)
     {
-        ORM::instance()->persist($comment);
+    }
+
+    public function save(Comment $comment): void
+    {
+        $em = $this->getEntityManager();
+
+        $em->persist($comment);
+        $em->flush();
     }
 
     public function findCommentByGuid(string $guid): ?Comment
     {
-        return ORM::instance()->getRepository(Comment::class)->find($guid);
+        return $this->getEntityManager()->find(Comment::class, $guid);
     }
 
     public function countCommentsInInterval(DateInterval $interval): int
@@ -31,7 +42,7 @@ class CommentRepository implements CommentRepositoryInterface
             ->select('COUNT(c)')
             ->from(Comment::class, 'c')
             ->where('c.createdAt > :fromTime')
-            ->setParameters(['fromTime' => Carbon::now()->sub($interval)])
+            ->setParameters(['fromTime' => (new DateTime())->sub($interval)])
             ->getQuery()->getSingleScalarResult();
     }
 
@@ -44,19 +55,32 @@ class CommentRepository implements CommentRepositoryInterface
     {
         /** @var iterable<Comment> $comments */
         $comments = $this->createQueryBuilder()
-                         ->select('c')
-                         ->from(Comment::class, 'c')
-                         ->where('c.post = :post')
-                         ->setParameters(['post' => $post])
-                         ->orderBy('c.createdAt', 'DESC')
-                         ->getQuery()
-                         ->toIterable();
+            ->select('c')
+            ->from(Comment::class, 'c')
+            ->where('c.post = :post')
+            ->setParameters(['post' => $post])
+            ->orderBy('c.createdAt', 'DESC')
+            ->getQuery()
+            ->toIterable();
 
         return new Collection($comments);
     }
 
-    private static function createQueryBuilder(): QueryBuilder
+    private function getEntityManager(): ObjectManager
     {
-        return ORM::instance()->createQueryBuilder();
+        $em = $this->registry->getManagerForClass(Comment::class);
+        if ($em === null) {
+            throw new RuntimeException('No relation configured to handle Comment entity');
+        }
+
+        return $em;
+    }
+
+    private function createQueryBuilder(): QueryBuilder
+    {
+        /** @var EntityManager $em */
+        $em = $this->getEntityManager();
+
+        return $em->createQueryBuilder();
     }
 }

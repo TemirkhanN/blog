@@ -24,20 +24,9 @@ class Comment
     private ?string $repliedToCommentGuid = null;
 
     /**
-     * @param Post   $post
-     * @param string $comment
-     *
-     * @internal use Post::addComment()
+     * @internal For aggregate root usage only
      */
-    public static function addToPost(Post $post, string $comment): Comment
-    {
-        $entity = new self($post, $comment);
-        CommentRepository::save($entity);
-
-        return $entity;
-    }
-
-    private function __construct(Post $post, string $comment)
+    public function __construct(Post $post, string $comment)
     {
         if ($comment === '') {
             throw new DomainException('Comment can not be empty.');
@@ -53,7 +42,6 @@ class Comment
     {
         $comment                       = new self($this->post, $reply);
         $comment->repliedToCommentGuid = $this->guid();
-        CommentRepository::save($comment);
 
         return $comment;
     }

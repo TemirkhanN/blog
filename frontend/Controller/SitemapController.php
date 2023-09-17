@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Frontend\Controller;
@@ -11,7 +12,8 @@ class SitemapController
 {
     public function __construct(
         private readonly CacheGatewayInterface $cacheGateway
-    ) {}
+    ) {
+    }
 
     public function __invoke(): Response
     {
@@ -20,7 +22,7 @@ class SitemapController
             return new Response('', 404);
         }
 
-        $content = file_get_contents($sitemapFile);
+        $content  = file_get_contents($sitemapFile);
         $response = new Response($content, 200, ['Content-Type' => 'application/xml;charset=UTF-8']);
 
         return $this->cacheGateway->cache($response, TTL::hours(24));

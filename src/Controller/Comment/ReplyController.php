@@ -51,6 +51,7 @@ class ReplyController
         }
 
         $reply = $target->addReply($commentData->text);
+        $this->commentRepository->save($reply);
         // TODO async static events
         $this->eventDispatcher->dispatch(new PostCommentedEvent($reply));
 

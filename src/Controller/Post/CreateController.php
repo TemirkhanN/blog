@@ -6,6 +6,7 @@ namespace App\Controller\Post;
 
 use App\Dto\PostData;
 use App\Entity\Post;
+use App\Repository\PostRepositoryInterface;
 use App\Service\Response\ResponseFactoryInterface;
 use App\View\PostView;
 use App\View\ValidationErrorsView;
@@ -17,6 +18,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CreateController
 {
     public function __construct(
+        private readonly PostRepositoryInterface $postRepository,
         private readonly AuthorizationCheckerInterface $security,
         private readonly ResponseFactoryInterface $responseFactory,
         private readonly ValidatorInterface $validator
@@ -34,7 +36,16 @@ class CreateController
             return $this->responseFactory->createResponse(ValidationErrorsView::create(($violations)));
         }
 
-        $post = new Post($postData->title, $postData->preview, $postData->content, $postData->tags);
+        // TODO slug is unknown outside of the scope. Need a way to validate it without domainexception
+        $post = new Post(
+            $this->postRepository,
+            $postData->title,
+            $postData->preview,
+            $postData->content,
+            $postData->tags
+        );
+
+        $this->postRepository->save($post);
 
         return $this->responseFactory->createResponse(PostView::create($post));
     }

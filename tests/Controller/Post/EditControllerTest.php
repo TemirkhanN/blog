@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Post;
 
 use App\Entity\Post;
-use App\Entity\Tag;
 use App\FunctionalTestCase;
 
 class EditControllerTest extends FunctionalTestCase
@@ -131,27 +130,6 @@ class EditControllerTest extends FunctionalTestCase
     }
 
     /**
-     * @param string        $title
-     * @param string        $preview
-     * @param string        $content
-     * @param array<string> $tags
-     *
-     * @return Post
-     */
-    private function createPost(
-        string $title,
-        string $preview,
-        string $content,
-        array $tags
-    ): Post {
-        $post = new Post($title, $preview, $content);
-        $post->setTags($tags);
-        $this->saveState();
-
-        return $post;
-    }
-
-    /**
      * @param Post                                                                        $post
      * @param array{title: string, preview: string, content: string, tags: array<string>} $withData
      *
@@ -159,6 +137,7 @@ class EditControllerTest extends FunctionalTestCase
      */
     private function assertPostModified(Post $post, array $withData): void
     {
+        // TODO why?
         $this->refreshState($post);
 
         self::assertEquals($withData['title'], $post->title());

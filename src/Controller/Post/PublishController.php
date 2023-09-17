@@ -37,6 +37,8 @@ class PublishController
             return $this->responseFactory->createResponse(new SystemMessage($e->getMessage()));
         }
 
+        $this->postRepository->save($post);
+
         return $this->responseFactory->createResponse([]);
     }
 }

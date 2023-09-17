@@ -53,6 +53,7 @@ class AddController
         }
 
         $comment = $post->addComment($commentData->text);
+        $this->commentRepository->save($comment);
         // TODO async static events
         $this->eventDispatcher->dispatch(new PostCommentedEvent($comment));
 

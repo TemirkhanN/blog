@@ -20,8 +20,9 @@ class ReplyControllerTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->post    = new Post('Some post title', 'Some preview', 'Some content');
+        $this->post    = $this->createPost('Some post title', 'Some preview', 'Some content');
         $this->comment = $this->post->addComment('Some comment');
+        $this->saveState($this->comment);
     }
 
     public function testSpamDetection(): void
@@ -74,9 +75,9 @@ class ReplyControllerTest extends FunctionalTestCase
     private function exceedSpamThreshold(): void
     {
         for ($i = 0; $i <= 10; $i++) {
-            $this->post->addComment('Comment ' . $i);
+            $comment = $this->post->addComment('Comment ' . $i);
+            $this->saveState($comment);
         }
-        $this->saveState();
     }
 
     /**
@@ -90,8 +91,7 @@ class ReplyControllerTest extends FunctionalTestCase
 
         self::assertEquals($this->currentTime->format(DATE_ATOM), $expectedComment['createdAt']);
 
-        /** @var CommentRepositoryInterface $commentRepository */
-        $commentRepository = $this->getContainer()->get(CommentRepositoryInterface::class);
+        $commentRepository = $this->getService(CommentRepositoryInterface::class);
 
         $comments = $commentRepository->findCommentsByPost($this->post);
 

@@ -51,7 +51,7 @@ class PublishControllerTest extends FunctionalTestCase
     {
         $post = $this->createPost('Some title', 'Some preview', 'Some content');
         $post->publish();
-        $this->saveState();
+        $this->saveState($post);
 
         $this->authenticate('SomeHardCodedToken');
         $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->slug()));
@@ -64,7 +64,7 @@ class PublishControllerTest extends FunctionalTestCase
     {
         $post = $this->createPost('Some title', 'Some preview', 'Some content');
         $post->archive();
-        $this->saveState();
+        $this->saveState($post);
 
         $this->authenticate('SomeHardCodedToken');
         $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->slug()));
@@ -77,17 +77,6 @@ class PublishControllerTest extends FunctionalTestCase
 
         $this->refreshState($post);
         self::assertTrue($post->isArchived());
-    }
-
-    private function createPost(
-        string $title,
-        string $preview,
-        string $content
-    ): Post {
-        $post = new Post($title, $preview, $content);
-        $this->saveState();
-
-        return $post;
     }
 
     private function assertPostIsPublished(Post $post): void
