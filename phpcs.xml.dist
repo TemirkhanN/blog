@@ -17,6 +17,9 @@
     <rule ref="Squiz.Commenting.FunctionComment.Missing">
             <severity>0</severity>
     </rule>
+    <rule ref="Squiz.Commenting.FunctionCommentThrowTag.Missing">
+            <severity>0</severity>
+    </rule>
     <rule ref="Squiz.Commenting.FunctionComment.IncorrectTypeHint">
             <severity>0</severity>
     </rule>
@@ -43,6 +46,9 @@
             <severity>0</severity>
     </rule>
     <rule ref="Generic.Commenting.DocComment.ContentBeforeClose">
+            <severity>0</severity>
+    </rule>
+    <rule ref="Generic.Commenting.DocComment.ParamNotFirst">
             <severity>0</severity>
     </rule>
 

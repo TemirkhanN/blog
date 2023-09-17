@@ -47,10 +47,11 @@ class Post
     private Collection $comments;
 
     /**
-     * @param string   $title
-     * @param string   $preview
-     * @param string   $content
-     * @param string[] $tags
+     * @param PostRepositoryInterface $postRepository
+     * @param string                  $title
+     * @param string                  $preview
+     * @param string                  $content
+     * @param string[]                $tags
      *
      * @throws DomainException
      */

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Repository\CommentRepository;
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -24,6 +23,9 @@ class Comment
     private ?string $repliedToCommentGuid = null;
 
     /**
+     * @param Post   $post
+     * @param string $comment
+     *
      * @internal For aggregate root usage only
      */
     public function __construct(Post $post, string $comment)
