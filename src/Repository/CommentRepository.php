@@ -6,8 +6,8 @@ namespace App\Repository;
 
 use App\Entity\Comment;
 use App\Entity\Post;
+use Carbon\Carbon;
 use DateInterval;
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -42,7 +42,7 @@ class CommentRepository implements CommentRepositoryInterface
             ->select('COUNT(c)')
             ->from(Comment::class, 'c')
             ->where('c.createdAt > :fromTime')
-            ->setParameters(['fromTime' => (new DateTime())->sub($interval)])
+            ->setParameters(['fromTime' => Carbon::now()->sub($interval)])
             ->getQuery()->getSingleScalarResult();
     }
 
