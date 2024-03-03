@@ -1,4 +1,4 @@
-FROM php:8.1-fpm AS dev_container
+FROM php:8.3-fpm AS dev_container
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
