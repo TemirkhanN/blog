@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: nanasess/setup-php@master
         with:
-          php-version: '8.1'
+          php-version: '8.3'
       - name: install dependencies
         run: composer install --no-interaction
       - name: codestyle
