@@ -31,7 +31,13 @@ class SitemapGenerator
         );
 
         $tags = [];
-        foreach ($this->postRepository->getPosts($filter) as $post) {
+        try {
+            $posts = $this->postRepository->getPosts($filter);
+        } catch (\Throwable $e) {
+            $posts = [];
+        }
+
+        foreach ($posts as $post) {
             $lastMod = $post->updatedAt() ?? $post->createdAt();
             foreach ($post->tags() as $tag) {
                 $tags[$tag] = true;

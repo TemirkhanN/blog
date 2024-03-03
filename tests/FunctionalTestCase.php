@@ -44,6 +44,7 @@ class FunctionalTestCase extends WebTestCase
         $this->browser = self::createClient();
 
         /** @var ManagerRegistry $doctrineRegistry */
+        // @phpstan-ignore-next-line
         $doctrineRegistry       = self::$kernel->getContainer()->get('doctrine');
         $this->doctrineRegistry = $doctrineRegistry;
 
