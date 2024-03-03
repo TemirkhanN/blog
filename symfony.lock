@@ -228,6 +228,9 @@
     "sebastian/version": {
         "version": "3.0.2"
     },
+    "ser/dto-request-bundle": {
+        "version": "dev-feature/symfony-7"
+    },
     "squizlabs/php_codesniffer": {
         "version": "3.6",
         "recipe": {

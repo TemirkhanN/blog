@@ -22,7 +22,7 @@ class ViewPostVoter implements VoterInterface
      *
      * @return int
      */
-    public function vote(TokenInterface $token, mixed $subject, array $attributes)
+    public function vote(TokenInterface $token, mixed $subject, array $attributes): int
     {
         if ($attributes !== [self::ACTION_VIEW_POST]) {
             return VoterInterface::ACCESS_ABSTAIN;
