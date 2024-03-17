@@ -99,6 +99,10 @@ class Post
 
     public function changeTitle(string $newTitle, PostRepositoryInterface $postRepository): void
     {
+        if ($this->title === $newTitle) {
+            return;
+        }
+
         // TODO check uniqueness of the slug on title change
         $slug = (string) new Slug($this->createdAt, $newTitle);
 

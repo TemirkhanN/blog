@@ -215,6 +215,7 @@ class Client
     {
         $data = $response->toArray(false);
 
+        // TODO incorrect when it comes to structures containing "message"
         if (!isset($data['message'])) {
             return '';
         }

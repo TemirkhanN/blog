@@ -129,6 +129,35 @@ class EditControllerTest extends FunctionalTestCase
         $this->assertPostModified($post, $newData);
     }
 
+    public function testSuccessSlugUnchanged(): void
+    {
+        $post = $this->createPost(
+            'Some title',
+            'Some preview',
+            'Some content',
+            [
+                'SomeTag1',
+                'SomeTag2',
+            ]
+        );
+
+        $newData = [
+            'title'   => 'Some title',
+            'preview' => 'Another preview',
+            'content' => 'Another content',
+            'tags'    => [
+                'SomeTag2',
+                'SomeTag3',
+            ],
+        ];
+
+        $this->authenticate('SomeHardCodedToken');
+        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $post->slug()), $newData);
+
+        self::assertEquals(200, $response->getStatusCode());
+        $this->assertPostModified($post, $newData);
+    }
+
     /**
      * @param Post                                                                        $post
      * @param array{title: string, preview: string, content: string, tags: array<string>} $withData

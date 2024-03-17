@@ -19,8 +19,9 @@ class IssueTokenController
 
     public function __invoke(Request $request): Response
     {
-        $login    = (string) $request->request->get('login');
-        $password = (string) $request->request->get('password');
+        $data     = $request->getPayload();
+        $login    = (string) $data->get('login');
+        $password = (string) $data->get('password');
         if ($login === '' || $password === '') {
             return $this->responseFactory->badRequest('Login or password can not be empty');
         }
