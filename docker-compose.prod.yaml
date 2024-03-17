@@ -6,9 +6,6 @@ services:
       dockerfile: Dockerfile.frontend
     environment:
       - BLOG_DOMAIN_NAME
-    volumes:
-      # TODO this shouldn't be like it is now...
-      - ./public:/app/public:ro
     ports:
       - "80:80"
       - "443:443"
