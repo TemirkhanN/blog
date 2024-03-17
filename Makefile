@@ -37,3 +37,7 @@ code-check:
 	$(BACKEND_CLI) php ./vendor/bin/phpcs
 	$(BACKEND_CLI) php -d memory_limit=512M ./vendor/bin/phpstan
 	$(BACKEND_CLI) php ./vendor/bin/phpunit
+
+.PHONY: certbot
+certbot:
+	docker-compose exec frontend certbot --nginx

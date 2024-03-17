@@ -1,13 +1,14 @@
 version: '3.4'
 services:
   frontend:
-    image: nginx:1.21
+    build:
+      context: ./
+      dockerfile: Dockerfile.frontend
     environment:
       - BLOG_DOMAIN_NAME
     volumes:
-      - ./.docker/nginx.conf:/etc/nginx/templates/default.conf.template:ro
+      # TODO this shouldn't be like it is now...
       - ./public:/app/public:ro
-      - ./.docker/certbot-nginx.sh:/app/certbot.sh:ro
     ports:
       - "80:80"
       - "443:443"
@@ -20,8 +21,8 @@ services:
     logging:
       driver: local
       options:
-        max-size: "5m"
-        max-file: "3"
+        max-size: "2m"
+        max-file: "2"
   backend:
     build:
       context: ./
@@ -50,6 +51,10 @@ services:
     depends_on:
       - db
       - cache
+    logging:
+      driver: local
+      options:
+        max-size: "1m"
   db:
     image: sameersbn/postgresql:12-20200524
     environment:
