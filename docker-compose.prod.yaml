@@ -23,7 +23,6 @@ services:
         max-file: "2"
     volumes:
       - ssl-cert:/etc/letsencrypt/
-      - nginx-conf:/etc/nginx/conf.d/
   backend:
     build:
       context: ./
@@ -89,4 +88,3 @@ networks:
 volumes:
   db-storage:
   ssl-cert:
-  nginx-conf:
