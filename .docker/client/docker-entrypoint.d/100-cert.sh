@@ -3,9 +3,9 @@
 CHAIN_FILE=/etc/letsencrypt/live/$BLOG_DOMAIN_NAME/fullchain.pem
 
 if [ ! -f $CHAIN_FILE ]; then
-  certbot --nginx -d $BLOG_DOMAIN_NAME -m $SSLCERT_OWNER_EMAIL --agree-tos --no-redirect --non-interactive
+  certbot --nginx -d $BLOG_DOMAIN_NAME -m $SSLCERT_OWNER_EMAIL --agree-tos -n
 else
-  certbot --nginx -d $BLOG_DOMAIN_NAME -m $SSLCERT_OWNER_EMAIL --reinstall
+  certbot --nginx -d $BLOG_DOMAIN_NAME -m $SSLCERT_OWNER_EMAIL --reinstall -n
 fi
 
 cron
