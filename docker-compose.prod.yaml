@@ -19,7 +19,7 @@ services:
       driver: local
       options:
         max-size: "2m"
-        max-file: "1"
+        max-file: "2"
     volumes:
       - certbot:/etc/letsencrypt/
   backend:
@@ -54,7 +54,7 @@ services:
       driver: local
       options:
         max-size: "1m"
-        max-file: "1"
+        max-file: "2"
   db:
     image: sameersbn/postgresql:12-20200524
     environment:
@@ -69,7 +69,7 @@ services:
       driver: local
       options:
         max-size: "2m"
-        max-file: "1"
+        max-file: "2"
   cache:
     image: redis
     networks:
@@ -78,7 +78,7 @@ services:
       driver: local
       options:
         max-size: "1m"
-        max-file: "1"
+        max-file: "2"
 
 networks:
   infranet:
