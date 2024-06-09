@@ -20,6 +20,8 @@ services:
       options:
         max-size: "2m"
         max-file: "2"
+    volumes:
+      - certbot:/etc/letsencrypt/
   backend:
     build:
       context: ./
@@ -75,3 +77,4 @@ networks:
 
 volumes:
   db-storage:
+  certbot:

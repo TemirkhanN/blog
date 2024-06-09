@@ -3,7 +3,7 @@ services:
   frontend:
     image: nginx:1.21
     volumes:
-      - ./.docker/nginx.conf:/etc/nginx/templates/default.conf.template:ro
+      - ./.docker/client/nginx.conf:/etc/nginx/templates/default.conf.template:ro
       - ./public:/app/public:ro
     ports:
       - "80:80"

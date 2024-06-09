@@ -1,4 +1,4 @@
-FROM nginx:1.21 as dev
+FROM nginx:1.27 as dev
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     python3 python3-venv libaugeas0 cron \
@@ -9,4 +9,5 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN echo "0 0 1 * * root certbot renew -q" | tee -a /etc/crontab
 
-COPY ./.docker/nginx.conf /etc/nginx/templates/default.conf.template
+COPY .docker/client/nginx.conf /etc/nginx/templates/default.conf.template
+COPY .docker/client/docker-entrypoint.d/*.sh /docker-entrypoint.d/
