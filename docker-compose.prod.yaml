@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile.frontend
     environment:
       - BLOG_DOMAIN_NAME
+      - SSLCERT_OWNER_EMAIL
     ports:
       - "80:80"
       - "443:443"
