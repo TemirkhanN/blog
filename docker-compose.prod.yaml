@@ -22,7 +22,8 @@ services:
         max-size: "2m"
         max-file: "2"
     volumes:
-      - certbot:/etc/letsencrypt/
+      - certbot/letsencrypt:/etc/letsencrypt/
+      - certbot/nginx:/etc/nginx/conf.d/
   backend:
     build:
       context: ./
