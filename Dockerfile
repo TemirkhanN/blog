@@ -45,7 +45,7 @@ CMD php-fpm -F
 
 FROM dev_container as prod_container
 
-COPY ./ /app
+COPY --chown=www-data:www-data ./ /app
 
 RUN composer install --no-dev --prefer-dist --no-progress --optimize-autoloader
 RUN php bin/console cache:clear

@@ -9,5 +9,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN echo "0 0 1 * * root certbot renew -q" | tee -a /etc/crontab
 
+COPY public /app/public
 COPY .docker/client/nginx.conf /etc/nginx/templates/default.conf.template
 COPY .docker/client/docker-entrypoint.d/*.sh /docker-entrypoint.d/

@@ -23,7 +23,6 @@ services:
         max-file: "2"
     volumes:
       - ssl-cert:/etc/letsencrypt/
-      - ./public:/app/public:ro
   backend:
     build:
       context: ./
