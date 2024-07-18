@@ -4,11 +4,39 @@ html {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
+/*
+dmode.bg: #121212
+dmode.text.common: rgba(255, 255, 255, 0.87)
+dmode.text.noticeable: rgba(255, 255, 255, 0.60)
+dmode.text.disabled: rgba(255, 255, 255, 0.38)
+
+*/
 body {
+    background-color: white;
+    color: black;
     height: 100%;
     margin: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+body.dark-mode {
+    background-color: #121212;
+    color: rgba(255, 255, 255, 0.87);
+}
+
+.dark-mode a {
+    color: #3b80ba;
+}
+
+/* Toggle button styling */
+#dark-mode-toggle {
+    font-size: 2em;
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    cursor: pointer;
+    transition: top 0.3s;
 }
 
 code {
@@ -25,6 +53,10 @@ header {
     text-decoration: none;
     float: right;
     margin-right: 1em;
+}
+
+.dark-mode .social-link {
+    color: rgba(255, 255, 255, 0.60);
 }
 
 .social-link:first-child {
@@ -94,6 +126,10 @@ footer {
     text-align: center;
 }
 
+.dark-mode footer {
+    background-color: #222222;
+}
+
 @media screen and (max-width: 850px) {
     footer {
         border-radius: 0;
@@ -109,6 +145,10 @@ footer {
     text-decoration: none;
 }
 
+.dark-mode .copyright a {
+    color: rgba(255, 255, 255, 0.60);
+}
+
 /* Posts */
 .post {
     font-family: 'Inconsolata', serif;
@@ -122,16 +162,29 @@ footer {
     padding: 1em 0;
 }
 
+.dark-mode .post-preview {
+    color: rgba(255, 255, 255, 0.60);
+}
+
 .preview-link {
     color: black;
     font-size: 1.2em;
     text-decoration: none;
 }
 
+.dark-mode .preview-link {
+    color: rgba(255, 255, 255, 0.87);
+}
+
 .pub-date {
     color: gray;
     margin: 0 0 0 2px;
     font-size: 0.8em;
+}
+
+
+.dark-mode .pub-date {
+    color: rgba(255, 255, 255, 0.38);
 }
 
 .tags {
@@ -146,6 +199,10 @@ footer {
     font-weight: bolder;
 }
 
+.dark-mode .tags a {
+    color: lightblue;
+}
+
 .tags a:hover {
     text-decoration: underline;
 }
@@ -157,14 +214,13 @@ footer {
     padding: 1em 0;
 }
 
+.dark-mode #disclaimer {
+    color: rgba(255, 255, 255, 0.60);
+}
+
 #disclaimer p {
     margin: 0;
     text-align: center;
-}
-
-#disclaimer a:visited {
-    text-decoration: none;
-    color: blue;
 }
 
 #comments {
@@ -223,18 +279,27 @@ footer {
     padding: 0.5em;
 }
 
-form label {
+.dark-mode .comment-text {
+    background-color: #323741;
+}
+
+label {
     width: 100%;
     padding: 0.5em 0;
     display: block;
 }
 
-form input {
+input {
     width: 100%;
 }
 
-form textarea {
+textarea {
     width: 100%;
+}
+
+.dark-mode textarea {
+    background-color: #323741;
+    color: rgba(255, 255, 255, 0.87);
 }
 
 #error-details {
