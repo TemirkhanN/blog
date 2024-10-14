@@ -11,3 +11,5 @@ framework:
       cache.doctrine.metadata:
         adapter: cache.adapter.redis
         default_lifetime: P1D
+      cache.rate_limiter:
+        adapter: cache.adapter.redis

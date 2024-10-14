@@ -77,6 +77,7 @@ class Post
 
         $slug = (string) new Slug($createdAt, $title);
 
+        // TODO this has to happen in runtime if it wasn't validated. Thus, slug has to be know in advance in app layer
         if ($postRepository->findOneBySlug($slug)) {
             throw new DomainException('There already exists a post with a similar title');
         }

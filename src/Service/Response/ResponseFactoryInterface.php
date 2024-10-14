@@ -43,4 +43,6 @@ interface ResponseFactoryInterface
     public function badRequest(string $message): Response;
 
     public function unauthorized(string $message): Response;
+
+    public function tooManyRequests(string $message = ''): Response;
 }

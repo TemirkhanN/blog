@@ -22,3 +22,10 @@ framework:
       scoped_clients:
         blog_api_transport:
           base_uri: '%env(BLOG_HOST)%'
+
+    rate_limiter:
+      sensitive_api:
+        policy: 'fixed_window'
+        limit: 5
+        interval: '1 minutes'
+        cache_pool: cache.rate_limiter

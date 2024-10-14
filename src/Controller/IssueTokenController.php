@@ -8,6 +8,7 @@ use App\Service\Response\ResponseFactoryInterface;
 use App\Service\TokenIssuer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 
 class IssueTokenController
 {
@@ -17,8 +18,13 @@ class IssueTokenController
     ) {
     }
 
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request, RateLimiterFactory $sensitiveApiLimiter): Response
     {
+        $limiter = $sensitiveApiLimiter->create($request->getClientIp());
+        if (!$limiter->consume()->isAccepted()) {
+            return $this->responseFactory->tooManyRequests();
+        }
+
         $data     = $request->getPayload();
         $login    = (string) $data->get('login');
         $password = (string) $data->get('password');

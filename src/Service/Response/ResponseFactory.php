@@ -82,4 +82,9 @@ class ResponseFactory implements ResponseFactoryInterface
 
         return $this->createResponse(new SystemMessage($details, $code));
     }
+
+    public function tooManyRequests(string $details = 'Too many requests'): Response
+    {
+        return $this->createResponse(new SystemMessage($details, Response::HTTP_FORBIDDEN));
+    }
 }
