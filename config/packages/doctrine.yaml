@@ -1,21 +1,23 @@
 doctrine:
-    dbal:
-        dbname: '%env(resolve:DB_NAME)%'
-        host: '%env(resolve:DB_HOST)%'
-        port: '%env(resolve:DB_PORT)%'
-        user: '%env(resolve:DB_USER)%'
-        password: '%env(resolve:DB_PASS)%'
-        driver: '%env(resolve:DB_DRIVER)%'
-        server_version: '%env(resolve:DB_VERSION)%'
-        charset: UTF8
-    orm:
-        auto_generate_proxy_classes: true
-        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
-        auto_mapping: true
-        enable_lazy_ghost_objects: true
-        mappings:
-            App:
-                is_bundle: false
-                type: xml
-                dir: '%kernel.project_dir%/config/mapping/'
-                prefix: 'App\Entity'
+  dbal:
+    dbname: '%env(resolve:DB_NAME)%'
+    host: '%env(resolve:DB_HOST)%'
+    port: '%env(resolve:DB_PORT)%'
+    user: '%env(resolve:DB_USER)%'
+    password: '%env(resolve:DB_PASS)%'
+    driver: '%env(resolve:DB_DRIVER)%'
+    server_version: '%env(resolve:DB_VERSION)%'
+    charset: UTF8
+  orm:
+    auto_generate_proxy_classes: true
+    naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+    auto_mapping: true
+    enable_lazy_ghost_objects: true
+    mappings:
+      App:
+        is_bundle: false
+        type: xml
+        dir: '%kernel.project_dir%/config/mapping/'
+        prefix: 'App\Entity'
+    controller_resolver:
+      auto_mapping: false
