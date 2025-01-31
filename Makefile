@@ -1,14 +1,14 @@
 include .env
 
-BACKEND_CLI=docker-compose exec -u www-data backend
+BACKEND_CLI=docker compose exec -u www-data backend
 
 .PHONY: build
 build:
-	docker-compose build
+	docker compose build
 
 .PHONY: up
 up:
-	docker-compose up -d
+	docker compose up -d
 	make composer
 	make migrate
 
@@ -18,11 +18,11 @@ bash:
 
 .PHONY: down
 down:
-	docker-compose down
+	docker compose down
 
 .PHONY: ps
 ps:
-	docker-compose ps
+	docker compose ps
 
 .PHONY: migrate
 migrate:
