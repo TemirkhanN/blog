@@ -17,11 +17,12 @@ parameters:
     - name: Controller
       collectors:
         - { type: directory, value: /src/Controller/ }
-        - { type: className, value: \\App\\EventSubscriber\\NotifyAdminSubscriber }
+        - { type: class, value: \\App\\EventSubscriber\\NotifyAdminSubscriber }
 
     - name: Model
       collectors:
         - { type: directory, value: /src/Entity/ }
+        - { type: classLike, value: '.*RepositoryInterface'}
 
     - name: Service
       collectors:
@@ -42,15 +43,15 @@ parameters:
 
     - name: Infrastructure
       collectors:
-        - { type: className, value: \\App\\EventSubscriber\\ConvertHttpErrorToResponseSubscriber }
-        - { type: className, value: \\App\\EventSubscriber\\ConvertHttpErrorSubscriber }
+        - { type: class, value: \\App\\EventSubscriber\\ConvertHttpErrorToResponseSubscriber }
+        - { type: class, value: \\App\\EventSubscriber\\ConvertHttpErrorSubscriber }
         - { type: directory, value: /src/Service/Response/ }
+        - { type: directory, value: /src/Dto/ }
         - { type: directory, value: /src/Service/Notification/ }
         - { type: directory, value: /src/Service/DateTime/ }
-        - { type: className, value: \\App\\Service\\UriResolver }
-        - { type: className, value: \\App\\Service\\TokenIssuer }
-        - { type: directory, value: /src/Repository/ }
-        - { type: bool, must: [{type: directory, value: /src/Repository/}], must_not: [{type: className, value: \\App\\Repository\\ORM}]}
+        - { type: class, value: \\App\\Service\\UriResolver }
+        - { type: class, value: \\App\\Service\\TokenIssuer }
+        - { type: bool, must: [{type: directory, value: /src/Repository/}], must_not: [{type: classLike, value: '.*RepositoryInterface'}]}
 
   ruleset:
     Controller:
@@ -74,13 +75,10 @@ parameters:
       - ExternalDependency
 
   skip_violations:
-    App\Repository\CommentRepositoryInterface:
-      - App\Entity\Comment
-      - App\Entity\Post
     App\Repository\CommentRepository:
       - App\Entity\Comment
       - App\Entity\Post
-    App\Repository\PostRepositoryInterface:
-      - App\Entity\Post
+      - App\Repository\CommentRepositoryInterface
     App\Repository\PostRepository:
       - App\Entity\Post
+      - App\Repository\PostRepositoryInterface

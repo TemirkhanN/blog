@@ -26,9 +26,8 @@
 ###> phpstan ###
 .phpstan
 ###< phpstan ###
-
-###> qossmic/deptrac-shim ###
-/.deptrac.cache
-###< qossmic/deptrac-shim ###
-
 public/sitemap.xml
+
+###> qossmic/deptrac ###
+/.deptrac.cache
+###< qossmic/deptrac ###
