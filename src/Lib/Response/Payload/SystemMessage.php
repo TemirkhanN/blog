@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Response\Dto;
+namespace App\Lib\Response\Payload;
 
 class SystemMessage implements \JsonSerializable
 {

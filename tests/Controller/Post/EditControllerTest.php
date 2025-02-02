@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
-use App\Entity\Post;
+use App\Domain\Entity\Post;
 use App\FunctionalTestCase;
 
 class EditControllerTest extends FunctionalTestCase

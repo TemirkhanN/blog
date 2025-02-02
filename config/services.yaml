@@ -16,8 +16,7 @@ services:
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
     App\:
-        resource: '../src/{Command,EventSubscriber,Repository,Service,Security}'
-        exclude: '../src/Service/Response'
+        resource: '../src/{Command,Domain,EventSubscriber,Lib,Repository,Service,Security}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
@@ -44,7 +43,7 @@ services:
         $areNotificationsEnabled: '%env(bool:ADMIN_NOTIFICATIONS_ENABLED)%'
         $adminTelegramChatId: '%env(int:TELEGRAM_ADMIN_CHAT_ID)%'
 
-    App\Service\Notification\TelegramNotifier:
+    App\Lib\Notification\TelegramNotifier:
       arguments:
         $botToken: '%env(string:TELEGRAM_BOT_TOKEN)%'
 

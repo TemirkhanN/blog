@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Frontend\Controller;
 
-use App\Service\Response\Cache\CacheGatewayInterface;
-use App\Service\Response\Cache\TTL;
+use App\Lib\Response\Cache\CacheGatewayInterface;
+use App\Lib\Response\Cache\TTL;
 use Symfony\Component\HttpFoundation\Response;
 
 class SitemapController

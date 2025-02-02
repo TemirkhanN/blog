@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Service\Response\ResponseFactoryInterface;
+use App\Lib\Response\ResponseFactoryInterface;
 use App\Service\TokenIssuer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

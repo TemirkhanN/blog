@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Frontend\Controller;
 
-use App\Service\Response\Cache\CacheGatewayInterface;
+use App\Lib\Response\Cache\CacheGatewayInterface;
 use Frontend\API\Client;
 use Frontend\Service\Renderer;
 

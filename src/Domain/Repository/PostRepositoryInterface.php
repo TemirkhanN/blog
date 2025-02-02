@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Domain\Repository;
 
-use App\Entity\Post;
-use App\Service\Post\Dto\PostFilter;
+use App\Domain\Entity\Post;
 use TemirkhanN\Generic\Collection\CollectionInterface;
 
 interface PostRepositoryInterface

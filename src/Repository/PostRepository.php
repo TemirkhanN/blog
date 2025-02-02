@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Post;
-use App\Service\Post\Dto\PostFilter;
+use App\Domain\Entity\Post;
+use App\Domain\Repository\PostFilter;
+use App\Domain\Repository\PostRepositoryInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;

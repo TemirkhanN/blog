@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Exception;
+namespace App\Domain\Entity\Exception;
 
 use DomainException;
 

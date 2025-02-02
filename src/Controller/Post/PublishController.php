@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
-use App\Entity\Exception\ImpossibleTransitionException;
-use App\Repository\PostRepositoryInterface;
-use App\Service\Response\Dto\SystemMessage;
-use App\Service\Response\ResponseFactoryInterface;
+use App\Domain\Entity\Exception\ImpossibleTransitionException;
+use App\Domain\Repository\PostRepositoryInterface;
+use App\Lib\Response\Payload\SystemMessage;
+use App\Lib\Response\ResponseFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 

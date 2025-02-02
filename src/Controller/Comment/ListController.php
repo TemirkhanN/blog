@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller\Comment;
 
-use App\Repository\CommentRepositoryInterface;
-use App\Repository\PostRepositoryInterface;
-use App\Service\Response\Cache\CacheGatewayInterface;
-use App\Service\Response\Cache\TTL;
-use App\Service\Response\ResponseFactoryInterface;
+use App\Domain\Repository\CommentRepositoryInterface;
+use App\Domain\Repository\PostRepositoryInterface;
+use App\Lib\Response\Cache\CacheGatewayInterface;
+use App\Lib\Response\Cache\TTL;
+use App\Lib\Response\ResponseFactoryInterface;
 use App\View\CommentsTreeView;
 use Symfony\Component\HttpFoundation\Response;
 

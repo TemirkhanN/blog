@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller\Comment;
 
+use App\Domain\Repository\CommentRepositoryInterface;
+use App\Domain\Repository\PostRepositoryInterface;
+use App\Dto\NewComment;
 use App\Event\PostCommentedEvent;
-use App\Repository\CommentRepositoryInterface;
-use App\Repository\PostRepositoryInterface;
-use App\Service\Post\Dto\NewComment;
-use App\Service\Response\Dto\SystemMessage;
-use App\Service\Response\ResponseFactoryInterface;
+use App\Lib\Response\Payload\SystemMessage;
+use App\Lib\Response\ResponseFactoryInterface;
 use App\View\CommentView;
 use App\View\ValidationErrorsView;
 use DateInterval;

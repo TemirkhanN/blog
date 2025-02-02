@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Response;
+namespace App\Lib\Response;
 
-use App\Service\Response\Dto\SystemMessage;
+use App\Lib\Response\Payload\SystemMessage;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

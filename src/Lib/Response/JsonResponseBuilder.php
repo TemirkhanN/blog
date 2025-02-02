@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Response;
+namespace App\Lib\Response;
 
 use Symfony\Component\HttpFoundation\Response;
 use UnexpectedValueException;

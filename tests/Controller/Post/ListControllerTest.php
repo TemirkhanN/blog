@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
-use App\Entity\Post;
+use App\Domain\Entity\Post;
+use App\Domain\Repository\PostRepositoryInterface;
 use App\FunctionalTestCase;
-use App\Repository\PostRepositoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListControllerTest extends FunctionalTestCase

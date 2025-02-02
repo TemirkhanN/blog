@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\View;
 
-use App\Entity\Comment;
+use App\Domain\Entity\Comment;
 use TemirkhanN\Generic\Collection\CollectionInterface;
 
 class CommentsTreeView

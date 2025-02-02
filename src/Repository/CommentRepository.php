@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Comment;
-use App\Entity\Post;
+use App\Domain\Entity\Comment;
+use App\Domain\Entity\Post;
+use App\Domain\Repository\CommentRepositoryInterface;
 use Carbon\Carbon;
 use DateInterval;
 use Doctrine\ORM\EntityManager;

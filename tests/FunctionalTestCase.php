@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Entity\Post;
-use App\Repository\PostRepositoryInterface;
+use App\Domain\Entity\Post;
+use App\Domain\Repository\PostRepositoryInterface;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use Doctrine\ORM\EntityManager;

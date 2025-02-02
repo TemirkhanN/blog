@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Frontend\Controller\Post;
 
-use App\Service\Response\Cache\TTL;
+use App\Lib\Response\Cache\TTL;
 use Frontend\Controller\AbstractBlogController;
 use Frontend\Resource\View\Page;
 use Symfony\Component\HttpFoundation\Response;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Repository\PostRepositoryInterface;
-use App\Service\Post\Dto\PostFilter;
+use App\Domain\Repository\PostFilter;
+use App\Domain\Repository\PostRepositoryInterface;
 use SimpleXMLElement;
 
 class SitemapGenerator

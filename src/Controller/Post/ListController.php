@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
-use App\Entity\Post;
-use App\Repository\PostRepositoryInterface;
-use App\Service\Post\Dto\PostFilter;
-use App\Service\Response\Cache\CacheGatewayInterface;
-use App\Service\Response\Cache\TTL;
-use App\Service\Response\ResponseFactoryInterface;
-use App\Service\Response\Dto\CollectionChunk;
+use App\Domain\Entity\Post;
+use App\Domain\Repository\PostFilter;
+use App\Domain\Repository\PostRepositoryInterface;
+use App\Lib\Response\Cache\CacheGatewayInterface;
+use App\Lib\Response\Cache\TTL;
+use App\Lib\Response\Payload\CollectionChunk;
+use App\Lib\Response\ResponseFactoryInterface;
 use App\View\PaginatedView;
 use App\View\PostView;
 use Symfony\Component\HttpFoundation\Request;

@@ -2,83 +2,63 @@ parameters:
   formatters:
     graphviz:
       hidden_layers:
-        - ExternalDependency
+        - Vendor
       point_to_groups: false
-      groups:
-        Domain:
-          - Model
-          - Service
-        Application:
-          - Controller
-          - View
   paths:
     - ./src
   layers:
-    - name: Controller
+    - name: Domain
       collectors:
-        - { type: directory, value: /src/Controller/ }
-        - { type: class, value: \\App\\EventSubscriber\\NotifyAdminSubscriber }
-
-    - name: Model
-      collectors:
-        - { type: directory, value: /src/Entity/ }
-        - { type: classLike, value: '.*RepositoryInterface'}
-
-    - name: Service
-      collectors:
-        - type: bool
-          must:
-            - { type: directory, value: /src/Service/ }
-            - { type: directory, value: /src/Event }
-          must_not:
-            - { type: layer, value: Infrastructure }
+        - { type: directory, value: /src/Domain/ }
 
     - name: View
       collectors:
         - { type: directory, value: /src/View/ }
 
-    - name: ExternalDependency
+    - name: Infrastructure
+      collectors:
+        # There is barely a difference between infrastructure and vendor
+        - { type: directory, value: /src/Lib/ }
+        - { type: directory, value: /src/Repository/ }
+
+    - name: Application
+      collectors:
+        - type: bool
+          must:
+            - { type: directory, value: /src/ }
+          must_not:
+            - { type: layer, value: Infrastructure }
+            - { type: layer, value: Domain }
+            - { type: layer, value: View }
+
+    - name: Vendor
       collectors:
         - { type: bool, must_not: [ { type: classLike, value: ^App\\ } ] }
 
-    - name: Infrastructure
-      collectors:
-        - { type: class, value: \\App\\EventSubscriber\\ConvertHttpErrorToResponseSubscriber }
-        - { type: class, value: \\App\\EventSubscriber\\ConvertHttpErrorSubscriber }
-        - { type: directory, value: /src/Service/Response/ }
-        - { type: directory, value: /src/Dto/ }
-        - { type: directory, value: /src/Service/Notification/ }
-        - { type: directory, value: /src/Service/DateTime/ }
-        - { type: class, value: \\App\\Service\\UriResolver }
-        - { type: class, value: \\App\\Service\\TokenIssuer }
-        - { type: bool, must: [{type: directory, value: /src/Repository/}], must_not: [{type: classLike, value: '.*RepositoryInterface'}]}
-
   ruleset:
-    Controller:
-      - Model
-      - Service
+    Application:
+      - Domain
       - View
       - Infrastructure
-      - ExternalDependency
-    Model:
-      - ExternalDependency
+      - Vendor
+    Domain:
+      - Vendor
       - Infrastructure
-    Service:
-      - Model
-      - Infrastructure
-      - ExternalDependency
     View:
-      - Model
-      - ExternalDependency
+      - Domain
+      - Vendor
       - Infrastructure
     Infrastructure:
-      - ExternalDependency
+      - Vendor
 
+  # Skip only interaction between transitioning layer(repository with domain)
+  # Explanation: repository implementation is infrastructural, while contract is coming from domain.
   skip_violations:
     App\Repository\CommentRepository:
-      - App\Entity\Comment
-      - App\Entity\Post
-      - App\Repository\CommentRepositoryInterface
+      - App\Domain\Entity\Comment
+      - App\Domain\Entity\Post
+      - App\Domain\Repository\CommentRepositoryInterface
     App\Repository\PostRepository:
-      - App\Entity\Post
-      - App\Repository\PostRepositoryInterface
+      - App\Domain\Entity\Post
+      - App\Domain\Repository\PostRepositoryInterface
+      - App\Domain\Repository\PostFilter

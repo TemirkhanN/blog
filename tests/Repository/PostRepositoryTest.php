@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\Post;
+use App\Domain\Entity\Post;
+use App\Domain\Repository\PostFilter;
 use App\FunctionalTestCase;
-use App\Service\Post\Dto\PostFilter;
 
 class PostRepositoryTest extends FunctionalTestCase
 {

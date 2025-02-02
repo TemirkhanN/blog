@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Domain\Entity;
 
-use App\Repository\PostRepositoryInterface;
-use App\ValueObject\Slug;
+use App\Domain\Repository\PostRepositoryInterface;
+use App\Domain\ValueObject\Slug;
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -217,7 +217,7 @@ class Post
             $fromState = $this->getStateName($this->state);
             $toState   = $this->getStateName(self::STATE_PUBLISHED);
 
-            throw Exception\ImpossibleTransitionException::create($fromState, $toState);
+            throw \App\Domain\Entity\Exception\ImpossibleTransitionException::create($fromState, $toState);
         }
 
         $this->state       = self::STATE_PUBLISHED;

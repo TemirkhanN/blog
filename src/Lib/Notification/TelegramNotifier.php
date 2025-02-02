@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Notification;
+namespace App\Lib\Notification;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use TemirkhanN\Generic\Error;

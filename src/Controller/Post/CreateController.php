@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
+use App\Domain\Entity\Post;
+use App\Domain\Repository\PostRepositoryInterface;
 use App\Dto\PostData;
-use App\Entity\Post;
-use App\Repository\PostRepositoryInterface;
-use App\Service\Response\ResponseFactoryInterface;
+use App\Lib\Response\ResponseFactoryInterface;
 use App\View\PostView;
 use App\View\ValidationErrorsView;
 use Ser\DtoRequestBundle\Attributes\Dto;

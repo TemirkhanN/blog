@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-  <entity name="App\Entity\Comment" table="comments">
+  <entity name="App\Domain\Entity\Comment" table="comments">
     <indexes>
       <index name="created_at_idx" columns="created_at"/>
     </indexes>
@@ -12,7 +12,7 @@
         <option name="default">CURRENT_TIMESTAMP</option>
       </options>
     </field>
-    <many-to-one field="post" target-entity="App\Entity\Post" inversed-by="comments" fetch="LAZY">
+    <many-to-one field="post" target-entity="App\Domain\Entity\Post" inversed-by="comments" fetch="LAZY">
       <join-columns>
         <join-column name="post_id" referenced-column-name="id" nullable="false"/>
       </join-columns>

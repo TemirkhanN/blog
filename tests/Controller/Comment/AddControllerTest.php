@@ -2,9 +2,9 @@
 
 namespace App\Controller\Comment;
 
-use App\Entity\Post;
+use App\Domain\Entity\Post;
+use App\Domain\Repository\CommentRepositoryInterface;
 use App\FunctionalTestCase;
-use App\Repository\CommentRepositoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class AddControllerTest extends FunctionalTestCase

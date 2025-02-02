@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Comment;
 
-use App\Entity\Comment;
-use App\Entity\Post;
+use App\Domain\Entity\Comment;
+use App\Domain\Entity\Post;
+use App\Domain\Repository\CommentRepositoryInterface;
 use App\FunctionalTestCase;
-use App\Repository\CommentRepositoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReplyControllerTest extends FunctionalTestCase

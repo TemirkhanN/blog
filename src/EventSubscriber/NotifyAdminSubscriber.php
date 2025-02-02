@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\EventSubscriber;
 
 use App\Event\PostCommentedEvent;
-use App\Service\Notification\TelegramNotifier;
+use App\Lib\Notification\TelegramNotifier;
 use App\Service\UriResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

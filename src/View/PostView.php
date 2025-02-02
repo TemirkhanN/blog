@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace App\View;
 
-use App\Entity\Post;
-use App\Entity\Tag;
+use App\Domain\Entity\Post;
 
 class PostView
 {

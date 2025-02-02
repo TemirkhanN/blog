@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace App\Domain\Repository;
 
-use App\Entity\Comment;
-use App\Entity\Post;
+use App\Domain\Entity\Comment;
+use App\Domain\Entity\Post;
 use DateInterval;
 use TemirkhanN\Generic\Collection\CollectionInterface;
 
