@@ -48,8 +48,13 @@ services:
       - appnet
       - infranet
     depends_on:
-      - db
-      - cache
+      db: { condition: service_healthy }
+      cache: { condition: service_started }
+    post_start:
+      - command: php bin/console doctrine:migrations:migrate --no-interaction
+        user: www-data
+      - command: php bin/console sitemap:generate
+        user: www-data
     logging:
       driver: local
       options:
@@ -70,6 +75,11 @@ services:
       options:
         max-size: "2m"
         max-file: "2"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}" ]
+      interval: 5s
+      retries: 5
+      timeout: 3s
   cache:
     image: redis
     networks:

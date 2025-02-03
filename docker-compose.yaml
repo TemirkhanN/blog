@@ -28,7 +28,14 @@ services:
       - appnet
       - infranet
     depends_on:
-      - db
+      db: { condition: service_healthy }
+    post_start:
+      - command: composer install --no-interaction
+        user: www-data
+      - command: php bin/console doctrine:migrations:migrate --no-interaction
+        user: www-data
+      - command: php bin/console sitemap:generate
+        user: www-data
   db:
     image: sameersbn/postgresql:12-20200524
     environment:
@@ -41,7 +48,11 @@ services:
       - infranet
     volumes:
       - db-storage:/var/lib/postgresql
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+      interval: 5s
+      retries: 5
+      timeout: 3s
 networks:
   infranet:
   appnet:

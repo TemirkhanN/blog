@@ -9,8 +9,6 @@ build:
 .PHONY: up
 up:
 	docker compose up -d
-	make composer
-	make migrate
 
 .PHONY: bash
 bash:

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # There has to be more adequate way to resolve this. Currently installing certificate before running nginx issues conflict
+# TODO check if post_start hook is applicable
 # on binding port.
 run_with_delay() {
     local delay=$1
