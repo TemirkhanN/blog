@@ -46,16 +46,14 @@ class Post
     private Collection $comments;
 
     /**
-     * @param PostRepositoryInterface $postRepository
-     * @param string                  $title
-     * @param string                  $preview
-     * @param string                  $content
-     * @param string[]                $tags
+     * @param string   $title
+     * @param string   $preview
+     * @param string   $content
+     * @param string[] $tags
      *
      * @throws DomainException
      */
     public function __construct(
-        PostRepositoryInterface $postRepository,
         string $title,
         string $preview,
         string $content,
@@ -75,12 +73,7 @@ class Post
 
         $createdAt = CarbonImmutable::now();
 
-        $slug = (string) new Slug($createdAt, $title);
-
-        // TODO this has to happen in runtime if it wasn't validated. Thus, slug has to be know in advance in app layer
-        if ($postRepository->findOneBySlug($slug)) {
-            throw new DomainException('There already exists a post with a similar title');
-        }
+        $slug = (string) new Slug($title, $createdAt);
 
         $this->state    = self::STATE_DRAFT;
         $this->title    = $title;
@@ -98,21 +91,14 @@ class Post
         $this->slug        = $slug;
     }
 
-    public function changeTitle(string $newTitle, PostRepositoryInterface $postRepository): void
+    public function changeTitle(string $newTitle): void
     {
         if ($this->title === $newTitle) {
             return;
         }
 
-        // TODO check uniqueness of the slug on title change
-        $slug = (string) new Slug($this->createdAt, $newTitle);
-
-        if ($postRepository->findOneBySlug($slug)) {
-            throw new DomainException('There already exists a post with a similar title');
-        }
-
         $this->title     = $newTitle;
-        $this->slug      = $slug;
+        $this->slug      = (string) new Slug($newTitle, $this->createdAt);
         $this->updatedAt = CarbonImmutable::now();
     }
 

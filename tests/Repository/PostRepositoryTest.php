@@ -200,7 +200,6 @@ class PostRepositoryTest extends FunctionalTestCase
             $this->setCurrentTime($this->currentTime->addSecond());
 
             $post = new Post(
-                $this->repository,
                 'Some title ' . $postWithSomeTag,
                 'Some preview ' . $postWithSomeTag,
                 'Some content ' . $postWithSomeTag
@@ -213,7 +212,6 @@ class PostRepositoryTest extends FunctionalTestCase
         foreach (range(1, 4) as $postWithAnotherTag) {
             $this->setCurrentTime($this->currentTime->addSecond());
             $post2 = new Post(
-                $this->repository,
                 'Another title ' . $postWithAnotherTag,
                 'Another preview ' . $postWithAnotherTag,
                 'Another content ' . $postWithAnotherTag
@@ -225,7 +223,6 @@ class PostRepositoryTest extends FunctionalTestCase
 
         $this->setCurrentTime($this->currentTime->addSecond());
         $postWithMultipleTags = new Post(
-            $this->repository,
             'Multitagged post',
             'Some multitag preview',
             'Some multitag content'
@@ -236,7 +233,6 @@ class PostRepositoryTest extends FunctionalTestCase
 
         $this->setCurrentTime($this->currentTime->addSecond());
         $draftPost = new Post(
-            $this->repository,
             'Some draft title 23',
             'Some preview of 23',
             'Some content of 23'
@@ -246,7 +242,6 @@ class PostRepositoryTest extends FunctionalTestCase
 
         $this->setCurrentTime($this->currentTime->addSecond());
         $archivedPost = new Post(
-            $this->repository,
             'Archived title 24',
             'Some preview of 24',
             'Some content of 24'
@@ -257,7 +252,6 @@ class PostRepositoryTest extends FunctionalTestCase
 
         $this->setCurrentTime($this->currentTime->addSecond());
         $draftPostThatWasNeverUpdated = new Post(
-            $this->repository,
             'Some draft title 25',
             'Some preview of 25',
             'Some content of 25'

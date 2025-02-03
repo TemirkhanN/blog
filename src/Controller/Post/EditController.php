@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller\Post;
 
+use App\Domain\Entity\Post;
 use App\Domain\Repository\PostRepositoryInterface;
+use App\Domain\ValueObject\Slug;
 use App\Dto\PostData;
 use App\Lib\Response\ResponseFactoryInterface;
 use App\View\PostView;
@@ -40,7 +42,13 @@ class EditController
             return $this->responseFactory->notFound("Publication doesn't exist");
         }
 
-        $post->changeTitle($newData->title, $this->postRepository);
+        if ($this->alreadyExists($post, $newData)) {
+            return $this->responseFactory->createResponse(
+                ValidationErrorsView::createPlain(['title' => 'There already exists a post with a similar title'])
+            );
+        }
+
+        $post->changeTitle($newData->title);
         $post->changePreview($newData->preview);
         $post->changeContent($newData->content);
         $post->setTags($newData->tags);
@@ -48,5 +56,17 @@ class EditController
         $this->postRepository->save($post);
 
         return $this->responseFactory->createResponse(PostView::create($post));
+    }
+
+    private function alreadyExists(Post $post, PostData $postData): bool
+    {
+        // TODO this is not good. Details on how slug is built within Post are spilled into app layer here
+        $newSlug = (string) new Slug($postData->title, $post->createdAt());
+        $oldSlug = $post->slug();
+        if ($newSlug === $oldSlug) {
+            return false;
+        }
+
+        return $this->postRepository->findOneBySlug((string) new Slug($postData->title, $post->createdAt())) !== null;
     }
 }

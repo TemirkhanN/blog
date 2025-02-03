@@ -195,7 +195,7 @@ class FunctionalTestCase extends WebTestCase
         string $content,
         array $tags = []
     ): Post {
-        $post = new Post($this->postRepository, $title, $preview, $content);
+        $post = new Post($title, $preview, $content);
         $post->setTags($tags);
         $this->postRepository->save($post);
 

@@ -361,7 +361,6 @@ class ListControllerTest extends FunctionalTestCase
             $order = $key + 1;
 
             $post = new Post(
-                $postRepository,
                 'Some title ' . $order,
                 'Some preview ' . $order,
                 'Some content ' . $order
@@ -372,9 +371,9 @@ class ListControllerTest extends FunctionalTestCase
             $postRepository->save($post);
         }
 
-        $draftPost = new Post($postRepository, 'Some title 23', 'Some preview of 23', 'Some content of 23');
+        $draftPost = new Post('Some title 23', 'Some preview of 23', 'Some content of 23');
         $draftPost->setTags(['SomeTag', 'AnotherTag', 'OneMoreTag']);
-        $archivedPost = new Post($postRepository, 'Some title 24', 'Some preview of 24', 'Some content of 24');
+        $archivedPost = new Post('Some title 24', 'Some preview of 24', 'Some content of 24');
         $archivedPost->setTags(['SomeTag', 'AnotherTag', 'OneMoreTag']);
         $archivedPost->archive();
 

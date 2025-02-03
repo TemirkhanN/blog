@@ -8,7 +8,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class ValidationErrorsView
 {
-    public static function create(ConstraintViolationListInterface $violations): array
+    public static function create(ConstraintViolationListInterface $violations, int $code = 0): array
     {
         $errors = [];
         foreach ($violations as $violation) {
@@ -17,8 +17,17 @@ class ValidationErrorsView
 
         return [
             'message' => 'Invalid data',
-            'code'    => 0,
+            'code'    => $code,
             'details' => $errors,
+        ];
+    }
+
+    public static function createPlain(array $violations, int $code = 0): array
+    {
+        return [
+            'message' => 'Invalid data',
+            'code'    => $code,
+            'details' => $violations,
         ];
     }
 }

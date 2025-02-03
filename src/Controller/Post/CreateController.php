@@ -6,6 +6,7 @@ namespace App\Controller\Post;
 
 use App\Domain\Entity\Post;
 use App\Domain\Repository\PostRepositoryInterface;
+use App\Domain\ValueObject\Slug;
 use App\Dto\PostData;
 use App\Lib\Response\ResponseFactoryInterface;
 use App\View\PostView;
@@ -36,9 +37,13 @@ class CreateController
             return $this->responseFactory->createResponse(ValidationErrorsView::create(($violations)));
         }
 
-        // TODO slug is unknown outside of the scope. Need a way to validate it without domainexception
+        if ($this->alreadyExists($postData)) {
+            return $this->responseFactory->createResponse(
+                ValidationErrorsView::createPlain(['title' => 'There already exists a post with a similar title'])
+            );
+        }
+
         $post = new Post(
-            $this->postRepository,
             $postData->title,
             $postData->preview,
             $postData->content,
@@ -48,5 +53,10 @@ class CreateController
         $this->postRepository->save($post);
 
         return $this->responseFactory->createResponse(PostView::create($post));
+    }
+
+    private function alreadyExists(PostData $postData): bool
+    {
+        return $this->postRepository->findOneBySlug((string) new Slug($postData->title)) !== null;
     }
 }
