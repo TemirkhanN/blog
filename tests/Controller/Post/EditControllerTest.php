@@ -166,7 +166,7 @@ class EditControllerTest extends FunctionalTestCase
      */
     private function assertPostModified(Post $post, array $withData): void
     {
-        // TODO why?
+        // This ensures that changes are actually saved to the storage(i.e., not in modified-yet-not-saved state)
         $this->refreshState($post);
 
         self::assertEquals($withData['title'], $post->title());
