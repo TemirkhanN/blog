@@ -12,39 +12,39 @@ create_post:
   methods: [ POST ]
   controller: App\Controller\Post\CreateController
 update_post:
-  path: /posts/{slug}
+  path: /posts/{id}
   requirements:
-    slug: '[a-zA-Z0-9_-]{10,}'
+    id: '[1-9][0-9]*'
   methods: [ PATCH ]
   controller: App\Controller\Post\EditController
 view_post:
-  path: /posts/{slug}
+  path: /posts/{id}
   requirements:
-    slug: '[a-zA-Z0-9_-]{10,}'
+    id: '[1-9][0-9]*'
   methods: [ GET ]
   controller: App\Controller\Post\ViewController
 add_comment:
-  path: /posts/{slug}/comments
+  path: /posts/{id}/comments
   requirements:
-    slug: '[a-zA-Z0-9_-]{10,}'
+    id: '[1-9][0-9]*'
   methods: [ POST ]
   controller: App\Controller\Comment\AddController
 publish_post:
-  path: /posts/{slug}/releases
+  path: /posts/{id}/releases
   controller: App\Controller\Post\PublishController
   requirements:
-    slug: '[a-zA-Z0-9_-]{10,}'
+    id: '[1-9][0-9]*'
   methods: [ POST ]
 reply_comment:
-  path: /posts/{slug}/comments/{replyTo}
+  path: /posts/{postId}/comments/{replyTo}
   requirements:
-    slug: '[a-zA-Z0-9_-]{10,}'
+    postId: '[1-9][0-9]*'
     replyTo: '[a-z0-9]{8}(-[a-z0-9]{4}){3}-[a-z0-9]{12}'
   methods: [ POST ]
   controller: App\Controller\Comment\ReplyController
 view_comments:
-  path: /posts/{slug}/comments
+  path: /posts/{id}/comments
   requirements:
-    slug: '[a-zA-Z0-9_-]{10,}'
+    id: '[1-9][0-9]*'
   methods: [ GET ]
   controller: App\Controller\Comment\ListController

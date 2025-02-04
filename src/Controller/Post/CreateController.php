@@ -6,7 +6,6 @@ namespace App\Controller\Post;
 
 use App\Domain\Entity\Post;
 use App\Domain\Repository\PostRepositoryInterface;
-use App\Domain\ValueObject\Slug;
 use App\Dto\PostData;
 use App\Lib\Response\ResponseFactoryInterface;
 use App\View\PostView;
@@ -16,13 +15,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class CreateController
+readonly class CreateController
 {
     public function __construct(
-        private readonly PostRepositoryInterface $postRepository,
-        private readonly AuthorizationCheckerInterface $security,
-        private readonly ResponseFactoryInterface $responseFactory,
-        private readonly ValidatorInterface $validator
+        private PostRepositoryInterface $postRepository,
+        private AuthorizationCheckerInterface $security,
+        private ResponseFactoryInterface $responseFactory,
+        private ValidatorInterface $validator
     ) {
     }
 
@@ -37,12 +36,6 @@ class CreateController
             return $this->responseFactory->createResponse(ValidationErrorsView::create(($violations)));
         }
 
-        if ($this->alreadyExists($postData)) {
-            return $this->responseFactory->createResponse(
-                ValidationErrorsView::createPlain(['title' => 'There already exists a post with a similar title'])
-            );
-        }
-
         $post = new Post(
             $postData->title,
             $postData->preview,
@@ -53,10 +46,5 @@ class CreateController
         $this->postRepository->save($post);
 
         return $this->responseFactory->createResponse(PostView::create($post));
-    }
-
-    private function alreadyExists(PostData $postData): bool
-    {
-        return $this->postRepository->findOneBySlug((string) new Slug($postData->title)) !== null;
     }
 }

@@ -9,13 +9,13 @@ use App\FunctionalTestCase;
 
 class PublishControllerTest extends FunctionalTestCase
 {
-    private const ENDPOINT = '/api/posts/%s/releases';
+    private const ENDPOINT = '/api/posts/%d/releases';
 
     public function testForbiddenAccess(): void
     {
-        $postSlug = 'Some-slug-123';
+        $postId = 123;
 
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $postSlug));
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $postId));
 
         self::assertEquals(
             '{"code":403,"message":"You\u0027re not allowed to modify posts"}',
@@ -25,10 +25,10 @@ class PublishControllerTest extends FunctionalTestCase
 
     public function testNotFound(): void
     {
-        $postSlug = 'Some-slug-123';
+        $postId = 123;
 
         $this->authenticate('SomeHardCodedToken');
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $postSlug));
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $postId));
 
         self::assertEquals(
             '{"code":404,"message":"Publication doesn\u0027t exist"}',
@@ -41,7 +41,7 @@ class PublishControllerTest extends FunctionalTestCase
         $post = $this->createPost('Some title', 'Some preview', 'Some content');
 
         $this->authenticate('SomeHardCodedToken');
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->slug()));
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->id()));
 
         self::assertEquals('[]', $response->getContent());
         $this->assertPostIsPublished($post);
@@ -54,7 +54,7 @@ class PublishControllerTest extends FunctionalTestCase
         $this->saveState($post);
 
         $this->authenticate('SomeHardCodedToken');
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->slug()));
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->id()));
 
         self::assertEquals('[]', $response->getContent());
         $this->assertPostIsPublished($post);
@@ -67,7 +67,7 @@ class PublishControllerTest extends FunctionalTestCase
         $this->saveState($post);
 
         $this->authenticate('SomeHardCodedToken');
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->slug()));
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT, $post->id()));
 
         self::assertEquals(200, $response->getStatusCode());
         self::assertEquals(

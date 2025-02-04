@@ -10,15 +10,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CommentController
+readonly class CommentController
 {
     private const ACTION_ADD_COMMENT = 'add';
 
-    public function __construct(private readonly Client $blogApi)
+    public function __construct(private Client $blogApi)
     {
     }
 
-    public function __invoke(string $postSlug, Request $request): Response
+    public function __invoke(int $id, string $slug, Request $request): Response
     {
         try {
             $payload = $request->toArray();
@@ -27,30 +27,28 @@ class CommentController
         }
 
         $action = (string) ($payload['action'] ?? '');
-
-        switch ($action) {
-            case self::ACTION_ADD_COMMENT:
-                return $this->addComment($postSlug, $payload);
-            default:
-                return new JsonResponse('Unknown action', 400);
+        if ($action !== self::ACTION_ADD_COMMENT) {
+            return new JsonResponse('Unknown action', 400);
         }
+
+        return $this->addComment($id, $payload);
     }
 
     /**
-     * @param string                   $postSlug
+     * @param int                      $postId
      * @param array<array-key, scalar> $requestPayload
      *
      * @return Response
      */
-    private function addComment(string $postSlug, array $requestPayload): Response
+    private function addComment(int $postId, array $requestPayload): Response
     {
         $comment = (string) ($requestPayload['comment'] ?? '');
         $replyTo = (string) ($requestPayload['replyTo'] ?? '');
 
         if ($replyTo === '') {
-            $result = $this->blogApi->addComment($postSlug, $comment);
+            $result = $this->blogApi->addComment($postId, $comment);
         } else {
-            $result = $this->blogApi->replyToComment($replyTo, $postSlug, $comment);
+            $result = $this->blogApi->replyToComment($replyTo, $postId, $comment);
         }
 
         if (!$result->isSuccessful()) {

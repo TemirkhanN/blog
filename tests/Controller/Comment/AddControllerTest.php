@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AddControllerTest extends FunctionalTestCase
 {
-    private const ENDPOINT = '/api/posts/%s/comments';
+    private const ENDPOINT = '/api/posts/%d/comments';
     private Post $post;
 
     protected function setUp(): void
@@ -24,7 +24,7 @@ class AddControllerTest extends FunctionalTestCase
         $this->post->publish();
         $this->saveState($this->post);
 
-        $uri = sprintf(self::ENDPOINT, $this->post->slug());
+        $uri = sprintf(self::ENDPOINT, $this->post->id());
         $this->sendRequest('POST', $uri);
 
         self::assertResponseContainsError(
@@ -37,7 +37,7 @@ class AddControllerTest extends FunctionalTestCase
     {
         $this->exceedSpamThreshold();
 
-        $uri      = sprintf(self::ENDPOINT, $this->post->slug());
+        $uri      = sprintf(self::ENDPOINT, $this->post->id());
         $payload  = ['text' => 'Some comment text'];
         $response = $this->sendRequest('POST', $uri, $payload);
 
@@ -46,16 +46,17 @@ class AddControllerTest extends FunctionalTestCase
 
     public function testAddCommentToNonExistingPost(): void
     {
-        $uri      = sprintf(self::ENDPOINT, 'NonExistingSlug');
-        $payload  = ['text' => 'Some comment text'];
-        $response = $this->sendRequest('POST', $uri, $payload);
+        $nonExistingPostId = 123456789;
+        $uri               = sprintf(self::ENDPOINT, $nonExistingPostId);
+        $payload           = ['text' => 'Some comment text'];
+        $response          = $this->sendRequest('POST', $uri, $payload);
 
         self::assertEquals('{"code":404,"message":"Target post does not exist"}', $response->getContent());
     }
 
     public function testAddCommentToHiddenPost(): void
     {
-        $uri      = sprintf(self::ENDPOINT, $this->post->slug());
+        $uri      = sprintf(self::ENDPOINT, $this->post->id());
         $payload  = ['text' => 'Some comment text that is longer than 6 words.'];
         $response = $this->sendRequest('POST', $uri, $payload);
 
@@ -70,7 +71,7 @@ class AddControllerTest extends FunctionalTestCase
         $this->post->publish();
         $this->saveState($this->post);
 
-        $uri      = sprintf(self::ENDPOINT, $this->post->slug());
+        $uri      = sprintf(self::ENDPOINT, $this->post->id());
         $payload  = ['text' => 'Some comment text that is longer than 6 words.'];
         $response = $this->sendRequest('POST', $uri, $payload);
 

@@ -8,12 +8,12 @@ use App\Lib\Response\Cache\TTL;
 use Frontend\Resource\View\Page;
 use Symfony\Component\HttpFoundation\Response;
 
-class MarkdownPageController extends AbstractBlogController
+readonly class MarkdownPageController extends AbstractBlogController
 {
     /**
-     * @var array<string, array{title: string, source: string}>
+     * @const array<string, array{title: string, source: string}>
      */
-    private static array $pages = [
+    private const PAGES = [
         'about' => [
             'title'  => 'About me',
             'source' => 'https://raw.githubusercontent.com/TemirkhanN/cv/master/README.md',
@@ -22,11 +22,11 @@ class MarkdownPageController extends AbstractBlogController
 
     public function __invoke(string $name): Response
     {
-        if (!isset(self::$pages[$name])) {
+        if (!isset(self::PAGES[$name])) {
             return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
         }
 
-        $page = self::$pages[$name];
+        $page = self::PAGES[$name];
 
         $response = new Response(
             $this->renderer->render(Page::MARKDOWN_PAGE, [

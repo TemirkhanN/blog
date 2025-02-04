@@ -13,6 +13,7 @@ class PostView
      * @param bool $extended
      *
      * @return array{
+     *  id: int,
      *  slug: string,
      *  title: string,
      *  preview: string,
@@ -26,6 +27,7 @@ class PostView
     public static function create(Post $post, bool $extended = true): array
     {
         $view = [
+            'id'          => $post->id(),
             'slug'        => $post->slug(),
             'title'       => $post->title(),
             'createdAt'   => DateTimeView::create($post->createdAt()),

@@ -6,14 +6,22 @@ namespace Frontend\Controller;
 
 use App\Lib\Response\Cache\CacheGatewayInterface;
 use Frontend\API\Client;
+use Frontend\API\Model\Post;
 use Frontend\Service\Renderer;
+use Symfony\Component\Routing\RouterInterface;
 
-abstract class AbstractBlogController
+readonly abstract class AbstractBlogController
 {
     public function __construct(
-        protected readonly Client $blogApi,
-        protected readonly Renderer $renderer,
-        protected readonly CacheGatewayInterface $cacheGateway
+        protected Client $blogApi,
+        protected Renderer $renderer,
+        protected CacheGatewayInterface $cacheGateway,
+        protected RouterInterface $router
     ) {
+    }
+
+    protected function getPostUri(Post $post): string
+    {
+        return $this->router->generate('blog_post', ['id' => $post->id, 'slug' => $post->slug]);
     }
 }

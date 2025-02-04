@@ -11,16 +11,16 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class PostEditorController extends AbstractBlogController
+readonly class PostEditorController extends AbstractBlogController
 {
-    public function __invoke(Request $request, string $slug, Access $access): Response
+    public function __invoke(Request $request, int $id, Access $access): Response
     {
         if (!$access->isAdmin()) {
             return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
         }
 
-        if ($slug !== '') {
-            return $this->handleUpdate($slug, $request);
+        if ($id !== 0) {
+            return $this->handleUpdate($id, $request);
         }
 
         return $this->handleCreation($request);
@@ -35,16 +35,16 @@ class PostEditorController extends AbstractBlogController
 
         $error = '';
         if ($request->isMethod('POST')) {
-            $title   = (string) $request->request->get('title', '');
-            $preview = (string) $request->request->get('preview', '');
-            $content = (string) $request->request->get('content', '');
-            $tags    = (string) $request->request->get('tags', '');
+            $title   = $request->request->getString('title');
+            $preview = $request->request->getString('preview');
+            $content = $request->request->getString('content');
+            $tags    = $request->request->getString('tags');
 
             $postCreation = $this->blogApi->createPost($title, $preview, $content, $this->unserializeTags($tags));
             if ($postCreation->isSuccessful()) {
                 $post = $postCreation->getData();
 
-                return new RedirectResponse('/blog/' . $post->slug);
+                return new RedirectResponse($this->getPostUri($post));
             }
 
             $error = $postCreation->getError()->getMessage();
@@ -58,9 +58,9 @@ class PostEditorController extends AbstractBlogController
         );
     }
 
-    private function handleUpdate(string $postSlug, Request $request): Response
+    private function handleUpdate(int $id, Request $request): Response
     {
-        $post = $this->blogApi->getPost($postSlug);
+        $post = $this->blogApi->getPost($id);
         if ($post === null) {
             return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
         }
@@ -72,16 +72,14 @@ class PostEditorController extends AbstractBlogController
 
         $error = '';
         if ($request->isMethod('POST')) {
-            $title   = (string) $request->request->get('title', '');
-            $preview = (string) $request->request->get('preview', '');
-            $content = (string) $request->request->get('content', '');
-            $tags    = (string) $request->request->get('tags', '');
+            $title   = $request->request->getString('title');
+            $preview = $request->request->get('preview');
+            $content = $request->request->get('content');
+            $tags    = $request->request->get('tags');
 
-            $postUpdate = $this->blogApi
-                ->editPost($postSlug, $title, $preview, $content, $this->unserializeTags($tags));
-
+            $postUpdate = $this->blogApi->editPost($id, $title, $preview, $content, $this->unserializeTags($tags));
             if ($postUpdate->isSuccessful()) {
-                return new RedirectResponse('/blog/' . $postUpdate->getData()->slug);
+                return new RedirectResponse($this->getPostUri($postUpdate->getData()));
             }
 
             $error = $postUpdate->getError()->getMessage();

@@ -7,24 +7,26 @@ namespace Frontend\API\Model;
 use DateTimeImmutable;
 use Frontend\Service\DatetimeTransformer;
 
-class Post
+readonly class Post
 {
     public function __construct(
-        public readonly string $slug,
-        public readonly string $title,
-        public readonly string $preview,
-        public readonly string $content,
-        public readonly array $tags,
-        public readonly array $comments,
-        public readonly DateTimeImmutable $createdAt,
-        public readonly ?DateTimeImmutable $updatedAt,
-        public readonly ?DateTimeImmutable $publishedAt,
+        public int $id,
+        public string $slug,
+        public string $title,
+        public string $preview,
+        public string $content,
+        public array $tags,
+        public array $comments,
+        public DateTimeImmutable $createdAt,
+        public ?DateTimeImmutable $updatedAt,
+        public ?DateTimeImmutable $publishedAt,
     ) {
     }
 
     public static function unmarshall(array $from): self
     {
         return new self(
+            $from['id'],
             $from['slug'],
             $from['title'],
             $from['preview'],

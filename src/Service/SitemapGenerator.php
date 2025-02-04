@@ -8,7 +8,10 @@ use App\Domain\Repository\PostFilter;
 use App\Domain\Repository\PostRepositoryInterface;
 use SimpleXMLElement;
 
-class SitemapGenerator
+/**
+ * @TODO does not belong to src. Move to frontend directory. Same applies to usages.
+ */
+readonly class SitemapGenerator
 {
     private const FREQ_MONTHLY    = 'monthly';
     private const FREQ_YEARLY     = 'yearly';
@@ -16,8 +19,8 @@ class SitemapGenerator
     private const PRIORITY_NORMAL = '0.5';
 
     public function __construct(
-        private readonly PostRepositoryInterface $postRepository,
-        private readonly UriResolver $uriResolver
+        private PostRepositoryInterface $postRepository,
+        private UriResolver $uriResolver
     ) {
     }
 
@@ -38,7 +41,7 @@ class SitemapGenerator
             }
 
             $url = $doc->addChild('url');
-            $url->addChild('loc', $this->uriResolver->resolvePostUri($post->slug()));
+            $url->addChild('loc', $this->uriResolver->resolvePostUri($post->id(), $post->slug()));
             $url->addChild('lastmod', $lastMod->format(DATE_ATOM));
             $url->addChild('changefreq', self::FREQ_YEARLY);
             $url->addChild('priority', self::PRIORITY_TOP);

@@ -20,14 +20,14 @@ use TemirkhanN\Generic\Error;
 use TemirkhanN\Generic\Result;
 use TemirkhanN\Generic\ResultInterface;
 
-class ListController
+readonly class ListController
 {
     private const POSTS_PER_PAGE = 10;
 
     public function __construct(
-        private readonly PostRepositoryInterface $postRepository,
-        private readonly AuthorizationCheckerInterface $security,
-        private readonly ResponseFactoryInterface $responseFactory
+        private PostRepositoryInterface $postRepository,
+        private AuthorizationCheckerInterface $security,
+        private ResponseFactoryInterface $responseFactory
     ) {
     }
 
@@ -60,9 +60,7 @@ class ListController
      */
     private function createView(CollectionChunk $collection): array
     {
-        return PaginatedView::create($collection, static function (Post $post): array {
-            return PostView::create($post, false);
-        });
+        return PaginatedView::create($collection, static fn (Post $post) => PostView::create($post, false));
     }
 
     /**

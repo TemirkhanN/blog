@@ -16,9 +16,9 @@ use RuntimeException;
 use TemirkhanN\Generic\Collection\Collection;
 use TemirkhanN\Generic\Collection\CollectionInterface;
 
-class PostRepository implements PostRepositoryInterface
+readonly class PostRepository implements PostRepositoryInterface
 {
-    public function __construct(private readonly ManagerRegistry $registry)
+    public function __construct(private ManagerRegistry $registry)
     {
     }
 
@@ -81,9 +81,9 @@ class PostRepository implements PostRepositoryInterface
         return (int) $query->getQuery()->getSingleScalarResult();
     }
 
-    public function findOneBySlug(string $slug): ?Post
+    public function findOneById(int $id): ?Post
     {
-        return $this->registry->getRepository(Post::class)->findOneBy(['slug' => $slug]);
+        return $this->registry->getRepository(Post::class)->find($id);
     }
 
     public function save(Post $post): void

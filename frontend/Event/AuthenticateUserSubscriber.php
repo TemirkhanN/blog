@@ -8,7 +8,7 @@ use Frontend\API\Client;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
-class AuthenticateUserSubscriber implements EventSubscriberInterface
+readonly class AuthenticateUserSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
@@ -20,7 +20,7 @@ class AuthenticateUserSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function __construct(private readonly Client $blogApi)
+    public function __construct(private Client $blogApi)
     {
     }
 

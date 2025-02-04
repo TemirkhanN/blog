@@ -9,11 +9,11 @@ use App\FunctionalTestCase;
 
 class EditControllerTest extends FunctionalTestCase
 {
-    private const ENDPOINT = '/api/posts/%s';
+    private const ENDPOINT = '/api/posts/%d';
 
     public function testForbiddenAccess(): void
     {
-        $postSlug = 'Some-slug-123';
+        $postId = 123;
 
         $newData = [
             'title'   => 'Another title',
@@ -25,7 +25,7 @@ class EditControllerTest extends FunctionalTestCase
             ],
         ];
 
-        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug), $newData);
+        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postId), $newData);
 
         self::assertEquals(
             '{"code":403,"message":"You\u0027re not allowed to edit posts"}',
@@ -35,8 +35,8 @@ class EditControllerTest extends FunctionalTestCase
 
     public function testNotFound(): void
     {
-        $postSlug = 'Some-slug-123';
-        $newData  = [
+        $postId  = 123;
+        $newData = [
             'title'   => 'Another title',
             'preview' => 'Another preview',
             'content' => 'Another content',
@@ -47,7 +47,7 @@ class EditControllerTest extends FunctionalTestCase
         ];
 
         $this->authenticate('SomeHardCodedToken');
-        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug), $newData);
+        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postId), $newData);
 
         self::assertEquals(
             '{"code":404,"message":"Publication doesn\u0027t exist"}',
@@ -57,10 +57,10 @@ class EditControllerTest extends FunctionalTestCase
 
     public function testBadRequest(): void
     {
-        $postSlug = 'Some-slug-123';
+        $postId = 123;
 
         $this->authenticate('SomeHardCodedToken');
-        $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postSlug));
+        $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $postId));
 
         $this->assertResponseContainsError('Invalid data', [
             'title'   => 'This value should not be blank.',
@@ -90,7 +90,7 @@ class EditControllerTest extends FunctionalTestCase
 
         $this->authenticate('SomeHardCodedToken');
 
-        $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $post->slug()), $newData);
+        $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $post->id()), $newData);
 
         $this->assertResponseContainsError('Invalid data', [
             'title'   => 'This value should not be blank.',
@@ -123,7 +123,7 @@ class EditControllerTest extends FunctionalTestCase
         ];
 
         $this->authenticate('SomeHardCodedToken');
-        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $post->slug()), $newData);
+        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $post->id()), $newData);
 
         self::assertEquals(200, $response->getStatusCode());
         $this->assertPostModified($post, $newData);
@@ -152,7 +152,7 @@ class EditControllerTest extends FunctionalTestCase
         ];
 
         $this->authenticate('SomeHardCodedToken');
-        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $post->slug()), $newData);
+        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT, $post->id()), $newData);
 
         self::assertEquals(200, $response->getStatusCode());
         $this->assertPostModified($post, $newData);

@@ -11,22 +11,22 @@ use App\Lib\Response\ResponseFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class PublishController
+readonly class PublishController
 {
     public function __construct(
-        private readonly PostRepositoryInterface $postRepository,
-        private readonly AuthorizationCheckerInterface $security,
-        private readonly ResponseFactoryInterface $responseFactory
+        private PostRepositoryInterface $postRepository,
+        private AuthorizationCheckerInterface $security,
+        private ResponseFactoryInterface $responseFactory
     ) {
     }
 
-    public function __invoke(string $slug): Response
+    public function __invoke(int $id): Response
     {
         if (!$this->security->isGranted('create_post')) {
             return $this->responseFactory->forbidden("You're not allowed to modify posts");
         }
 
-        $post = $this->postRepository->findOneBySlug($slug);
+        $post = $this->postRepository->findOneById($id);
         if ($post === null) {
             return $this->responseFactory->notFound("Publication doesn't exist");
         }

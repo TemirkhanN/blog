@@ -1,17 +1,3 @@
-<script>
-    function selectCommentForReply(commentGuid) {
-        const commentForm = document.getElementById("comment-form");
-        if (!commentForm) {
-            return;
-        }
-
-        commentForm.getElementsByTagName("input").replyTo.value = commentGuid;
-        const commentInput = commentForm.getElementsByTagName("textarea").comment;
-        commentInput.scrollIntoView(true);
-
-        commentInput.focus();
-    }
-</script>
 <div class="comment">
     <p class="pub-date">{{comment.createdAt|date('j F Y')}}</p>
     <div class="comment-text">

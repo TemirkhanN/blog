@@ -9,7 +9,7 @@ use App\FunctionalTestCase;
 
 class ViewControllerTest extends FunctionalTestCase
 {
-    private const ENDPOINT = '/api/posts/%s';
+    private const ENDPOINT = '/api/posts/%d';
 
     protected function setUp(): void
     {
@@ -36,7 +36,9 @@ class ViewControllerTest extends FunctionalTestCase
      */
     public function testNotFound(string $slug): void
     {
-        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT, $slug));
+        $post = $this->findPostBySlug($slug);
+
+        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT, $post?->id() ?? 123));
 
         self::assertEquals(
             '{"code":404,"message":"Publication doesn\u0027t exist"}',
@@ -47,7 +49,7 @@ class ViewControllerTest extends FunctionalTestCase
     /**
      * @return iterable<array{0: string}>
      */
-    public function unreachablePostSlugProvider(): iterable
+    public static function unreachablePostSlugProvider(): iterable
     {
         yield 'archived post' => ['2023-12-27_Archived-post-title'];
 
@@ -63,19 +65,20 @@ class ViewControllerTest extends FunctionalTestCase
      */
     public function testView(string $slug): void
     {
-        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT, $slug));
+        $post = $this->findPostBySlug($slug);
+        self::assertNotNull($post);
+
+        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT, $post->id()));
 
         self::assertEquals(200, $response->getStatusCode());
 
-        $postRepository = $this->getEntityManager()->getRepository(Post::class);
-        /** @var Post $post */
-        $post = $postRepository->findOneBy(['slug' => $slug]);
         self::assertNotNull($post);
         self::assertNotNull($post->publishedAt());
         self::assertNotNull($post->updatedAt());
         self::assertJsonEqualsToData(
             (string) $response->getContent(),
             [
+                'id'          => $post->id(),
                 'slug'        => $post->slug(),
                 'title'       => $post->title(),
                 'preview'     => $post->preview(),
@@ -96,5 +99,12 @@ class ViewControllerTest extends FunctionalTestCase
         yield ['2023-12-27_Some-title'];
 
         yield ['2023-12-27_Another-title'];
+    }
+
+    private function findPostBySlug(string $slug): ?Post
+    {
+        return $this->getEntityManager()
+            ->getRepository(Post::class)
+            ->findOneBy(['slug' => $slug]);
     }
 }

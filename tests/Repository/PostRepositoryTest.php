@@ -35,34 +35,6 @@ class PostRepositoryTest extends FunctionalTestCase
     }
 
     /**
-     * @param string $slug
-     *
-     * @dataProvider postSlugProvider
-     */
-    public function testFindOneBuSlug(string $slug): void
-    {
-        $post = $this->repository->findOneBySlug($slug);
-
-        self::assertNotNull($post);
-        self::assertEquals($slug, $post->slug());
-    }
-
-    /** @return iterable<string[]> */
-    public function postSlugProvider(): iterable
-    {
-        yield ['2023-12-27_Some-title-1'];
-        yield ['2023-12-27_Some-title-2'];
-        yield ['2023-12-27_Some-title-3'];
-        yield ['2023-12-27_Some-title-4'];
-        yield ['2023-12-27_Some-title-5'];
-        yield ['2023-12-27_Another-title-1'];
-        yield ['2023-12-27_Another-title-2'];
-        yield ['2023-12-27_Another-title-3'];
-        yield ['2023-12-27_Another-title-4'];
-        yield ['2023-12-27_Multitagged-post'];
-    }
-
-    /**
      * @param PostFilter $filter
      * @param string[]   $expectedTitles
      *

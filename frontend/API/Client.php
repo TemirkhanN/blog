@@ -16,9 +16,9 @@ class Client
 {
     private const ENDPOINT_LOGIN         = '/api/auth/tokens';
     private const ENDPOINT_POSTS         = '/api/posts';
-    private const ENDPOINT_POST          = '/api/posts/%s';
-    private const ENDPOINT_POST_RELEASES = '/api/posts/%s/releases';
-    private const ENDPOINT_COMMENTS      = '/api/posts/%s/comments';
+    private const ENDPOINT_POST          = '/api/posts/%d';
+    private const ENDPOINT_POST_RELEASES = '/api/posts/%d/releases';
+    private const ENDPOINT_COMMENTS      = '/api/posts/%d/comments';
 
     private string $userToken = '';
 
@@ -72,7 +72,7 @@ class Client
     }
 
     /**
-     * @param string   $slug
+     * @param int      $id
      * @param string   $title
      * @param string   $preview
      * @param string   $content
@@ -81,7 +81,7 @@ class Client
      * @return ResultInterface<Post>
      */
     public function editPost(
-        string $slug,
+        int $id,
         string $title,
         string $preview,
         string $content,
@@ -89,7 +89,7 @@ class Client
     ): ResultInterface {
         $payload = compact('title', 'preview', 'content', 'tags');
 
-        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT_POST, $slug), $payload);
+        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT_POST, $id), $payload);
         $error    = $this->getErrorMessage($response);
 
         if ($error !== '') {
@@ -99,15 +99,15 @@ class Client
         return Result::success(Post::unmarshall($response->toArray(false)));
     }
 
-    public function getPost(string $slug): ?Post
+    public function getPost(int $id): ?Post
     {
-        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_POST, $slug));
+        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_POST, $id));
 
         if ($this->getErrorMessage($response) !== '') {
             return null;
         }
 
-        $commentsRaw = $this->sendRequest('GET', sprintf(self::ENDPOINT_COMMENTS, $slug));
+        $commentsRaw = $this->sendRequest('GET', sprintf(self::ENDPOINT_COMMENTS, $id));
 
         $comments = array_map([Comment::class, 'unmarshall'], $commentsRaw->toArray(false));
 
@@ -115,13 +115,13 @@ class Client
     }
 
     /**
-     * @param string $slug
+     * @param int $id
      *
      * @return ResultInterface<void>
      */
-    public function publishPost(string $slug): ResultInterface
+    public function publishPost(int $id): ResultInterface
     {
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT_POST_RELEASES, $slug));
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT_POST_RELEASES, $id));
 
         $error = $this->getErrorMessage($response);
 
@@ -155,15 +155,15 @@ class Client
     }
 
     /**
-     * @param string $postSlug
+     * @param int    $id
      * @param string $comment
      *
      * @return ResultInterface<void>
      */
-    public function addComment(string $postSlug, string $comment): ResultInterface
+    public function addComment(int $id, string $comment): ResultInterface
     {
         $payload  = ['text' => $comment];
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT_COMMENTS, $postSlug), $payload);
+        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT_COMMENTS, $id), $payload);
 
         $error = $this->getErrorMessage($response);
         if ($error !== '') {
@@ -175,15 +175,15 @@ class Client
 
     /**
      * @param string $commentId
-     * @param string $inPost
+     * @param int    $postId
      * @param string $reply
      *
      * @return ResultInterface<void>
      */
-    public function replyToComment(string $commentId, string $inPost, string $reply): ResultInterface
+    public function replyToComment(string $commentId, int $postId, string $reply): ResultInterface
     {
         $payload  = ['text' => $reply];
-        $endpoint = sprintf(self::ENDPOINT_COMMENTS . '/%s', $inPost, $commentId);
+        $endpoint = sprintf(self::ENDPOINT_COMMENTS . '/%s', $postId, $commentId);
 
         $response = $this->sendRequest('POST', $endpoint, $payload);
 

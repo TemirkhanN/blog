@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domain\Entity;
 
-use App\Domain\Repository\PostRepositoryInterface;
 use App\Domain\ValueObject\Slug;
 use Carbon\CarbonImmutable;
 use DateTimeImmutable;
@@ -71,10 +70,6 @@ class Post
             throw new DomainException('Content can not be empty');
         }
 
-        $createdAt = CarbonImmutable::now();
-
-        $slug = (string) new Slug($title, $createdAt);
-
         $this->state    = self::STATE_DRAFT;
         $this->title    = $title;
         $this->preview  = $preview;
@@ -85,10 +80,15 @@ class Post
             $this->tags->add(new Tag($newTag, $this));
         }
 
-        $this->createdAt   = $createdAt;
+        $this->createdAt   = CarbonImmutable::now();
         $this->publishedAt = null;
         $this->updatedAt   = null;
-        $this->slug        = $slug;
+        $this->slug        = Slug::create($title, $this->createdAt);
+    }
+
+    public function id(): int
+    {
+        return $this->id;
     }
 
     public function changeTitle(string $newTitle): void
@@ -98,7 +98,7 @@ class Post
         }
 
         $this->title     = $newTitle;
-        $this->slug      = (string) new Slug($newTitle, $this->createdAt);
+        $this->slug      = Slug::create($newTitle, $this->createdAt);
         $this->updatedAt = CarbonImmutable::now();
     }
 

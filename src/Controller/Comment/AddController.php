@@ -19,26 +19,26 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class AddController
+readonly class AddController
 {
     public function __construct(
-        private readonly PostRepositoryInterface $postRepository,
-        private readonly CommentRepositoryInterface $commentRepository,
-        private readonly AuthorizationCheckerInterface $security,
-        private readonly ResponseFactoryInterface $responseFactory,
-        private readonly ValidatorInterface $validator,
-        private readonly EventDispatcherInterface $eventDispatcher
+        private PostRepositoryInterface $postRepository,
+        private CommentRepositoryInterface $commentRepository,
+        private AuthorizationCheckerInterface $security,
+        private ResponseFactoryInterface $responseFactory,
+        private ValidatorInterface $validator,
+        private EventDispatcherInterface $eventDispatcher
     ) {
     }
 
-    public function __invoke(string $slug, #[Dto] NewComment $commentData): Response
+    public function __invoke(int $id, #[Dto] NewComment $commentData): Response
     {
         $commentsInLastTenMinutes = $this->commentRepository->countCommentsInInterval(new DateInterval('PT10M'));
         if ($commentsInLastTenMinutes > 10) {
             return $this->responseFactory->createResponse(new SystemMessage('Request limit match'), 429);
         }
 
-        $post = $this->postRepository->findOneBySlug($slug);
+        $post = $this->postRepository->findOneById($id);
         if ($post === null) {
             return $this->responseFactory->notFound('Target post does not exist');
         }

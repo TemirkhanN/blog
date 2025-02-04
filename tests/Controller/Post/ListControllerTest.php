@@ -407,6 +407,7 @@ class ListControllerTest extends FunctionalTestCase
             self::assertNotNull($post->updatedAt());
 
             $posts[] = [
+                'id'          => $post->id(),
                 'slug'        => $post->slug(),
                 'title'       => $post->title(),
                 'publishedAt' => $post->publishedAt()->format(DATE_W3C),

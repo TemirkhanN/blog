@@ -1,4 +1,17 @@
 <script>
+    function selectCommentForReply(commentGuid) {
+        const commentForm = document.getElementById("comment-form");
+        if (!commentForm) {
+            return;
+        }
+
+        commentForm.getElementsByTagName("input").replyTo.value = commentGuid;
+        const commentInput = commentForm.getElementsByTagName("textarea").comment;
+        commentInput.scrollIntoView(true);
+
+        commentInput.focus();
+    }
+
     function writeComment() {
         const commentForm = document.getElementById("comment-form");
 
@@ -16,7 +29,7 @@
         }
 
         if (comment.length > 4000) {
-            alert("Your comment is probably bigger than the whole publication. Please, send it via email.");
+            alert("Your comment is probably bigger than the whole publication. Please, send it via email T_T");
 
             submitButton.disabled = false;
 
@@ -25,7 +38,7 @@
 
         const req = new XMLHttpRequest();
         const replyTo = inputs.replyTo.value ?? "";
-        const apiUrl = "{{ path('blog_post_comments_action', {postSlug: post.slug}) }}";
+        const apiUrl = "{{ path('blog_post_comments_action', {id: post.id, slug: post.slug}) }}";
 
         req.addEventListener('load', (e) => {
             if (e.target.status === 200) {

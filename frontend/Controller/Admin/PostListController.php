@@ -9,15 +9,13 @@ use Frontend\Resource\View\Page;
 use Frontend\Service\Access;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use TemirkhanN\Generic\Error;
+use TemirkhanN\Generic\Result;
+use TemirkhanN\Generic\ResultInterface;
 
-class PostListController extends AbstractBlogController
+readonly class PostListController extends AbstractBlogController
 {
     private const POSTS_PER_PAGE = 10;
-
-    /**
-     * @var string[]
-     */
-    private array $errors = [];
 
 
     public function __invoke(Request $request, int $page, Access $access): Response
@@ -26,25 +24,32 @@ class PostListController extends AbstractBlogController
             return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
         }
 
-        $this->performAction($request);
+        $result = $this->performAction($request);
 
         $posts = $this->blogApi->getPosts($page, self::POSTS_PER_PAGE);
 
+        $errors = [];
+        if (!$result->isSuccessful()) {
+            $errors[] = $result->getError()->getMessage();
+        }
+
         return new Response(
-            $this->renderer->render(Page::ADMIN_POST_LIST, ['posts' => $posts, 'errors' => $this->errors])
+            $this->renderer->render(Page::ADMIN_POST_LIST, ['posts' => $posts, 'errors' => $errors])
         );
     }
 
-    private function performAction(Request $request): void
+    private function performAction(Request $request): ResultInterface
     {
-        $publish = (string) $request->query->get('publish', '');
+        $publishingPostId = $request->query->getInt('publish');
 
-        if ($publish !== '') {
-            $result = $this->blogApi->publishPost($publish);
+        if ($publishingPostId !== 0) {
+            $result = $this->blogApi->publishPost($publishingPostId);
 
             if (!$result->isSuccessful()) {
-                $this->errors[] = $result->getError()->getMessage();
+                return Result::error(Error::create($result->getError()->getMessage()));
             }
         }
+
+        return Result::success();
     }
 }

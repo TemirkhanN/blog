@@ -18,18 +18,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ReplyController
+readonly class ReplyController
 {
     public function __construct(
-        private readonly CommentRepositoryInterface $commentRepository,
-        private readonly AuthorizationCheckerInterface $security,
-        private readonly ResponseFactoryInterface $responseFactory,
-        private readonly ValidatorInterface $validator,
-        private readonly EventDispatcherInterface $eventDispatcher
+        private CommentRepositoryInterface $commentRepository,
+        private AuthorizationCheckerInterface $security,
+        private ResponseFactoryInterface $responseFactory,
+        private ValidatorInterface $validator,
+        private EventDispatcherInterface $eventDispatcher
     ) {
     }
 
-    public function __invoke(string $slug, string $replyTo, #[Dto] NewComment $commentData): Response
+    public function __invoke(int $postId, string $replyTo, #[Dto] NewComment $commentData): Response
     {
         $commentsInLastTenMinutes = $this->commentRepository->countCommentsInInterval(new DateInterval('PT10M'));
         if ($commentsInLastTenMinutes > 10) {
@@ -37,7 +37,7 @@ class ReplyController
         }
 
         $target = $this->commentRepository->findCommentByGuid($replyTo);
-        if ($target === null || $target->getPost()->slug() !== $slug) {
+        if ($target === null || $target->getPost()->id() !== $postId) {
             return $this->responseFactory->notFound('Target comment does not exist');
         }
 

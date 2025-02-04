@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class LoginController extends AbstractBlogController
+readonly class LoginController extends AbstractBlogController
 {
     public function __invoke(Request $request): Response
     {

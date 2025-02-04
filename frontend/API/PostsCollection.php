@@ -12,13 +12,13 @@ use Traversable;
  * @template-covariant Post
  * @extends            IteratorAggregate<Post>
  */
-class PostsCollection implements IteratorAggregate
+readonly class PostsCollection implements IteratorAggregate
 {
     /**
      * @param Post[]   $posts
      * @param Metadata $metadata
      */
-    public function __construct(public readonly array $posts, public readonly Metadata $metadata)
+    public function __construct(public array $posts, public Metadata $metadata)
     {
     }
 

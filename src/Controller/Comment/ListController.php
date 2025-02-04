@@ -12,18 +12,18 @@ use App\Lib\Response\ResponseFactoryInterface;
 use App\View\CommentsTreeView;
 use Symfony\Component\HttpFoundation\Response;
 
-class ListController
+readonly class ListController
 {
     public function __construct(
-        private readonly CommentRepositoryInterface $commentRepository,
-        private readonly PostRepositoryInterface $postRepository,
-        private readonly ResponseFactoryInterface $responseFactory
+        private CommentRepositoryInterface $commentRepository,
+        private PostRepositoryInterface $postRepository,
+        private ResponseFactoryInterface $responseFactory
     ) {
     }
 
-    public function __invoke(string $slug, CacheGatewayInterface $cacheGateway): Response
+    public function __invoke(int $id, CacheGatewayInterface $cacheGateway): Response
     {
-        $post = $this->postRepository->findOneBySlug($slug);
+        $post = $this->postRepository->findOneById($id);
         if (!$post) {
             return $this->responseFactory->notFound('Post not found');
         }

@@ -38,11 +38,11 @@
                 <span class="pub-date">{{ post.publishedAt is empty ? "Draft" : post.publishedAt|date('j F Y') }}</span>
             </td>
             <td>
-                <a title="Edit post" href="{{ path('admin_edit_post', {slug: post.slug}) }}">{{post.title}}</a>
+                <a title="Edit post" href="{{ path('admin_edit_post', {id: post.id}) }}">{{post.title}}</a>
             </td>
             <td>
                 {% if post.publishedAt is empty %}
-                    <a href="{{ app.request.pathinfo }}?publish={{ post.slug }}">publish</a>
+                    <a href="{{ app.request.pathinfo }}?publish={{ post.id }}">publish</a>
                 {% endif %}
             </td>
         </tr>

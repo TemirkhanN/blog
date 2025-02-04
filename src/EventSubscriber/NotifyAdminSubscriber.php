@@ -9,13 +9,13 @@ use App\Lib\Notification\TelegramNotifier;
 use App\Service\UriResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class NotifyAdminSubscriber implements EventSubscriberInterface
+readonly class NotifyAdminSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private readonly bool $areNotificationsEnabled,
-        private readonly int $adminTelegramChatId,
-        private readonly UriResolver $uriResolver,
-        private readonly TelegramNotifier $notifier
+        private bool $areNotificationsEnabled,
+        private int $adminTelegramChatId,
+        private UriResolver $uriResolver,
+        private TelegramNotifier $notifier
     ) {
     }
 
@@ -30,15 +30,15 @@ class NotifyAdminSubscriber implements EventSubscriberInterface
             return;
         }
 
-        if ($event->repliedTo() !== '') {
-            $threadUri    = $this->uriResolver->resolveThreadUri($event->postSlug(), $event->repliedTo());
+        if ($event->repliedTo !== '') {
+            $threadUri    = $this->uriResolver->resolveThreadUri($event->postId, $event->postSlug, $event->repliedTo);
             $notification = sprintf('New reply to %s :' . PHP_EOL, $threadUri);
         } else {
-            $postUri      = $this->uriResolver->resolvePostUri($event->postSlug());
+            $postUri      = $this->uriResolver->resolvePostUri($event->postId, $event->postSlug);
             $notification = sprintf('New comment to %s :' . PHP_EOL, $postUri);
         }
 
-        $notification .= $event->comment();
+        $notification .= $event->comment;
 
         $this->notifier->sendNotification($this->adminTelegramChatId, $notification);
     }

@@ -12,18 +12,18 @@ use App\View\PostView;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class ViewController
+readonly class ViewController
 {
     public function __construct(
-        private readonly PostRepositoryInterface $postRepository,
-        private readonly AuthorizationCheckerInterface $security,
-        private readonly ResponseFactoryInterface $responseFactory
+        private PostRepositoryInterface $postRepository,
+        private AuthorizationCheckerInterface $security,
+        private ResponseFactoryInterface $responseFactory
     ) {
     }
 
-    public function __invoke(string $slug, CacheGatewayInterface $cacheGateway): Response
+    public function __invoke(int $id, CacheGatewayInterface $cacheGateway): Response
     {
-        $post = $this->postRepository->findOneBySlug($slug);
+        $post = $this->postRepository->findOneById($id);
         if ($post === null || !$this->security->isGranted('view_post', $post)) {
             return $this->responseFactory->notFound("Publication doesn't exist");
         }

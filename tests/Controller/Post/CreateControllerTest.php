@@ -82,18 +82,17 @@ class CreateControllerTest extends FunctionalTestCase
         self::assertJson($content);
         $responseData = (array) json_decode($content, true);
 
-        self::assertArrayHasKey('slug', $responseData);
-
         /** @var Post $post */
         $post = $this->getEntityManager()
                      ->getRepository(Post::class)
-                     ->findOneBy(['slug' => $responseData['slug']]);
+                     ->find($responseData['id']);
 
         self::assertNotNull($post);
 
         self::assertJsonEqualsToData(
             $content,
             [
+                'id'          => $post->id(),
                 'slug'        => $post->slug(),
                 'title'       => 'Some title',
                 'preview'     => 'Some preview',

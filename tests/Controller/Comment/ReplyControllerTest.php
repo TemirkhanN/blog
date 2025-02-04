@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ReplyControllerTest extends FunctionalTestCase
 {
-    private const ENDPOINT = '/api/posts/%s/comments/%s';
+    private const ENDPOINT = '/api/posts/%d/comments/%s';
     private Post $post;
     private Comment $comment;
 
@@ -29,7 +29,7 @@ class ReplyControllerTest extends FunctionalTestCase
     {
         $this->exceedSpamThreshold();
 
-        $uri      = sprintf(self::ENDPOINT, $this->post->slug(), $this->comment->guid());
+        $uri      = sprintf(self::ENDPOINT, $this->post->id(), $this->comment->guid());
         $payload  = ['text' => 'Some comment text'];
         $response = $this->sendRequest('POST', $uri, $payload);
 
@@ -38,16 +38,17 @@ class ReplyControllerTest extends FunctionalTestCase
 
     public function testAddCommentToNonExistingPost(): void
     {
-        $uri      = sprintf(self::ENDPOINT, 'NonExistingSlug', $this->comment->guid());
-        $payload  = ['text' => 'Some comment text'];
-        $response = $this->sendRequest('POST', $uri, $payload);
+        $nonExistingPostId = 123;
+        $uri               = sprintf(self::ENDPOINT, $nonExistingPostId, $this->comment->guid());
+        $payload           = ['text' => 'Some comment text'];
+        $response          = $this->sendRequest('POST', $uri, $payload);
 
         self::assertEquals('{"code":404,"message":"Target comment does not exist"}', $response->getContent());
     }
 
     public function testAddCommentToHiddenPost(): void
     {
-        $uri      = sprintf(self::ENDPOINT, $this->post->slug(), $this->comment->guid());
+        $uri      = sprintf(self::ENDPOINT, $this->post->id(), $this->comment->guid());
         $payload  = ['text' => 'Some comment text that is longer than 6 words.'];
         $response = $this->sendRequest('POST', $uri, $payload);
 
@@ -61,7 +62,7 @@ class ReplyControllerTest extends FunctionalTestCase
     {
         $this->post->publish();
 
-        $uri      = sprintf(self::ENDPOINT, $this->post->slug(), $this->comment->guid());
+        $uri      = sprintf(self::ENDPOINT, $this->post->id(), $this->comment->guid());
         $payload  = ['text' => 'Some comment text that is longer than 6 words.'];
         $response = $this->sendRequest('POST', $uri, $payload);
 

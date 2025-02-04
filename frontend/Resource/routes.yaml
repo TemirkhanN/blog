@@ -25,17 +25,19 @@ blog:
   controller: Frontend\Controller\Post\ListController
 
 blog_post:
-  path: /blog/{slug}
+  path: /blog/{id}_{slug}
   stateless: true
   requirements:
+    id: '[1-9][0-9]*'
     slug: '[a-zA-Z0-9_-]{10,}'
   methods: [ GET ]
   controller: Frontend\Controller\Post\ViewController
 
 blog_post_comments_action:
-  path: /blog/{postSlug}/comments
+  path: /blog/{id}_{slug}/comments
   requirements:
-    postSlug: '[a-zA-Z0-9_-]{10,}'
+    id: '[1-9][0-9]*'
+    slug: '[a-zA-Z0-9_-]{10,}'
   methods: [ POST ]
   controller: Frontend\Controller\Post\CommentController
 
@@ -44,12 +46,14 @@ login:
   methods: [GET, POST]
   controller: Frontend\Controller\Admin\LoginController
 
+# TODO dummy routing. Separate endpoints
+# currently /admin/post is resolved as 0(page for new post creation)
 admin_edit_post:
-  path: /admin/post/{slug}
+  path: /admin/post/{id}
   requirements:
-    slug: '[a-zA-Z0-9_-]{10,}'
+    id: '[1-9][0-9]*'
   defaults:
-    slug: ''
+    id: 0
   methods: [GET, POST]
   controller: Frontend\Controller\Admin\PostEditorController
 
