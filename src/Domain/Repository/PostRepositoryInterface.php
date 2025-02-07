@@ -19,6 +19,7 @@ interface PostRepositoryInterface
     public function countPosts(PostFilter $filter): int;
 
     public function findOneById(int $id): ?Post;
+    public function findOneBySlug(string $slug): ?Post;
 
     public function save(Post $post): void;
 }

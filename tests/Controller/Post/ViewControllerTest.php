@@ -9,7 +9,8 @@ use App\FunctionalTestCase;
 
 class ViewControllerTest extends FunctionalTestCase
 {
-    private const ENDPOINT = '/api/posts/%d';
+    private const ENDPOINT     = '/api/posts/%d';
+    private const ENDPOINT_ALT = '/api/posts/%s';
 
     protected function setUp(): void
     {
@@ -72,6 +73,36 @@ class ViewControllerTest extends FunctionalTestCase
 
         self::assertEquals(200, $response->getStatusCode());
 
+        self::assertNotNull($post);
+        self::assertNotNull($post->publishedAt());
+        self::assertNotNull($post->updatedAt());
+        self::assertJsonEqualsToData(
+            (string) $response->getContent(),
+            [
+                'id'          => $post->id(),
+                'slug'        => $post->slug(),
+                'title'       => $post->title(),
+                'preview'     => $post->preview(),
+                'content'     => $post->content(),
+                'tags'        => $post->tags(),
+                'createdAt'   => $post->createdAt()->format(DATE_ATOM),
+                'updatedAt'   => $post->updatedAt()->format(DATE_W3C),
+                'publishedAt' => $post->publishedAt()->format(DATE_ATOM),
+            ]
+        );
+    }
+    /**
+     * @param string $slug
+     *
+     * @dataProvider publishedPostsSlugProvider
+     */
+    public function testViewBySlug(string $slug): void
+    {
+        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_ALT, $slug));
+
+        self::assertEquals(200, $response->getStatusCode());
+
+        $post = $this->findPostBySlug($slug);
         self::assertNotNull($post);
         self::assertNotNull($post->publishedAt());
         self::assertNotNull($post->updatedAt());

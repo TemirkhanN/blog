@@ -13,10 +13,8 @@ use SimpleXMLElement;
  */
 readonly class SitemapGenerator
 {
-    private const FREQ_MONTHLY    = 'monthly';
-    private const FREQ_YEARLY     = 'yearly';
-    private const PRIORITY_TOP    = '1.0';
-    private const PRIORITY_NORMAL = '0.5';
+    private const FREQ_YEARLY  = 'yearly';
+    private const PRIORITY_TOP = '1.0';
 
     public function __construct(
         private PostRepositoryInterface $postRepository,

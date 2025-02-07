@@ -86,6 +86,11 @@ readonly class PostRepository implements PostRepositoryInterface
         return $this->registry->getRepository(Post::class)->find($id);
     }
 
+    public function findOneBySlug(string $slug): ?Post
+    {
+        return $this->registry->getRepository(Post::class)->findOneBy(['slug' => $slug]);
+    }
+
     public function save(Post $post): void
     {
         $em = $this->registry->getManagerForClass(Post::class);

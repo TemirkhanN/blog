@@ -17,6 +17,7 @@ class Client
     private const ENDPOINT_LOGIN         = '/api/auth/tokens';
     private const ENDPOINT_POSTS         = '/api/posts';
     private const ENDPOINT_POST          = '/api/posts/%d';
+    private const ENDPOINT_POST_LEGACY   = '/api/posts/%s';
     private const ENDPOINT_POST_RELEASES = '/api/posts/%d/releases';
     private const ENDPOINT_COMMENTS      = '/api/posts/%d/comments';
 
@@ -112,6 +113,17 @@ class Client
         $comments = array_map([Comment::class, 'unmarshall'], $commentsRaw->toArray(false));
 
         return Post::unmarshall($response->toArray(false) + ['comments' => $comments]);
+    }
+
+    public function getPostBySlug(string $slug): ?Post
+    {
+        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_POST_LEGACY, $slug));
+        if ($this->getErrorMessage($response) !== '') {
+            return null;
+        }
+        $data = $response->toArray(false);
+
+        return $this->getPost($data['id']);
     }
 
     /**

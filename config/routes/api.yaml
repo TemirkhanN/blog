@@ -23,6 +23,15 @@ view_post:
     id: '[1-9][0-9]*'
   methods: [ GET ]
   controller: App\Controller\Post\ViewController
+
+# Backward-compatibility. For legacy reasons
+view_post_by_slug:
+  path: /posts/{slug}
+  requirements:
+    slug: '[a-zA-Z0-9_-]{10,}'
+  methods: [ GET ]
+  controller: App\Controller\Post\ViewController
+
 add_comment:
   path: /posts/{id}/comments
   requirements:

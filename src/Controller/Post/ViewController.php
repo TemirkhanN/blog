@@ -21,9 +21,13 @@ readonly class ViewController
     ) {
     }
 
-    public function __invoke(int $id, CacheGatewayInterface $cacheGateway): Response
+    public function __invoke(?int $id, ?string $slug, CacheGatewayInterface $cacheGateway): Response
     {
-        $post = $this->postRepository->findOneById($id);
+        if ($id === null && $slug === null) {
+            return $this->responseFactory->badRequest('No resource identification provided');
+        }
+
+        $post = $id !== null ? $this->postRepository->findOneById($id) : $this->postRepository->findOneBySlug($slug);
         if ($post === null || !$this->security->isGranted('view_post', $post)) {
             return $this->responseFactory->notFound("Publication doesn't exist");
         }
