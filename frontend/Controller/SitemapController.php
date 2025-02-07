@@ -6,23 +6,20 @@ namespace Frontend\Controller;
 
 use App\Lib\Response\Cache\CacheGatewayInterface;
 use App\Lib\Response\Cache\TTL;
+use Frontend\Service\SitemapGenerator;
 use Symfony\Component\HttpFoundation\Response;
 
-class SitemapController
+readonly class SitemapController
 {
     public function __construct(
-        private readonly CacheGatewayInterface $cacheGateway
+        private SitemapGenerator $sitemapGenerator,
+        private CacheGatewayInterface $cacheGateway
     ) {
     }
 
     public function __invoke(): Response
     {
-        $sitemapFile = __DIR__ . '/../../public/sitemap.xml';
-        if (!file_exists($sitemapFile)) {
-            return new Response('', 404);
-        }
-
-        $content  = file_get_contents($sitemapFile);
+        $content  = $this->sitemapGenerator->generate();
         $response = new Response($content, 200, ['Content-Type' => 'application/xml;charset=UTF-8']);
 
         return $this->cacheGateway->cache($response, TTL::hours(24));

@@ -34,8 +34,6 @@ services:
         user: www-data
       - command: php bin/console doctrine:migrations:migrate --no-interaction
         user: www-data
-      - command: php bin/console sitemap:generate
-        user: www-data
   db:
     image: sameersbn/postgresql:12-20200524
     environment:

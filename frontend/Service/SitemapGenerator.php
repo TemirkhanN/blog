@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Frontend\Service;
 
 use App\Domain\Repository\PostFilter;
 use App\Domain\Repository\PostRepositoryInterface;
+use App\Service\UriResolver;
 use SimpleXMLElement;
 
-/**
- * @TODO does not belong to src. Move to frontend directory. Same applies to usages.
- */
 readonly class SitemapGenerator
 {
     private const FREQ_YEARLY  = 'yearly';

@@ -6,9 +6,9 @@ namespace App\Lib\Response\Cache;
 
 use InvalidArgumentException;
 
-class TTL
+readonly class TTL
 {
-    private function __construct(private readonly int $seconds)
+    private function __construct(private int $seconds)
     {
     }
 
