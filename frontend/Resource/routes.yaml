@@ -33,6 +33,14 @@ blog_post:
   methods: [ GET ]
   controller: Frontend\Controller\Post\ViewController
 
+blog_post_backward_compatibility:
+  path: /blog/{slug}
+  stateless: true
+  requirements:
+    slug: '[a-zA-Z0-9_-]{10,}'
+  methods: [ GET ]
+  controller: Frontend\Controller\Post\ViewController
+
 blog_post_comments_action:
   path: /blog/{id}_{slug}/comments
   requirements:
@@ -46,7 +54,6 @@ login:
   methods: [GET, POST]
   controller: Frontend\Controller\Admin\LoginController
 
-# TODO dummy routing. Separate endpoints
 # currently /admin/post is resolved as 0(page for new post creation)
 admin_edit_post:
   path: /admin/post/{id}
