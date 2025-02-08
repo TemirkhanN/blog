@@ -12,6 +12,8 @@ services:
           - blog.internal
     depends_on:
       - backend
+    environment:
+      - BLOG_DOMAIN_NAME
   backend:
     build:
       context: ./
@@ -20,7 +22,7 @@ services:
       - .env
       - .env.local
     environment:
-      - BLOG_HOST=http://blog.internal
+      - BLOG_HOST
     volumes:
       - ./:/app
       - .composer/:/var/www/.composer/
