@@ -26,6 +26,7 @@ services:
     volumes:
       - ./:/app
       - .composer/:/var/www/.composer/
+      - ./.docker/server/xdebug/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini:ro
     networks:
       - appnet
       - infranet

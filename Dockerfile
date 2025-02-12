@@ -1,4 +1,4 @@
-FROM php:8.3-fpm AS dev_container
+FROM php:8.3-fpm AS base_container
 
 ARG USER_ID=1000
 ARG GROUP_ID=1000
@@ -39,11 +39,17 @@ WORKDIR /app
 RUN usermod -u ${USER_ID} www-data
 RUN chown -R www-data:www-data /app /var/www
 
-USER "${USER_ID}:${GROUP_ID}"
-
 CMD php-fpm -F
 
-FROM dev_container as prod_container
+FROM base_container as dev_container
+
+RUN pecl install xdebug
+
+USER "${USER_ID}:${GROUP_ID}"
+
+FROM base_container as prod_container
+
+USER "${USER_ID}:${GROUP_ID}"
 
 COPY --chown=www-data:www-data ./ /app
 
