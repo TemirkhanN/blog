@@ -36,7 +36,7 @@ when@prod:
                 buffer_size: 50 # How many messages should be saved? Prevent memory leaks
             nested:
                 type: sentry
-                level: info
+                level: error
                 hub_id: Sentry\State\HubInterface
                 process_psr_3_messages: false
                 fill_extra_context: true
