@@ -50,3 +50,10 @@ services:
     app.db.registry:
       alias: Doctrine\Persistence\ManagerRegistry
       public: true
+
+when@prod:
+  services:
+    Sentry\Monolog\BreadcrumbHandler:
+      arguments:
+        - '@Sentry\State\HubInterface'
+        - !php/const Monolog\Logger::INFO
