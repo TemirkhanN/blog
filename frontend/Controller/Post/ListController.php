@@ -17,7 +17,12 @@ readonly class ListController extends AbstractBlogController
 
     public function __invoke(Request $request, int $page = 1, ?string $tag = null): Response
     {
-        $posts = $this->blogApi->getPosts($page, self::POSTS_PER_PAGE, $tag);
+        $postsFetch = $this->blogApi->getPosts($page, self::POSTS_PER_PAGE, $tag);
+        if (!$postsFetch->isSuccessful()) {
+            return new Response($this->renderer->render(Page::ERROR, ['error' => 'Server error']), 503);
+        }
+
+        $posts = $postsFetch->getData();
         if ($posts->count() === 0) {
             if ($page !== 1) {
                 return new RedirectResponse('/');

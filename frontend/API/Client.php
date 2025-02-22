@@ -6,8 +6,8 @@ namespace Frontend\API;
 
 use Frontend\API\Model\Comment;
 use Frontend\API\Model\Post;
+use Symfony\Component\HttpClient\Exception\TimeoutException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 use TemirkhanN\Generic\Error;
 use TemirkhanN\Generic\Result;
 use TemirkhanN\Generic\ResultInterface;
@@ -35,9 +35,7 @@ class Client
      */
     public function createUserToken(string $login, string $password): ResultInterface
     {
-        $result = $this->sendRequest('POST', self::ENDPOINT_LOGIN, compact('login', 'password'));
-
-        $data = $result->toArray(false);
+        $data = $this->sendRequest('POST', self::ENDPOINT_LOGIN, compact('login', 'password'));
 
         if (!isset($data['token'])) {
             return Result::error(Error::create($data['message'], $data['code'], $data));
@@ -69,7 +67,7 @@ class Client
             return Result::error(Error::create($error));
         }
 
-        return Result::success(Post::unmarshall($response->toArray(false)));
+        return Result::success(Post::unmarshall($response));
     }
 
     /**
@@ -90,40 +88,65 @@ class Client
     ): ResultInterface {
         $payload = compact('title', 'preview', 'content', 'tags');
 
-        $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT_POST, $id), $payload);
-        $error    = $this->getErrorMessage($response);
+        try {
+            $response = $this->sendRequest('PATCH', sprintf(self::ENDPOINT_POST, $id), $payload);
+        } catch (TimeoutException $e) {
+            return Result::error($this->timeoutError());
+        }
 
+        $error = $this->getErrorMessage($response);
         if ($error !== '') {
-            return Result::error(Error::create($response->getContent(false)));
+            return Result::error(Error::create($error));
         }
 
-        return Result::success(Post::unmarshall($response->toArray(false)));
+        return Result::success(Post::unmarshall($response));
     }
 
-    public function getPost(int $id): ?Post
+    /**
+     * @param int $id
+     *
+     * @return ResultInterface<Post>
+     */
+    public function getPost(int $id): ResultInterface
     {
-        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_POST, $id));
-
-        if ($this->getErrorMessage($response) !== '') {
-            return null;
+        try {
+            $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_POST, $id));
+        } catch (TimeoutException $e) {
+            return Result::error($this->timeoutError());
         }
 
-        $commentsRaw = $this->sendRequest('GET', sprintf(self::ENDPOINT_COMMENTS, $id));
+        if ($this->getErrorMessage($response) !== '') {
+            return Result::error($this->resourceNotFound());
+        }
 
-        $comments = array_map([Comment::class, 'unmarshall'], $commentsRaw->toArray(false));
+        try {
+            $commentsRaw = $this->sendRequest('GET', sprintf(self::ENDPOINT_COMMENTS, $id));
+            $comments    = array_map([Comment::class, 'unmarshall'], $commentsRaw);
+        } catch (TimeoutException $e) {
+            $comments = [];
+        }
 
-        return Post::unmarshall($response->toArray(false) + ['comments' => $comments]);
+        return Result::success(Post::unmarshall($response + ['comments' => $comments]));
     }
 
-    public function getPostBySlug(string $slug): ?Post
+    /**
+     * @param string $slug
+     *
+     * @return ResultInterface<Post>
+     */
+    public function getPostBySlug(string $slug): ResultInterface
     {
-        $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_POST_LEGACY, $slug));
-        if ($this->getErrorMessage($response) !== '') {
-            return null;
+        try {
+            $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_POST_LEGACY, $slug));
+        } catch (TimeoutException $e) {
+            return Result::error($this->timeoutError());
         }
-        $data = $response->toArray(false);
 
-        return $this->getPost($data['id']);
+        if ($this->getErrorMessage($response) !== '') {
+            return Result::error($this->resourceNotFound());
+        }
+
+        return $this->getPost($response['id']);
     }
 
     /**
@@ -133,10 +156,13 @@ class Client
      */
     public function publishPost(int $id): ResultInterface
     {
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT_POST_RELEASES, $id));
+        try {
+            $response = $this->sendRequest('POST', sprintf(self::ENDPOINT_POST_RELEASES, $id));
+        } catch (TimeoutException $e) {
+            return Result::error($this->timeoutError());
+        }
 
         $error = $this->getErrorMessage($response);
-
         if ($error !== '') {
             return Result::error(Error::create($error));
         }
@@ -144,7 +170,14 @@ class Client
         return Result::success();
     }
 
-    public function getPosts(int $page, int $limit, ?string $tag = null): PostsCollection
+    /**
+     * @param int     $page
+     * @param int     $limit
+     * @param ?string $tag
+     *
+     * @return ResultInterface<PostsCollection>
+     */
+    public function getPosts(int $page, int $limit, ?string $tag = null): ResultInterface
     {
         $query = [
             'limit'  => $limit,
@@ -155,15 +188,17 @@ class Client
             $query['tag'] = $tag;
         }
 
-        $response = $this->sendRequest('GET', self::ENDPOINT_POSTS . '?' . http_build_query($query));
+        try {
+            $postsRaw = $this->sendRequest('GET', self::ENDPOINT_POSTS . '?' . http_build_query($query));
+        } catch (TimeoutException $e) {
+            return Result::error($this->timeoutError());
+        }
 
-        $postsRaw = $response->toArray(false);
-        $posts    = array_map([Post::class, 'unmarshall'], $postsRaw['data']);
-
+        $posts       = array_map([Post::class, 'unmarshall'], $postsRaw['data']);
         $metadataRaw = $postsRaw['pagination'];
         $metadata    = new Metadata($metadataRaw['limit'], $metadataRaw['offset'], $metadataRaw['total']);
 
-        return new PostsCollection($posts, $metadata);
+        return Result::success(new PostsCollection($posts, $metadata));
     }
 
     /**
@@ -174,8 +209,12 @@ class Client
      */
     public function addComment(int $id, string $comment): ResultInterface
     {
-        $payload  = ['text' => $comment];
-        $response = $this->sendRequest('POST', sprintf(self::ENDPOINT_COMMENTS, $id), $payload);
+        $payload = ['text' => $comment];
+        try {
+            $response = $this->sendRequest('POST', sprintf(self::ENDPOINT_COMMENTS, $id), $payload);
+        } catch (TimeoutException $e) {
+            return Result::error($this->timeoutError());
+        }
 
         $error = $this->getErrorMessage($response);
         if ($error !== '') {
@@ -197,7 +236,11 @@ class Client
         $payload  = ['text' => $reply];
         $endpoint = sprintf(self::ENDPOINT_COMMENTS . '/%s', $postId, $commentId);
 
-        $response = $this->sendRequest('POST', $endpoint, $payload);
+        try {
+            $response = $this->sendRequest('POST', $endpoint, $payload);
+        } catch (TimeoutException $e) {
+            return Result::error($this->timeoutError());
+        }
 
         $error = $this->getErrorMessage($response);
         if ($error !== '') {
@@ -207,7 +250,16 @@ class Client
         return Result::success();
     }
 
-    private function sendRequest(string $method, string $uri, array $payload = []): ResponseInterface
+    /**
+     * @param string $method
+     * @param string $uri
+     * @param array  $payload
+     *
+     * @return array response data
+     *
+     * @throws TimeoutException
+     */
+    private function sendRequest(string $method, string $uri, array $payload = []): array
     {
         $options = [];
         if ($payload !== []) {
@@ -220,18 +272,26 @@ class Client
             ];
         }
 
-        return $this->httpClient->request($method, $uri, $options);
+        return $this->httpClient->request($method, $uri, $options)->toArray(false);
     }
 
-    private function getErrorMessage(ResponseInterface $response): string
+    private function getErrorMessage(array $responseData): string
     {
-        $data = $response->toArray(false);
-
         // TODO incorrect when it comes to structures containing "message"
-        if (!isset($data['message'])) {
+        if (!isset($responseData['message'])) {
             return '';
         }
 
-        return $data['message'];
+        return $responseData['message'];
+    }
+
+    private function timeoutError(): Error
+    {
+        return Error::create('Service is currently unavailable', ApiError::TEMPORARILY_UNREACHABLE->value);
+    }
+
+    private function resourceNotFound(): Error
+    {
+        return Error::create('Resource not found', ApiError::RESOURCE_NOT_FOUND->value);
     }
 }

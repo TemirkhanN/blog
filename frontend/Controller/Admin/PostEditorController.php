@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Frontend\Controller\Admin;
 
+use Frontend\API\ApiError;
 use Frontend\Controller\AbstractBlogController;
 use Frontend\Resource\View\Page;
 use Frontend\Service\Access;
@@ -60,10 +61,17 @@ readonly class PostEditorController extends AbstractBlogController
 
     private function handleUpdate(int $id, Request $request): Response
     {
-        $post = $this->blogApi->getPost($id);
-        if ($post === null) {
-            return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
+        $fetchedPost = $this->blogApi->getPost($id);
+        if (!$fetchedPost->isSuccessful()) {
+            $error = $fetchedPost->getError();
+            if ($error->getCode() === ApiError::RESOURCE_NOT_FOUND->value) {
+                return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
+            }
+
+            return new Response($this->renderer->render(Page::ERROR, ['error' => 'Currently unavailable']), 503);
         }
+
+        $post = $fetchedPost->getData();
 
         $title   = $post->title;
         $preview = $post->preview;

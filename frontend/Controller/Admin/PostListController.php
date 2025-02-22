@@ -24,13 +24,19 @@ readonly class PostListController extends AbstractBlogController
             return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
         }
 
-        $result = $this->performAction($request);
+        $actionResult = $this->performAction($request);
+        $errors       = [];
 
-        $posts = $this->blogApi->getPosts($page, self::POSTS_PER_PAGE);
+        $postsFetch = $this->blogApi->getPosts($page, self::POSTS_PER_PAGE);
+        if ($postsFetch->isSuccessful()) {
+            $posts = $postsFetch->getData();
+        } else {
+            $errors[] = $postsFetch->getError()->getMessage();
+            $posts    = [];
+        }
 
-        $errors = [];
-        if (!$result->isSuccessful()) {
-            $errors[] = $result->getError()->getMessage();
+        if (!$actionResult->isSuccessful()) {
+            $errors[] = $actionResult->getError()->getMessage();
         }
 
         return new Response(

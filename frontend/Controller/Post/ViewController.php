@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Frontend\Controller\Post;
 
 use App\Lib\Response\Cache\TTL;
+use Frontend\API\ApiError;
 use Frontend\Controller\AbstractBlogController;
 use Frontend\Resource\View\Page;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,12 +19,17 @@ readonly class ViewController extends AbstractBlogController
             return $this->attemptToRedirectToLatestUrl($slug);
         }
 
-        $post = $this->blogApi->getPost($id);
+        $fetchedPost = $this->blogApi->getPost($id);
+        if (!$fetchedPost->isSuccessful()) {
+            $error = $fetchedPost->getError();
+            if ($error->getCode() === ApiError::RESOURCE_NOT_FOUND->value) {
+                return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
+            }
 
-        if ($post === null) {
-            return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
+            return new Response($this->renderer->render(Page::ERROR, ['error' => 'Currently unavailable']), 503);
         }
 
+        $post = $fetchedPost->getData();
         if ($post->slug !== $slug) {
             $newUri = $this->getPostUri($post);
 
@@ -37,12 +43,17 @@ readonly class ViewController extends AbstractBlogController
 
     private function attemptToRedirectToLatestUrl(string $slug): Response
     {
-        $post = $this->blogApi->getPostBySlug($slug);
-        if ($post === null) {
-            return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
+        $fetchedPost = $this->blogApi->getPostBySlug($slug);
+        if (!$fetchedPost->isSuccessful()) {
+            $error = $fetchedPost->getError();
+            if ($error->getCode() === ApiError::RESOURCE_NOT_FOUND->value) {
+                return new Response($this->renderer->render(Page::ERROR, ['error' => 404]), 404);
+            }
+
+            return new Response($this->renderer->render(Page::ERROR, ['error' => 'Currently unavailable']), 503);
         }
 
-        $newUri = $this->getPostUri($post);
+        $newUri = $this->getPostUri($fetchedPost->getData());
 
         return new RedirectResponse($newUri, Response::HTTP_PERMANENTLY_REDIRECT);
     }

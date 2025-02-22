@@ -13,9 +13,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
-class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
+readonly class ConvertHttpErrorToResponseSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly ResponseFactoryInterface $responseFactory)
+    public function __construct(private ResponseFactoryInterface $responseFactory)
     {
     }
 

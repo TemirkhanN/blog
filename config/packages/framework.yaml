@@ -22,6 +22,8 @@ framework:
       scoped_clients:
         blog_api_transport:
           base_uri: '%env(BLOG_HOST)%'
+          timeout: 3
+          max_duration: 5
 
     rate_limiter:
       sensitive_api:
