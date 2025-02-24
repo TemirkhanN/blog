@@ -49,6 +49,9 @@ USER "${USER_ID}:${GROUP_ID}"
 
 FROM base_container as prod_container
 
+ARG RELEASE_VERSION
+ENV RELEASE_VERSION=${RELEASE_VERSION}
+
 USER "${USER_ID}:${GROUP_ID}"
 
 COPY --chown=www-data:www-data ./ /app

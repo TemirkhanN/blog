@@ -1,6 +1,7 @@
 when@prod:
     sentry:
         dsn: '%env(SENTRY_DSN)%'
+        release: '%env(RELEASE_VERSION)%'
         options:
             ignore_exceptions:
                 - 'Symfony\Component\ErrorHandler\Error\FatalError'

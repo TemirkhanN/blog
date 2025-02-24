@@ -6,16 +6,16 @@ BACKEND_CLI=docker compose exec -u www-data backend
 build:
 	docker compose build
 
-.PHONY: up
-up:
+.PHONY: start
+start:
 	docker compose up -d
 
 .PHONY: bash
 bash:
 	$(BACKEND_CLI) bash
 
-.PHONY: down
-down:
+.PHONY: stop
+stop:
 	docker compose down
 
 .PHONY: ps
@@ -37,3 +37,12 @@ code-check:
 	$(BACKEND_CLI) php ./vendor/bin/deptrac analyze
 	$(BACKEND_CLI) php ./vendor/bin/phpunit
 
+# Live env
+
+.PHONY: build-prod
+build-prod:
+	RELEASE_VERSION=$(git rev-parse --short HEAD) docker compose -f docker-compose.prod.yaml build
+
+.PHONY: start-prod
+start-prod:
+	docker compose -f docker-compose.prod.yaml up -d

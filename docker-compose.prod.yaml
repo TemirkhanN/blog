@@ -25,9 +25,12 @@ services:
   backend:
     build:
       context: ./
+      labels:
+        - "release.version=${RELEASE_VERSION}"
       target: prod_container
       args:
         APP_ENV: ${APP_ENV}
+        RELEASE_VERSION: ${RELEASE_VERSION}
     environment:
       - APP_ENV
       - APP_SECRET
