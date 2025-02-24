@@ -1,11 +1,11 @@
 when@prod:
     sentry:
         dsn: '%env(SENTRY_DSN)%'
-        release: '%env(RELEASE_VERSION)%'
         options:
             ignore_exceptions:
                 - 'Symfony\Component\ErrorHandler\Error\FatalError'
                 - 'Symfony\Component\Debug\Exception\FatalErrorException'
+            release: '%env(RELEASE_VERSION)%'
 
         #If you are using Monolog, you also need this additional configuration to log the errors correctly:
         #https://docs.sentry.io/platforms/php/guides/symfony/#monolog-integration
