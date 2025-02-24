@@ -51,6 +51,7 @@ FROM base_container as prod_container
 
 ARG RELEASE_VERSION
 ENV RELEASE_VERSION=${RELEASE_VERSION}
+LABEL release.version=${RELEASE_VERSION}
 
 USER "${USER_ID}:${GROUP_ID}"
 

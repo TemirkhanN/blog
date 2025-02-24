@@ -41,7 +41,7 @@ code-check:
 
 .PHONY: build-prod
 build-prod:
-	RELEASE_VERSION=$(git rev-parse --short HEAD) docker compose -f docker-compose.prod.yaml build
+	RELEASE_VERSION=$$(git rev-parse --short HEAD) docker compose -f docker-compose.prod.yaml build
 
 .PHONY: start-prod
 start-prod:
