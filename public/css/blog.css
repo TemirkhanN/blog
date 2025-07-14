@@ -1,16 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+/*
+Written by me, adjusted by chatGPT =D
+*/
+
 html {
     height: 100%;
-    font-size: 18px;
+    font-size: clamp(16px, 1.5vw, 18px);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
-/*
-dmode.bg: #121212
-dmode.text.common: rgba(255, 255, 255, 0.87)
-dmode.text.noticeable: rgba(255, 255, 255, 0.60)
-dmode.text.disabled: rgba(255, 255, 255, 0.38)
-
-*/
 body {
     background-color: white;
     color: black;
@@ -88,6 +86,10 @@ blockquote {
     padding: 0 0.5em;
 }
 
+.dark-mode blockquote {
+    color: #a2a2a2;
+}
+
 /* Pagination */
 
 .pagination ul {
@@ -95,7 +97,8 @@ blockquote {
     padding: 0 1em;
 }
 
-.pagination .page-link, .pagination .page-link:visited {
+.pagination .page-link,
+.pagination .page-link:visited {
     color: #5b5b5b;
     text-decoration: none;
     font-weight: bold;
@@ -150,20 +153,46 @@ footer {
 }
 
 /* Posts */
+.post,
+.post-preview {
+    font-family: 'Inter', sans-serif;
+    line-height: 1.7;
+}
+
 .post {
-    font-family: 'Inconsolata', serif;
-    font-size: 1.2em;
+    font-size: 1.1em;
+    max-width: 700px;
+    margin: auto;
+    padding: 2em 1em;
+    line-height: 1.75;
+    letter-spacing: 0.01em;
+}
+
+.post p {
+    margin-bottom: 1.5em;
+}
+
+.post h1 {
+    font-size: 2.5em;
+    font-weight: 800;
+    background: linear-gradient(90deg, #facc15, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.post strong {
+    font-weight: 600;
+    color: #fca652;
 }
 
 .post-preview {
-    font-family: 'Inconsolata', serif;
     font-size: 1.1em;
     border-bottom: 1px solid #eee;
     padding: 1em 0;
 }
 
 .dark-mode .post-preview {
-    color: rgba(255, 255, 255, 0.60);
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .preview-link {
@@ -172,16 +201,19 @@ footer {
     text-decoration: none;
 }
 
+.preview-link:hover {
+    text-decoration: underline;
+}
+
 .dark-mode .preview-link {
     color: rgba(255, 255, 255, 0.87);
 }
 
 .pub-date {
-    color: gray;
-    margin: 0 0 0 2px;
-    font-size: 0.8em;
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 2em;
 }
-
 
 .dark-mode .pub-date {
     color: rgba(255, 255, 255, 0.38);
@@ -212,15 +244,11 @@ footer {
     color: #555;
     font-style: italic;
     padding: 1em 0;
+    text-align: center;
 }
 
 .dark-mode #disclaimer {
     color: rgba(255, 255, 255, 0.60);
-}
-
-#disclaimer p {
-    margin: 0;
-    text-align: center;
 }
 
 #comments {
@@ -229,7 +257,7 @@ footer {
 }
 
 #comment-form button {
-    float:right;
+    float: right;
     color: #fff;
     background-color: #007bff;
     border-color: #007bff;
@@ -238,7 +266,6 @@ footer {
     border-radius: 5px;
     cursor: pointer;
 }
-
 
 #comment-form button:hover {
     box-shadow: 0 0 0 1px #2276c7;
@@ -258,7 +285,7 @@ footer {
     height: 5em;
     border-color: #aaa;
     border-radius: 5px;
-    font-size:1em;
+    font-size: 1em;
 }
 
 .comment .comment:not(:first-child) {
@@ -289,10 +316,7 @@ label {
     display: block;
 }
 
-input {
-    width: 100%;
-}
-
+input,
 textarea {
     width: 100%;
 }
@@ -302,6 +326,7 @@ textarea {
     color: rgba(255, 255, 255, 0.87);
 }
 
+/* Error Pages */
 #error-details {
     text-align: center;
     font-size: 6em;
@@ -310,4 +335,15 @@ textarea {
 #error-details p {
     padding: 0;
     margin: 0;
+}
+
+/* Reading Progress Bar */
+#progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: #facc15;
+    width: 0;
+    z-index: 1000;
 }
