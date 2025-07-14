@@ -1,0 +1,36 @@
+name: DO deployment
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    branches: [master]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Build and deployment
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    environment: prod
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set release version
+        id: vars
+        run: echo "RELEASE_VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Connect & deploy via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER || 'root' }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          envs: RELEASE_VERSION
+          script: |
+            cd /root/blog
+            git pull origin master
+            RELEASE_VERSION=$RELEASE_VERSION docker compose -f docker-compose.prod.yaml build
+            docker compose -f docker-compose.prod.yaml up -d
