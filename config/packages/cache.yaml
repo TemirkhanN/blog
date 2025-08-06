@@ -5,6 +5,10 @@ framework:
     pools:
       cache.rate_limiter:
         adapter: cache.adapter.filesystem
+      cache.content:
+        adapter: cache.adapter.filesystem
+        default_lifetime: PT1H
+        tags: true
 
 when@prod:
   framework:
@@ -30,3 +34,7 @@ when@prod:
         cache.rate_limiter:
           adapter: cache.adapter.redis
           default_lifetime: PT1H
+        cache.content:
+          adapter: cache.adapter.redis
+          default_lifetime: PT1H
+          tags: true

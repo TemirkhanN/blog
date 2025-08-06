@@ -7,6 +7,8 @@ namespace Frontend\API;
 use Frontend\API\Model\Comment;
 use Frontend\API\Model\Post;
 use Symfony\Component\HttpClient\Exception\TimeoutException;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use TemirkhanN\Generic\Error;
 use TemirkhanN\Generic\Result;
@@ -23,8 +25,10 @@ class Client
 
     private string $userToken = '';
 
-    public function __construct(private readonly HttpClientInterface $httpClient)
-    {
+    public function __construct(
+        private readonly HttpClientInterface $httpClient,
+        private readonly TagAwareCacheInterface $cache
+    ) {
     }
 
     /**
@@ -62,7 +66,6 @@ class Client
         $response = $this->sendRequest('POST', self::ENDPOINT_POSTS, compact('title', 'preview', 'content', 'tags'));
 
         $error = $this->getErrorMessage($response);
-
         if ($error !== '') {
             return Result::error(Error::create($error));
         }
@@ -99,6 +102,9 @@ class Client
             return Result::error(Error::create($error));
         }
 
+        $this->cache->delete('post_' . $id);
+        $this->cache->invalidateTags(['posts']);
+
         return Result::success(Post::unmarshall($response));
     }
 
@@ -110,7 +116,12 @@ class Client
     public function getPost(int $id): ResultInterface
     {
         try {
-            $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_POST, $id));
+            $response = $this->cache->get('post_' . $id, function (ItemInterface $cached) use ($id) {
+                $oneHour = 60 * 60;
+                $cached->expiresAfter($oneHour);
+
+                return $this->sendRequest('GET', sprintf(self::ENDPOINT_POST, $id));
+            });
         } catch (TimeoutException $e) {
             return Result::error($this->timeoutError());
         }
@@ -137,7 +148,11 @@ class Client
     public function getPostBySlug(string $slug): ResultInterface
     {
         try {
-            $response = $this->sendRequest('GET', sprintf(self::ENDPOINT_POST_LEGACY, $slug));
+            $response = $this->cache->get('postBySlug_' . $slug, function (ItemInterface $item) use ($slug) {
+                $item->expiresAfter(new \DateInterval('P1M'));
+
+                return $this->sendRequest('GET', sprintf(self::ENDPOINT_POST_LEGACY, $slug));
+            });
         } catch (TimeoutException $e) {
             return Result::error($this->timeoutError());
         }
@@ -167,6 +182,10 @@ class Client
             return Result::error(Error::create($error));
         }
 
+        $this->cache->delete('post_' . $id);
+        // Delete cache for posts on the first page.
+        $this->cache->invalidateTags(['posts']);
+
         return Result::success();
     }
 
@@ -189,7 +208,17 @@ class Client
         }
 
         try {
-            $postsRaw = $this->sendRequest('GET', self::ENDPOINT_POSTS . '?' . http_build_query($query));
+            $cacheKey = 'posts_' . $page . '_' . $limit;
+            if ($tag !== null) {
+                $cacheKey .= '_' . $tag;
+            }
+            $postsRaw = $this->cache->get($cacheKey, function (ItemInterface $item) use ($query) {
+                $oneHour = 60 * 60;
+                $item->expiresAfter($oneHour);
+                $item->tag('posts');
+
+                return $this->sendRequest('GET', self::ENDPOINT_POSTS . '?' . http_build_query($query));
+            });
         } catch (TimeoutException $e) {
             return Result::error($this->timeoutError());
         }

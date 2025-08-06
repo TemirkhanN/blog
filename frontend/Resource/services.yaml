@@ -14,3 +14,4 @@ services:
   Frontend\API\Client:
     arguments:
       - '@blog_api_transport'
+      - '@cache.content'
