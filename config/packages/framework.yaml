@@ -31,3 +31,7 @@ framework:
         limit: 5
         interval: '1 minutes'
         cache_pool: cache.rate_limiter
+
+when@test:
+  framework:
+    test: true
